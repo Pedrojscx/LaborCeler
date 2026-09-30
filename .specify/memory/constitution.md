@@ -1,42 +1,3 @@
-<!--
-Sync Impact Report
-==================
-Version change: (template, sem versão) → 1.0.0
-Tipo de bump: MAJOR inicial — primeira ratificação; todos os placeholders substituídos.
-
-Princípios definidos (novos):
-  - [PRINCIPLE_1_NAME] → I. Servidor é a Autoridade (NÃO NEGOCIÁVEL)
-  - [PRINCIPLE_2_NAME] → II. Front-end sem Frameworks, Mobile-First
-  - [PRINCIPLE_3_NAME] → III. PostgreSQL com SQL Explícito, sem ORM
-  - [PRINCIPLE_4_NAME] → IV. Dados Derivados Não São Armazenados
-  - [PRINCIPLE_5_NAME] → V. Execução com um Único `docker compose up`
-  - (adicionado) VI. LGPD e Minimização de Dados
-  - (adicionado) VII. Escopo de MVP
-  - (adicionado) VIII. Rastreabilidade de Requisitos
-  - (adicionado) IX. Testes das Regras de Negócio Críticas
-  - (adicionado) X. Padrões de Código, Banco e Versionamento
-
-Seções adicionadas:
-  - Restrições Técnicas e de Escopo (SECTION_2)
-  - Fluxo de Desenvolvimento e Definition of Done (SECTION_3)
-  - Governança
-
-Seções removidas: nenhuma
-
-Templates dependentes: não modificados por este comando (leem a constituição em tempo de
-execução). Revisar manualmente se .specify/templates/plan-template.md ("Constitution Check")
-e tasks-template.md refletem os gates I–X.
-
-Ajustes pré-commit (versão mantida em 1.0.0, ainda não publicada):
-  - VII. Escopo de MVP: MVP redefinido como atendimento integral de RF01–RF21 e RP01–RP09
-    (inclui RF07 área de estudos, RF19/RP08 validação via QR Code, RF20 histórico). "Extra"
-    passa a ser só o que não consta no desafio (PDF no servidor, recuperação de senha,
-    painel administrativo). Seção "Restrições Técnicas e de Escopo" alinhada.
-  - VI. LGPD: páginas públicas exibem CPF mascarado no formato ***.456.789-** e nunca
-    exibem e-mail (antes: "CPF ou e-mail completos" com mascaramento genérico).
-
-TODOs pendentes: nenhum. Data de ratificação assumida como 2026-09-30 (data desta adoção).
--->
 
 # Portal de Certificação em Metodologias Ágeis — Constituição
 
@@ -72,7 +33,7 @@ Projeto acadêmico FATEC — ABP 1º DSM 2026-2.
 - É PROIBIDO usar ORM ou geradores de consulta que ocultem o SQL.
 - Toda consulta com dados externos DEVE ser parametrizada; concatenação de valores em SQL é
   proibida.
-- O esquema oficial é o `bdcertificacao.sql` da equipe. Qualquer mudança no esquema DEVE vir
+- O esquema oficial é o `bdcertificacao.sql` do projeto. Qualquer mudança no esquema DEVE vir
   acompanhada da atualização do modelo lógico no mesmo PR.
 
 **Justificativa**: requisito da disciplina, prevenção de SQL injection e fonte única de
@@ -93,7 +54,7 @@ estudada em aula.
 - Nenhum passo manual adicional (instalar dependências, rodar scripts, criar tabelas) é
   aceitável para a execução padrão.
 
-**Justificativa**: reprodutibilidade para avaliação docente e para todos os membros da equipe.
+**Justificativa**: reprodutibilidade para avaliação docente e em qualquer máquina.
 
 ### VI. LGPD e Minimização de Dados
 
@@ -113,7 +74,7 @@ estudada em aula.
   (RF19, RP08) e o histórico (RF20).
 - "Extra" é apenas o que NÃO consta no documento do desafio (ex.: PDF gerado no servidor,
   recuperação de senha, painel administrativo).
-- Extras só entram após o MVP estar completo e aprovado pela equipe (RP09).
+- Extras só entram após o MVP estar completo e aprovado pelo mantenedor (RP09).
 - A carga de conteúdo (temas, questões, alternativas) é feita via SQL.
 
 **Justificativa**: prazo acadêmico curto; cumprir todo o desafio antes de qualquer adição.
@@ -160,22 +121,23 @@ estudada em aula.
 
 Um item só está **pronto** quando TODOS os critérios abaixo são atendidos:
 
-1. Código revisado e aprovado por outro membro da equipe (via PR).
+1. Autoverificação concluída (ver abaixo).
 2. Testes automatizados passando, incluindo os exigidos pelo Princípio IX.
 3. Funciona a partir de um clone limpo com `docker compose up`.
 4. Documentação da API atualizada quando houver endpoint novo ou alterado.
 5. Requisito correspondente marcado no backlog, com IDs citados no PR.
 
-Revisões de PR DEVEM verificar explicitamente os Princípios I, III, IV e VI, que são os de
-maior risco.
+**Autoverificação**: antes de cada merge na `main`, o próprio autor DEVE conferir
+explicitamente os Princípios I, III, IV e VI, que são os de maior risco. O Claude Code PODE ser
+usado como revisor nessa conferência.
 
 ## Governance
 
-- Esta constituição prevalece sobre quaisquer outras práticas da equipe. Em conflito, ela
+- Esta constituição prevalece sobre quaisquer outras práticas do projeto. Em conflito, ela
   vence.
-- **Emendas**: propostas via PR que altere este arquivo, com justificativa, aprovadas pela
-  maioria da equipe; se afetarem requisitos da disciplina (RP/RNF), o orientador DEVE ser
-  consultado.
+- **Emendas**: propostas via PR que altere este arquivo, com justificativa, e decididas
+  pelo mantenedor do repositório; se afetarem requisitos da disciplina (RP/RNF), o orientador
+  DEVE ser consultado.
 - **Versionamento** (SemVer):
   - MAJOR: remoção ou redefinição incompatível de princípio.
   - MINOR: novo princípio/seção ou ampliação material de orientação.
@@ -184,4 +146,4 @@ maior risco.
   desvios DEVEM ser registrados e justificados no plano, com alternativa mais simples
   considerada.
 
-**Version**: 1.0.0 | **Ratified**: 2026-09-30 | **Last Amended**: 2026-09-30
+**Version**: 2.0.0 | **Ratified**: 2026-09-30 | **Last Amended**: 2026-09-30
