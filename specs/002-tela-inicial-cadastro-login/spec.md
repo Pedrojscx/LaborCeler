@@ -164,6 +164,9 @@ de novo, o candidato volta à mesma escolha.
 - Senha com espaços ou caracteres especiais: aceita; a senha nunca é ecoada em mensagens,
   telas posteriores ou registros do sistema.
 - Senha e confirmação diferentes: cadastro recusado, com a indicação do campo.
+- Senha dentro de 64 caracteres, mas com muitos acentos, símbolos ou emojis, que ultrapassa o
+  tamanho máximo que o sistema consegue proteger por inteiro: recusada com uma explicação, em
+  vez de ter parte dela ignorada em silêncio.
 - Várias pessoas na mesma rede errando a senha: cada CPF tem a sua própria contagem; as falhas
   de uma pessoa não bloqueiam as outras.
 - Tentativas repetidas com um CPF que não existe: contam e bloqueiam como as de um CPF
