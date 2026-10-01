@@ -1,4 +1,6 @@
 # Dossiê-fonte SDD: Portal de Certificação em Metodologias Ágeis (BorB)
+> **Nota:** a seção 2 registra o texto original da constituição; a versão em vigor é `.specify/memory/constitution.md` (2.0.1), que prevalece em caso de divergência.
+
 
 Versão 1.0 (30/09/2026). Fonte para o Claude Code gerar as specs com GitHub Spec Kit.
 Documentos de origem: Desafio ABP 1º DSM 2026-2 (versão 29/06/2026), Modelo Conceitual v2.0 e Modelo Lógico/Físico (30/09/2026, Pedro Lucas).
