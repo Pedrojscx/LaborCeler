@@ -1,0 +1,71 @@
+openapi: 3.1.0
+info:
+  title: Portal de Certificação em Metodologias Ágeis - Saúde
+  version: 0.1.0
+  description: >
+    Endpoint da feature 001 (FR-013). Confirma que a aplicação está no ar e conectada ao
+    banco, e informa as contagens da carga. Este trecho é copiado para docs/openapi.yaml.
+paths:
+  /api/saude:
+    get:
+      summary: Estado da aplicação e do banco
+      operationId: obterSaude
+      tags: [infraestrutura]
+      responses:
+        '200':
+          description: Aplicação e banco disponíveis.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Saude'
+              example:
+                status: ok
+                banco: ok
+                conteudo:
+                  temas: 12
+                  questoes: 48
+                  alternativas: 192
+                  materiais: 12
+                  provisorio: true
+        '503':
+          description: Aplicação no ar, mas o banco não respondeu.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SaudeIndisponivel'
+              example:
+                status: erro
+                banco: indisponivel
+components:
+  schemas:
+    Saude:
+      type: object
+      required: [status, banco, conteudo]
+      properties:
+        status:
+          type: string
+          const: ok
+        banco:
+          type: string
+          const: ok
+        conteudo:
+          type: object
+          required: [temas, questoes, alternativas, materiais, provisorio]
+          properties:
+            temas: { type: integer, minimum: 0 }
+            questoes: { type: integer, minimum: 0 }
+            alternativas: { type: integer, minimum: 0 }
+            materiais: { type: integer, minimum: 0 }
+            provisorio:
+              type: boolean
+              description: true se alguma questão, material ou imagem ainda tem a marca [PROVISÓRIO].
+    SaudeIndisponivel:
+      type: object
+      required: [status, banco]
+      properties:
+        status:
+          type: string
+          const: erro
+        banco:
+          type: string
+          const: indisponivel
