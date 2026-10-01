@@ -42,6 +42,15 @@ A Lua é o elemento central. Na certificação, ela representa o progresso (RF21
 --acento: #F5C46B (luz solar; botões com texto escuro);
 --sucesso: #4CC38A; --erro: #F07178; --painel-claro: #F7F6F2.
 
+Variantes para texto sobre o painel claro (acrescentadas na 002, em 01/10/2026):
+--erro-sobre-claro: #C5151F; --sucesso-sobre-claro: #256F4C.
+
+Uso: --sucesso e --erro só sobre os fundos escuros (céu e superfície), onde passam no AA; sobre
+--painel-claro elas não passam (2,65:1 e 2,05:1). Para mensagem de erro ou sucesso sobre o
+painel claro (e na impressão), use as variantes, no mesmo matiz e mais escuras:
+--erro-sobre-claro tem 5,55:1 sobre o painel claro e 6,00:1 sobre branco; --sucesso-sobre-claro,
+5,62:1 e 6,07:1. Contraste calculado pela fórmula WCAG 2.x (mínimo 4,5:1 para texto comum).
+
 ## Tipografia
 Títulos: Sora. Corpo: Source Sans 3. Arquivos .woff2 hospedados em app/public/fonts, sem depender de CDN, para o portal funcionar sem internet na apresentação. Pilha de fallback: system-ui, sans-serif.
 
