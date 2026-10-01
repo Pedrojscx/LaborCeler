@@ -176,7 +176,9 @@ transversal (RNF06).
 
 - **Decision**: o README exige **Docker Engine ≥ 20.10** e **Docker Compose ≥ v2.2.1**
   (plugin `docker compose`, não o `docker-compose` v1), ou **Docker Desktop ≥ 4.3**, que traz
-  esse par (Engine 20.10.11 + Compose 2.2.1). O healthcheck usa só `start_period`; **não**
+  esse par (Engine 20.10.11 + Compose 2.2.1). O plugin `docker buildx` é **recomendado**, não
+  exigido: sem ele o Compose constrói com o builder clássico e emite um aviso (validado na
+  subida de clone limpo da US1, 01/10/2026). O healthcheck usa só `start_period`; **não**
   usar `start_interval` sem antes subir o piso (ver abaixo).
 - **Rationale** (documentação oficial do Docker, Compose Specification e notas de versão,
   conferidas em 01/10/2026):

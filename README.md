@@ -16,9 +16,15 @@ front em HTML, CSS e JavaScript puros, tudo orquestrado com Docker Compose.
 | Git | qualquer versão recente | `git --version` |
 | Docker Engine | 20.10 | `docker version` |
 | Docker Compose (plugin `docker compose`, v2) | v2.2.1 | `docker compose version` |
+| Docker Buildx (plugin `docker buildx`) | recomendado | `docker buildx version` |
 
-No Windows e no macOS, o **Docker Desktop 4.3 ou mais novo** já traz Engine e Compose nessas
-versões. O antigo `docker-compose` (v1, com hífen) não serve.
+No Windows e no macOS, o **Docker Desktop 4.3 ou mais novo** já traz Engine, Compose e Buildx
+nessas versões. O antigo `docker-compose` (v1, com hífen) não serve.
+
+O Buildx não é obrigatório: sem ele o Compose constrói a imagem com o builder clássico e
+emite um aviso, mas o portal sobe do mesmo jeito. No Linux ele costuma vir em um pacote à
+parte (`docker-buildx-plugin` no repositório oficial do Docker para Debian/Ubuntu/Fedora,
+`docker-buildx` no Arch).
 
 **Não** é preciso instalar Node.js nem PostgreSQL na máquina, nem criar arquivo `.env`: tudo
 roda dentro dos containers com valores padrão de desenvolvimento.
