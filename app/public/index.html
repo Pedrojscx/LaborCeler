@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portal de Certificação em Metodologias Ágeis</title>
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+  <header class="cabecalho">
+    <h1>Portal de Certificação em Metodologias Ágeis</h1>
+  </header>
+
+  <main class="conteudo">
+    <section class="cartao" aria-labelledby="titulo-status">
+      <h2 id="titulo-status">Estado do portal</h2>
+      <ul class="lista-status">
+        <li class="item-status" id="status-aplicacao" data-estado="carregando">
+          <span class="rotulo">Aplicação</span>
+          <span class="valor" id="valor-aplicacao">Verificando…</span>
+        </li>
+        <li class="item-status" id="status-banco" data-estado="carregando">
+          <span class="rotulo">Banco de dados</span>
+          <span class="valor" id="valor-banco">Verificando…</span>
+        </li>
+      </ul>
+
+      <div class="alerta" id="alerta-carga" role="alert" hidden>
+        <strong>Carga incompleta:</strong> recrie o banco conforme o README
+        (<code>docker compose down -v</code> e <code>docker compose up</code>).
+      </div>
+
+      <p class="mensagem-erro" id="mensagem-erro" role="alert" hidden></p>
+    </section>
+
+    <section class="cartao" aria-labelledby="titulo-conteudo" id="resumo-conteudo" hidden>
+      <h2 id="titulo-conteudo">Conteúdo carregado</h2>
+      <dl class="contagens">
+        <div><dt>Temas</dt><dd id="contagem-temas">–</dd></div>
+        <div><dt>Questões</dt><dd id="contagem-questoes">–</dd></div>
+        <div><dt>Alternativas</dt><dd id="contagem-alternativas">–</dd></div>
+        <div><dt>Materiais</dt><dd id="contagem-materiais">–</dd></div>
+      </dl>
+      <p class="nota-provisorio" id="nota-provisorio" hidden>Conteúdo provisório</p>
+    </section>
+  </main>
+
+  <script src="js/inicio.js"></script>
+</body>
+</html>

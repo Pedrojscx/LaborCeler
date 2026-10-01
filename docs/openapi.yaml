@@ -1,0 +1,85 @@
+openapi: 3.1.0
+info:
+  title: Portal de Certificação em Metodologias Ágeis - API
+  version: 0.1.0
+  description: >
+    API do Portal de Certificação em Metodologias Ágeis (ABP FATEC 1º DSM). Cada feature
+    acrescenta aqui os seus endpoints (DoD, item 4).
+servers:
+  - url: http://localhost:3000
+    description: execução local com docker compose up
+paths:
+  /api/saude:
+    get:
+      summary: Estado da aplicação e do banco
+      description: >
+        Feature 001 (FR-013). Confirma que a aplicação está no ar e conectada ao banco e
+        informa as contagens da carga e se ela está completa. Também é o alvo do healthcheck
+        do serviço app no Compose.
+      operationId: obterSaude
+      tags: [infraestrutura]
+      responses:
+        '200':
+          description: Aplicação e banco disponíveis.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Saude'
+              example:
+                status: ok
+                banco: ok
+                conteudo:
+                  temas: 12
+                  questoes: 48
+                  alternativas: 192
+                  materiais: 12
+                  provisorio: true
+                  cargaCompleta: true
+        '503':
+          description: Aplicação no ar, mas o banco não respondeu.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SaudeIndisponivel'
+              example:
+                status: erro
+                banco: indisponivel
+components:
+  schemas:
+    Saude:
+      type: object
+      required: [status, banco, conteudo]
+      properties:
+        status:
+          type: string
+          const: ok
+        banco:
+          type: string
+          const: ok
+        conteudo:
+          type: object
+          required: [temas, questoes, alternativas, materiais, provisorio, cargaCompleta]
+          properties:
+            temas: { type: integer, minimum: 0 }
+            questoes: { type: integer, minimum: 0 }
+            alternativas: { type: integer, minimum: 0 }
+            materiais: { type: integer, minimum: 0 }
+            provisorio:
+              type: boolean
+              description: true se alguma questão, material ou imagem ainda tem a marca [PROVISÓRIO].
+            cargaCompleta:
+              type: boolean
+              description: >
+                true somente se há exatamente 12 temas, 48 questões e 192 alternativas. false
+                indica carga incompleta (ex.: primeira carga interrompida); a resposta continua
+                200, e a página inicial mostra "carga incompleta".
+    SaudeIndisponivel:
+      type: object
+      required: [status, banco]
+      properties:
+        status:
+          type: string
+          const: erro
+        banco:
+          type: string
+          const: indisponivel

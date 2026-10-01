@@ -1,0 +1,15 @@
+# Acesso OPCIONAL ao banco por um cliente SQL (DBeaver, pgAdmin, psql etc.).
+#
+# Uso:
+#   cp docker-compose.override.example.yml docker-compose.override.yml
+#   docker compose up -d --build --wait
+#
+# O Compose carrega o docker-compose.override.yml automaticamente. O banco fica acessível
+# SOMENTE nesta máquina, em 127.0.0.1:5433 (nunca pela rede local); a porta 5433 evita
+# conflito com um PostgreSQL instalado na 5432. O docker-compose.override.yml está no
+# .gitignore. Para fechar o acesso, apague-o e rode o "up" de novo (research R4).
+
+services:
+  db:
+    ports:
+      - "127.0.0.1:5433:5432"

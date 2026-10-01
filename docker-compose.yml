@@ -1,0 +1,56 @@
+# Portal de Certificação em Metodologias Ágeis
+# Sobe tudo com: docker compose up
+# Requisitos: RNF07, RP05 (execução com um único comando), RP02 (esquema e carga em SQL).
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-portal}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-portal}
+      POSTGRES_DB: ${POSTGRES_DB:-bdcertificacao}
+      TZ: America/Sao_Paulo
+      PGTZ: America/Sao_Paulo
+    volumes:
+      # dados persistem entre reinicializações; só "docker compose down -v" apaga
+      - dados_banco:/var/lib/postgresql/data
+      # scripts SQL rodados em ordem alfabética somente na primeira subida (volume vazio)
+      - ./db:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      # -h 127.0.0.1 força TCP: durante a carga inicial o servidor temporário só escuta no
+      # socket Unix, então o check só passa depois do esquema e do seed (research R2)
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    # sem "ports": o banco não é exposto no host (acesso opcional via override, research R4)
+
+  app:
+    build: ./app
+    # reconstrói a imagem a cada "up" (o que não mudou vem do cache), para nunca rodar código
+    # antigo de uma imagem <pasta>-app já existente (Compose >= v2.0.0, research R16)
+    pull_policy: build
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PORT: ${PORT:-3000}
+      # vazio quando não definida: o app deriva http://localhost:${PORT} (research R9)
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-}
+      DATABASE_URL: ${DATABASE_URL:-postgres://portal:portal@db:5432/bdcertificacao}
+      TZ: America/Sao_Paulo
+    ports:
+      - "${PORT:-3000}:${PORT:-3000}"
+    restart: unless-stopped
+    healthcheck:
+      # fetch nativo do Node 24, sem curl na imagem slim; sem start_interval (exigiria
+      # Engine >= 25, research R14). É o que faz "up --wait" esperar o portal (research R15).
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:' + (process.env.PORT || 3000) + '/api/saude').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  dados_banco:

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" width="640" height="360" role="img" aria-labelledby="titulo">
+  <title id="titulo">Ilustração provisória do material de estudo do tema 10, Planejamento Ágil: calendário em grade com dias marcados</title>
+  <defs>
+    <clipPath id="recorte">
+      <rect x="16" y="16" width="608" height="328" rx="12"/>
+    </clipPath>
+  </defs>
+  <rect width="640" height="360" fill="#f4f6f8"/>
+  <rect x="16" y="16" width="608" height="328" rx="12" fill="#ffffff" stroke="#d5dbe3" stroke-width="2"/>
+  <text x="40" y="60" font-family="system-ui, sans-serif" font-size="26" font-weight="700" fill="#1c2430">Planejamento Ágil</text>
+  <text x="40" y="92" font-family="system-ui, sans-serif" font-size="18" fill="#4a5565">Tema 10 · Material de estudo</text>
+  <rect x="220" y="140" width="200" height="170" rx="10" fill="#ffffff" stroke="#3d4a5c" stroke-width="6"/>
+  <path d="M 230 140 H 410 A 10 10 0 0 1 420 150 V 174 H 220 V 150 A 10 10 0 0 1 230 140 Z" fill="#3d4a5c"/>
+  <rect x="258" y="126" width="10" height="26" rx="5" fill="#3d4a5c"/>
+  <rect x="372" y="126" width="10" height="26" rx="5" fill="#3d4a5c"/>
+  <rect x="238" y="190" width="24" height="18" rx="3" fill="#dfe5ec"/>
+  <rect x="274" y="190" width="24" height="18" rx="3" fill="#3d4a5c"/>
+  <rect x="310" y="190" width="24" height="18" rx="3" fill="#dfe5ec"/>
+  <rect x="346" y="190" width="24" height="18" rx="3" fill="#dfe5ec"/>
+  <rect x="382" y="190" width="24" height="18" rx="3" fill="#dfe5ec"/>
+  <rect x="238" y="218" width="24" height="18" rx="3" fill="#dfe5ec"/>
+  <rect x="274" y="218" width="24" height="18" rx="3" fill="#dfe5ec"/>
+  <rect x="310" y="218" width="24" height="18" rx="3" fill="#dfe5ec"/>
+  <rect x="346" y="218" width="24" height="18" rx="3" fill="#3d4a5c"/>
+  <rect x="382" y="218" width="24" height="18" rx="3" fill="#dfe5ec"/>
+  <rect x="238" y="246" width="24" height="18" rx="3" fill="#3d4a5c"/>
+  <rect x="274" y="246" width="24" height="18" rx="3" fill="#dfe5ec"/>
+  <rect x="310" y="246" width="24" height="18" rx="3" fill="#dfe5ec"/>
+  <rect x="346" y="246" width="24" height="18" rx="3" fill="#dfe5ec"/>
+  <rect x="382" y="246" width="24" height="18" rx="3" fill="#dfe5ec"/>
+  <rect x="238" y="274" width="24" height="18" rx="3" fill="#dfe5ec"/>
+  <rect x="274" y="274" width="24" height="18" rx="3" fill="#dfe5ec"/>
+  <rect x="310" y="274" width="24" height="18" rx="3" fill="#3d4a5c"/>
+  <rect x="346" y="274" width="24" height="18" rx="3" fill="#dfe5ec"/>
+  <rect x="382" y="274" width="24" height="18" rx="3" fill="#dfe5ec"/>
+  <g clip-path="url(#recorte)">
+    <g transform="translate(548 76) rotate(35)">
+      <rect x="-170" y="-20" width="340" height="40" fill="#b42318"/>
+      <text x="0" y="8" text-anchor="middle" font-family="system-ui, sans-serif" font-size="20" font-weight="700" letter-spacing="4" fill="#ffffff">PROVISÓRIO</text>
+    </g>
+  </g>
+</svg>
