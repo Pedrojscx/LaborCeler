@@ -71,6 +71,86 @@ O estado também pode ser consultado em `http://localhost:3000/api/saude`.
   acompanha a porta).
 - **Banco de dados**: não é exposto no host, então não conflita com um PostgreSQL instalado na
   máquina. A aplicação fala com ele pela rede interna do Compose.
+  Para inspecioná-lo com um cliente SQL, veja [Acesso ao banco por cliente SQL](#acesso-ao-banco-por-cliente-sql).
+
+## Operação
+
+### Parar e voltar a subir (os dados são mantidos)
+
+```bash
+docker compose down                   # para e remove os containers; os dados ficam
+docker compose up -d --build --wait   # sobe de novo
+```
+
+Os dados gravados (cadastros, certificações, respostas e certificados) ficam no volume
+`dados_banco` e sobrevivem a `down`/`up` e a reinícios da máquina. A carga inicial **não** roda
+de novo: o banco continua com 12 temas e 48 questões, sem duplicar nada.
+
+Depois de `git pull`, de trocar de branch ou de mudar o código, use o mesmo
+`docker compose up -d --build --wait` (ver [Depois de atualizar o código](#depois-de-atualizar-o-código)).
+
+### Recriar o banco do zero
+
+```bash
+docker compose down -v
+docker compose up -d --build --wait
+```
+
+> **Atenção:** o `-v` apaga o volume `dados_banco` e, com ele, **todos os dados gravados**
+> (candidatos, certificações, respostas e certificados). A subida seguinte recria o esquema e
+> a carga inicial.
+
+**Alterações nos scripts `db/*.sql` só têm efeito depois de recriar o banco do zero.** Os
+scripts rodam apenas quando o banco está vazio; mudar um seed e só reiniciar o sistema não
+muda nada no banco.
+
+### Se a primeira carga falhar ou aparecer "Carga incompleta"
+
+Se um script de `db/` falhar na primeira subida (por exemplo, um seed com erro), o serviço `db`
+para com a mensagem do erro e a aplicação não sobe; veja a mensagem com `docker compose logs db`.
+Como o volume já foi criado, uma nova subida **pula** a carga e o banco fica incompleto: a
+página inicial mostra "Carga incompleta" e a verificação da carga lista o que falta. Para
+resolver, corrija o script e recrie o banco do zero (`docker compose down -v` e
+`docker compose up -d --build --wait`).
+
+### Verificar a carga e rodar os testes
+
+```bash
+docker compose exec app npm run verificar-carga          # confere a carga inicial
+docker compose exec app npm test                         # todos os testes
+docker compose exec app node --test test/saude.test.js   # um único arquivo de teste
+```
+
+A verificação imprime uma linha por regra (`OK`, `ERRO` ou `AVISO`) e termina com código `0`
+sem erros, `1` com algum `ERRO` e `2` se não conseguir conectar ao banco. Dois avisos são
+esperados: "conteúdo provisório", enquanto as questões, materiais e imagens forem provisórios,
+e "tabelas de uso com dados", depois que o portal começa a ser usado.
+
+### Acesso ao banco por cliente SQL
+
+Por padrão o banco não é exposto. Para um terminal SQL rápido, sem abrir porta nenhuma:
+
+```bash
+docker compose exec db psql -U portal -d bdcertificacao
+```
+
+Para usar um cliente gráfico (DBeaver, pgAdmin etc.), ative o arquivo de override opcional:
+
+```bash
+cp docker-compose.override.example.yml docker-compose.override.yml
+docker compose up -d --build --wait
+```
+
+Conecte em **host `127.0.0.1`, porta `5433`**, usuário `portal`, senha `portal` e banco
+`bdcertificacao` (ou os valores de `POSTGRES_*`, se tiverem sido alterados). O banco fica
+acessível só nesta máquina, nunca pela rede local, e a porta 5433 não conflita com um
+PostgreSQL instalado na 5432. O `docker-compose.override.yml` não é versionado. Para fechar o
+acesso de novo:
+
+```bash
+rm docker-compose.override.yml
+docker compose up -d --build --wait
+```
 
 ## Variáveis de ambiente
 
