@@ -36,8 +36,8 @@ arquivos em `app/public/img/` com caminho em `tbimagem.arquivo` (padrão D7).
 Compose (`docker compose exec app npm test`, que roda `node --test "test/**/*.test.js"`;
 filtros sempre por arquivo, ex.: `node --test test/saude.test.js`).
 
-**Target Platform**: Linux, macOS ou Windows com Docker Engine ≥ 24.0 (ou Docker Desktop
-≥ 4.22) e Compose ≥ v2.20.2 (research R14).
+**Target Platform**: Linux, macOS ou Windows com Docker Engine ≥ 20.10 e Compose ≥ v2.2.1
+(ou Docker Desktop ≥ 4.3); healthchecks só com `start_period` (research R14).
 
 **Project Type**: aplicação web (API + front estático no mesmo processo, mesma origem).
 

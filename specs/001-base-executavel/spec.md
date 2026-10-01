@@ -137,7 +137,7 @@ conteúdo não mudaram.
 - **FR-004**: O conteúdo inicial MUST conter exatamente 12 temas, com ordem de 1 a 12, nome e
   descrição (RF05).
 - **FR-005**: O conteúdo inicial MUST conter exatamente 4 questões por tema (48 no total), cada
-  uma com enunciado e uma imagem exclusiva com texto alternativo.
+  uma com enunciado e uma imagem exclusiva com texto alternativo (RP06).
 - **FR-006**: Cada questão MUST ter exatamente 4 alternativas, identificadas por A, B, C e D,
   com exatamente uma correta (RF08).
 - **FR-007**: Cada tema MUST ter ao menos um material de estudo (RF07).

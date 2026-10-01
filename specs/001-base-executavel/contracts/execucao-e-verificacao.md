@@ -35,7 +35,8 @@ Todas opcionais na 001: sem `.env`, valem os padrões (FR-015). `.env.example` l
 
 ## Versões mínimas
 
-Docker Engine ≥ 24.0 (ou Docker Desktop ≥ 4.22) e Docker Compose ≥ v2.20.2 (research R14).
+Docker Engine ≥ 20.10 e Docker Compose ≥ v2.2.1 (ou Docker Desktop ≥ 4.3), research R14. Os
+healthchecks usam só `start_period`; `start_interval` exigiria Engine ≥ 25.0 e Compose ≥ v2.20.2.
 
 ## Acesso opcional ao banco por cliente SQL
 

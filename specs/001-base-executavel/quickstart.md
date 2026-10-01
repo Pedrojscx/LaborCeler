@@ -6,7 +6,7 @@ regras da carga em [data-model.md](data-model.md).
 
 ## Pré-requisitos
 
-- Git, Docker Engine ≥ 24.0 (ou Docker Desktop ≥ 4.22) e Docker Compose ≥ v2.20.2
+- Git, Docker Engine ≥ 20.10 e Docker Compose ≥ v2.2.1 (ou Docker Desktop ≥ 4.3)
   (`docker version`, `docker compose version`; research R14).
 - Nenhum Node.js, PostgreSQL ou `.env` necessário na máquina.
 - Porta 3000 livre (ou outra, via `PORT`).

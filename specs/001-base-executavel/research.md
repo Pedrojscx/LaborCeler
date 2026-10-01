@@ -144,7 +144,9 @@ detalhe e as armadilhas encontradas ao encaixar essa stack na spec.
   `tbimagem.arquivo` existe em `app/public` (resolvida por `path.resolve(__dirname,
   '../../public')`, ver R8). Também confere que `tbtema.descricao` e `tbquestao.enunciado` não
   ficam vazios após `trim` (o DDL garante `not null`, mas aceita `''`). Exposto de duas formas: comando
-  `docker compose exec app npm run verificar-carga` (FR-016) e teste `node:test`.
+  `docker compose exec app npm run verificar-carga` (FR-016) e teste `node:test`. Cada consulta
+  é uma constante nomeada `{ nome, sql }` e a função `consultar` recebe o objeto inteiro; nos
+  testes, um `consultar` falso responde pelo `nome`, sem interpretar o SQL.
 - **Rationale**: o banco não enxerga os arquivos do app, então só o container do app consegue
   verificar FR-008. Um módulo só evita duas implementações divergentes.
 - **Alternatives considered**: script `.sql` rodado no `db` (não confere arquivos); checagem
@@ -172,24 +174,32 @@ transversal (RNF06).
 
 ## R14. Versões mínimas de Docker e Compose
 
-- **Decision**: o README exige **Docker Engine ≥ 24.0** (ou Docker Desktop ≥ 4.22) e
-  **Docker Compose ≥ v2.20.2** (plugin `docker compose`, não o `docker-compose` v1).
-- **Rationale** (documentação oficial do Docker e notas de versão do Compose, consultadas em
-  01/10/2026):
+- **Decision**: o README exige **Docker Engine ≥ 20.10** e **Docker Compose ≥ v2.2.1**
+  (plugin `docker compose`, não o `docker-compose` v1), ou **Docker Desktop ≥ 4.3**, que traz
+  esse par (Engine 20.10.11 + Compose 2.2.1). O healthcheck usa só `start_period`; **não**
+  usar `start_interval` sem antes subir o piso (ver abaixo).
+- **Rationale** (documentação oficial do Docker, Compose Specification e notas de versão,
+  conferidas em 01/10/2026):
   - `depends_on` com `condition: service_healthy` faz parte da sintaxe longa da Compose
     Specification desde o início do Compose v2; a referência
-    (docs.docker.com/reference/compose-file/services, seção `depends_on`) não registra versão
-    mínima para `condition`, só para os campos `restart` (2.17.0) e `required` (2.20.0), que
-    esta feature não usa.
+    (docs.docker.com/reference/compose-file/services, seção `depends_on`) só registra versão
+    mínima para `restart` (2.17.0) e `required` (2.20.0), que esta feature não usa.
   - `docker compose up --wait` entrou no Compose v2.1.1 ("Introduce up --wait condition",
-    docker/compose#8777).
-  - Os campos de duração do `healthcheck` (`interval`, `timeout`, `start_period`) constam como
-    introduzidos no Compose v2.20.2 na mesma referência; esta feature usa `start_period` nos
-    dois serviços, então esse é o piso efetivo.
-  - O Docker Desktop 4.22.0 traz Compose v2.20.2 e Docker Engine 24.0.5; usar o par
-    Engine 24.0 / Compose 2.20.2 dá um piso conservador e coerente para Linux, macOS e Windows.
-- **Alternatives considered**: exigir só "Compose v2" (vago, não atende FR-014); piso em
-  v2.1.1 (`--wait`), que não cobre o `start_period` usado.
+    docker/compose#8777); é o recurso que fixa o piso do Compose. O v2.2.0 só corrigiu um
+    erro de digitação nesse código (docker/compose#8888); o piso v2.2.1 é a versão do Docker
+    Desktop 4.3 e dá uma pequena margem.
+  - `start_period` já existe no Compose v2.0.0 (compose-go v1.0.1, `HealthCheckConfig.StartPeriod`
+    e `start_period` no schema) e no Engine desde a 17.05. A nota "Introduced in Docker Compose
+    version 2.20.2" da referência de `healthcheck` vale para `start_interval`, adicionado à
+    Compose Specification em 13/07/2023 (compose-spec#383), seis dias antes do v2.20.2.
+  - `start_interval` também exige **Docker Engine 25.0** (referência do Dockerfile,
+    HEALTHCHECK: "This option requires Docker Engine version 25.0 or later"). Se uma feature
+    futura quiser usá-lo, o piso passa a Engine ≥ 25.0 e Compose ≥ v2.20.2.
+  - Engine 20.10 é a linha distribuída com o Compose v2 nas primeiras versões do Docker
+    Desktop 4.x e atende `start_period`, healthcheck e volumes nomeados usados aqui.
+- **Alternatives considered**: exigir só "Compose v2" (vago, não atende FR-014); Engine 24 /
+  Compose 2.20.2 (primeira versão desta decisão, baseada numa leitura errada da nota de
+  versão; exigiria atualização sem necessidade); Compose v2.1.1 exato (sem margem).
 
 ## R15. Healthcheck do app
 
