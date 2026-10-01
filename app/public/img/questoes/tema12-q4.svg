@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" width="640" height="360" role="img" aria-labelledby="titulo">
+  <title id="titulo">Ilustração provisória da questão 4 do tema 12, Qualidade em Projetos Ágeis: escudo com marca de verificação</title>
+  <defs>
+    <clipPath id="recorte">
+      <rect x="16" y="16" width="608" height="328" rx="12"/>
+    </clipPath>
+  </defs>
+  <rect width="640" height="360" fill="#f4f6f8"/>
+  <rect x="16" y="16" width="608" height="328" rx="12" fill="#ffffff" stroke="#d5dbe3" stroke-width="2"/>
+  <text x="40" y="60" font-family="system-ui, sans-serif" font-size="26" font-weight="700" fill="#1c2430">Qualidade em Projetos Ágeis</text>
+  <text x="40" y="92" font-family="system-ui, sans-serif" font-size="18" fill="#4a5565">Tema 12 · Questão 4 de 4</text>
+  <path d="M 320 132 L 400 162 V 222 C 400 268 365 298 320 314 C 275 298 240 268 240 222 V 162 Z" fill="#6b2f8a"/>
+  <path d="M 285 224 L 312 251 L 360 197" fill="none" stroke="#ffffff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <g clip-path="url(#recorte)">
+    <g transform="translate(548 76) rotate(35)">
+      <rect x="-170" y="-20" width="340" height="40" fill="#b42318"/>
+      <text x="0" y="8" text-anchor="middle" font-family="system-ui, sans-serif" font-size="20" font-weight="700" letter-spacing="4" fill="#ffffff">PROVISÓRIO</text>
+    </g>
+  </g>
+</svg>

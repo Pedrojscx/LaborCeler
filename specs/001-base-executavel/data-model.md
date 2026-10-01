@@ -85,9 +85,9 @@ na carga, Princípio VI).
 | Regra (spec) | Banco (DDL) | Verificação (FR-016) |
 |---|---|---|
 | 12 temas, ordem 1–12 (FR-004) | `check (ordem between 1 and 12)`, `unique` | contagem = 12 e nomes da seção 6 |
-| descrição do tema preenchida (FR-004) | `not null` (aceita `''`) | `trim(descricao) <> ''` |
+| descrição do tema preenchida (FR-004) | `not null` (aceita `''`) | não vazia após `trim` (feito em JS sobre a consulta nomeada; também rejeita só tabulações ou quebras de linha) |
 | 4 questões por tema (FR-005) | — | contagem por tema = 4 |
-| enunciado preenchido (FR-005) | `not null` (aceita `''`) | `trim(enunciado) <> ''` |
+| enunciado preenchido (FR-005) | `not null` (aceita `''`) | não vazio após `trim` (idem) |
 | imagem exclusiva por questão (FR-005) | `unique (idimagem)` | — |
 | 4 alternativas A–D (FR-006) | `check letra`, `unique (idquestao, letra)` | contagem por questão = 4 |
 | exatamente 1 correta (FR-006) | índice parcial garante "no máximo 1" | "pelo menos 1" por questão |

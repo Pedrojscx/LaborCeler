@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" width="640" height="360" role="img" aria-labelledby="titulo">
+  <title id="titulo">Ilustração provisória da questão 1 do tema 6, Artefatos do Scrum: três blocos empilhados representando os artefatos do Scrum</title>
+  <defs>
+    <clipPath id="recorte">
+      <rect x="16" y="16" width="608" height="328" rx="12"/>
+    </clipPath>
+  </defs>
+  <rect width="640" height="360" fill="#f4f6f8"/>
+  <rect x="16" y="16" width="608" height="328" rx="12" fill="#ffffff" stroke="#d5dbe3" stroke-width="2"/>
+  <text x="40" y="60" font-family="system-ui, sans-serif" font-size="26" font-weight="700" fill="#1c2430">Artefatos do Scrum</text>
+  <text x="40" y="92" font-family="system-ui, sans-serif" font-size="18" fill="#4a5565">Tema 06 · Questão 1 de 4</text>
+  <rect x="210" y="145" width="200" height="50" rx="8" fill="#1f4e8c" fill-opacity="0.45"/>
+  <rect x="230" y="205" width="200" height="50" rx="8" fill="#1f4e8c" fill-opacity="0.7"/>
+  <rect x="250" y="265" width="200" height="50" rx="8" fill="#1f4e8c"/>
+  <g clip-path="url(#recorte)">
+    <g transform="translate(548 76) rotate(35)">
+      <rect x="-170" y="-20" width="340" height="40" fill="#b42318"/>
+      <text x="0" y="8" text-anchor="middle" font-family="system-ui, sans-serif" font-size="20" font-weight="700" letter-spacing="4" fill="#ffffff">PROVISÓRIO</text>
+    </g>
+  </g>
+</svg>

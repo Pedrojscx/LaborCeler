@@ -143,7 +143,9 @@ detalhe e as armadilhas encontradas ao encaixar essa stack na spec.
   imagem exclusiva por questão com texto alternativo) e checagem de que cada
   `tbimagem.arquivo` existe em `app/public` (resolvida por `path.resolve(__dirname,
   '../../public')`, ver R8). Também confere que `tbtema.descricao` e `tbquestao.enunciado` não
-  ficam vazios após `trim` (o DDL garante `not null`, mas aceita `''`). Exposto de duas formas: comando
+  ficam vazios após `trim` (o DDL garante `not null`, mas aceita `''`); essa checagem é feita em JS
+  sobre o valor devolvido pela consulta nomeada, para que o `consultar` falso dos testes a exercite
+  sem interpretar SQL. Exposto de duas formas: comando
   `docker compose exec app npm run verificar-carga` (FR-016) e teste `node:test`. Cada consulta
   é uma constante nomeada `{ nome, sql }` e a função `consultar` recebe o objeto inteiro; nos
   testes, um `consultar` falso responde pelo `nome`, sem interpretar o SQL.
