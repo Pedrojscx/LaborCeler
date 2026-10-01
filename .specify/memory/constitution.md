@@ -33,7 +33,7 @@ Projeto acadêmico FATEC — ABP 1º DSM 2026-2.
 - É PROIBIDO usar ORM ou geradores de consulta que ocultem o SQL.
 - Toda consulta com dados externos DEVE ser parametrizada; concatenação de valores em SQL é
   proibida.
-- O esquema oficial é o `bdcertificacao.sql` do projeto. Qualquer mudança no esquema DEVE vir
+- O esquema oficial é o `db/01-ddl.sql` do projeto. Qualquer mudança no esquema DEVE vir
   acompanhada da atualização do modelo lógico no mesmo PR.
 
 **Justificativa**: requisito da disciplina, prevenção de SQL injection e fonte única de
@@ -106,7 +106,7 @@ estudada em aula.
 
 ## Restrições Técnicas e de Escopo
 
-- **Banco**: PostgreSQL; esquema em `bdcertificacao.sql`; carga inicial de questões
+- **Banco**: PostgreSQL; esquema em `db/01-ddl.sql`; carga inicial de questões
   versionada no repositório e aplicada automaticamente pelo container.
 - **Front-end**: HTML, CSS e JavaScript puros, servidos pela aplicação ou por container
   próprio.
@@ -146,4 +146,4 @@ usado como revisor nessa conferência.
   desvios DEVEM ser registrados e justificados no plano, com alternativa mais simples
   considerada.
 
-**Version**: 2.0.0 | **Ratified**: 2026-09-30 | **Last Amended**: 2026-09-30
+**Version**: 2.0.1 | **Ratified**: 2026-09-30 | **Last Amended**: 2026-09-30
