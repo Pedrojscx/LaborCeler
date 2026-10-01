@@ -101,15 +101,19 @@ Esperado: `0` (dados apagados) e verificação da carga novamente toda `OK`.
 ## Cenário 6: acesso opcional ao banco
 
 ```bash
-docker compose port db 5432     # sem override: nenhuma porta publicada (erro)
+docker compose port db 5432     # sem override: erro (ex.: "invalid IP:0"), porta não publicada
 cp docker-compose.override.example.yml docker-compose.override.yml
 docker compose up -d --build --wait
 docker compose port db 5432     # esperado: 127.0.0.1:5433
 rm docker-compose.override.yml && docker compose up -d --build --wait
 ```
 
-Esperado: com o override, um cliente SQL conecta em `127.0.0.1:5433`; de outra máquina da rede,
-não conecta. Sem o override, a porta volta a ficar fechada.
+Esperado:
+- Sem o override, `docker compose port db 5432` **retorna erro** (por exemplo, `invalid IP:0`), o
+  que indica que a porta do banco não está publicada no host.
+- Com o override, o comando retorna `127.0.0.1:5433`, `ss -ltn` mostra a escuta só em
+  `127.0.0.1` e um cliente SQL conecta em `127.0.0.1:5433`; de outra máquina da rede, não conecta.
+- Depois de apagar o override e subir de novo, o comando volta a retornar erro (porta fechada).
 
 ## Testes automatizados
 
