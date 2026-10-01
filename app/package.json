@@ -1,0 +1,23 @@
+{
+  "name": "portal-certificacao",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Portal de Certificação em Metodologias Ágeis (ABP FATEC 1º DSM)",
+  "type": "commonjs",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test \"test/**/*.test.js\"",
+    "verificar-carga": "node src/verificacao/cli.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "pg": "^8.16.0"
+  },
+  "devDependencies": {
+    "supertest": "^7.1.0"
+  }
+}
