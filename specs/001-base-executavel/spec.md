@@ -61,8 +61,9 @@ fornecida pelo projeto) e conferir as contagens e regras de integridade do conte
    **Then** existem exatamente 12 temas, numerados de 1 a 12, com os nomes definitivos da
    tabela do desafio e uma descrição cada.
 2. **Given** a primeira inicialização concluída,
-   **When** questões, alternativas, materiais e imagens são exibidos,
-   **Then** é possível identificar que são conteúdo provisório.
+   **When** questões, materiais e imagens são exibidos,
+   **Then** é possível identificar que são conteúdo provisório; as alternativas são
+   consideradas provisórias junto com a questão a que pertencem, sem marca própria.
 3. **Given** a primeira inicialização concluída,
    **When** as questões são conferidas,
    **Then** cada tema possui exatamente 4 questões, cada questão tem enunciado, uma imagem
@@ -113,7 +114,9 @@ conteúdo não mudaram.
 - A aplicação tenta se conectar antes de o banco terminar de inicializar: a aplicação aguarda
   o banco ficar pronto em vez de falhar definitivamente.
 - A carga inicial falha no meio (ex.: questão com duas alternativas corretas): a inicialização
-  é interrompida com mensagem clara e o banco não fica com conteúdo parcial considerado válido.
+  é interrompida com mensagem clara e o banco não fica com conteúdo parcial considerado válido;
+  se o sistema for iniciado de novo sobre esse banco, a página inicial e a verificação de
+  saúde sinalizam "carga incompleta" (FR-013) e o README indica como recriar o banco.
 - Uma questão aponta para um arquivo de imagem inexistente: a verificação de conteúdo acusa o
   problema antes da entrega.
 - Pré-requisito ausente na máquina (ex.: ferramenta de execução não instalada): o README lista
@@ -145,9 +148,10 @@ conteúdo não mudaram.
   1 Fundamentos da Agilidade, 2 Manifesto Ágil, 3 Introdução ao Scrum, 4 Papéis do Scrum,
   5 Eventos do Scrum, 6 Artefatos do Scrum, 7 User Stories, 8 Gestão do Product Backlog,
   9 Kanban, 10 Planejamento Ágil, 11 Métricas Ágeis, 12 Qualidade em Projetos Ágeis. Questões, alternativas, materiais de estudo e imagens MUST ser
-  conteúdo provisório, claramente identificável como tal, mas no volume final completo e
-  obedecendo a todas as regras de FR-004 a FR-008, para que a verificação de FR-016 rode
-  contra o volume real.
+  conteúdo provisório no volume final completo e obedecendo a todas as regras de FR-004 a
+  FR-008, para que a verificação de FR-016 rode contra o volume real. Questões, materiais e
+  imagens MUST ser claramente identificáveis como provisórios; as alternativas são
+  consideradas provisórias quando a sua questão é provisória e não recebem marca própria.
 - **FR-009a**: As imagens provisórias MUST ser de autoria própria do projeto (ex.: ilustrações
   vetoriais geradas), sem dependência de licença de terceiros.
 - **FR-009b**: O conteúdo provisório MUST ficar isolado do esquema, de modo que a futura carga
@@ -157,7 +161,8 @@ conteúdo não mudaram.
   ainda não existe; reinicializações NÃO DEVEM recriar tabelas nem duplicar conteúdo.
 - **FR-012**: A aplicação MUST aguardar o banco estar pronto antes de atender requisições.
 - **FR-013**: A aplicação MUST exibir uma página inicial que confirme estar em funcionamento e
-  conectada ao banco.
+  conectada ao banco, e que sinalize "carga incompleta" quando o conteúdo carregado diferir de
+  12 temas, 48 questões e 192 alternativas.
 - **FR-014**: O README MUST conter uma seção de instalação (RNF06) com: pré-requisitos (com
   versões mínimas), o comando único de inicialização, o endereço de acesso, as portas
   utilizadas, as variáveis de ambiente (nome, finalidade e valor padrão), como parar o sistema
@@ -196,7 +201,8 @@ conteúdo não mudaram.
 - **SC-004**: Após 3 ciclos seguidos de parar e reiniciar o sistema, 100% dos registros
   gravados continuam presentes e as contagens de conteúdo não mudam.
 - **SC-005**: Após uma reinicialização com o banco já existente, o portal volta a responder em
-  até 1 minuto.
+  até 1 minuto, medido até a verificação de saúde do portal (página de status e banco
+  conectado) passar, e não apenas até os serviços estarem iniciados.
 
 ## Assumptions
 

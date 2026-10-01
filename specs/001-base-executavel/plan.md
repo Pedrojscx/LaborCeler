@@ -10,12 +10,15 @@
 
 Subir o portal inteiro com `docker compose up` a partir de um clone limpo. Dois serviços: `db`
 (PostgreSQL 16, imagem oficial, volume nomeado, healthcheck por TCP) e `app` (Node 24 LTS +
-Express 5, servindo a API em `/api` e o front estático em `/`). Na primeira subida, o banco
+Express 5, servindo a API em `/api` e o front estático em `/`, com healthcheck em `/api/saude`
+via `fetch` nativo). Na primeira subida, o banco
 executa `db/01-ddl.sql` (esquema oficial, sem mudanças) e dois seeds SQL escritos à mão: os 12
 temas definitivos com materiais provisórios, e 48 questões / 192 alternativas provisórias
 ligadas a SVGs de autoria própria em `app/public/img/`. Um módulo de verificação confere a
 carga (contagens, regras e arquivos de imagem), avisa quantas questões, materiais e imagens
 ainda estão marcados como `[PROVISÓRIO]` e roda como comando e como teste `node:test`.
+`/api/saude` e a página inicial sinalizam "carga incompleta" quando as contagens diferem de
+12 / 48 / 192 (resíduo de uma primeira carga que falhou, research R3).
 O README documenta instalação, variáveis, reset e o aviso de que mudar seed exige recriar o
 banco.
 
@@ -30,14 +33,17 @@ HTML/CSS/JS puros no front.
 arquivos em `app/public/img/` com caminho em `tbimagem.arquivo` (padrão D7).
 
 **Testing**: `node:test` + `supertest`, executados no container do app contra o banco do
-Compose (`docker compose exec app npm test`).
+Compose (`docker compose exec app npm test`, que roda `node --test "test/**/*.test.js"`;
+filtros sempre por arquivo, ex.: `node --test test/saude.test.js`).
 
-**Target Platform**: Linux, macOS ou Windows com Docker Engine/Desktop e Compose v2.
+**Target Platform**: Linux, macOS ou Windows com Docker Engine ≥ 24.0 (ou Docker Desktop
+≥ 4.22) e Compose ≥ v2.20.2 (research R14).
 
 **Project Type**: aplicação web (API + front estático no mesmo processo, mesma origem).
 
 **Performance Goals**: portal no ar em ≤ 10 min seguindo o README (SC-001); volta a responder
-em ≤ 1 min após reinício com banco existente (SC-005).
+em ≤ 1 min após reinício com banco existente (SC-005), medido por `docker compose up -d
+--wait`, que só retorna quando o healthcheck do `app` (`GET /api/saude`) passa (research R15).
 
 **Constraints**: um único comando, sem `.env` obrigatório; sem ORM; seed escrito à mão;
 esquema oficial intocado; por padrão nenhuma porta do banco publicada no host (acesso
@@ -61,7 +67,7 @@ uso local para desenvolvimento e banca.
 | VII. Escopo de MVP | Base para todo o MVP; nenhum extra (painel, PDF, recuperação de senha). Dependências não usadas adiadas (research R13). | ✅ |
 | VIII. Rastreabilidade | Requisitos citados na spec, neste plano e a citar nas tarefas/commits. | ✅ |
 | IX. Testes de regras críticas | Regras críticas (sorteio, 150 s etc.) não estão nesta feature; a verificação da carga tem teste automatizado. | ✅ |
-| X. Padrões | Identificadores, arquivos e mensagens em português; esquema já segue `tbxxx`/`id`/`idtabela`. | ✅ |
+| X. Padrões (2.0.2) | Identificadores de domínio, banco, mensagens e textos ao usuário em português; nomes estruturais da stack (`server.js`, `app.js`, `config.js`, `db.js`, `routes/`, `repositories/`, `test/`) seguem a convenção Node/Express, como a emenda 2.0.2 permite; esquema já segue `tbxxx`/`id`/`idtabela`. | ✅ |
 | DoD / API | Endpoint novo `/api/saude` documentado em `docs/openapi.yaml`. | ✅ |
 
 **Resultado pré-pesquisa**: aprovado, sem violações.
@@ -84,7 +90,7 @@ specs/001-base-executavel/
 │   └── execucao-e-verificacao.md
 ├── checklists/
 │   └── requirements.md
-└── tasks.md              # /speckit-tasks (ainda não criado)
+└── tasks.md
 ```
 
 ### Source Code (repository root)
@@ -95,7 +101,6 @@ specs/001-base-executavel/
 ├── docker-compose.override.example.yml   # opcional: banco em 127.0.0.1:5433
 ├── .env.example                  # PORT, PUBLIC_BASE_URL, DATABASE_URL, JWT_SECRET (vazio), POSTGRES_*
 ├── .gitignore                    # .env, node_modules/, pgdata/ + docker-compose.override.yml
-├── .dockerignore                 # node_modules, .git, specs, docs
 ├── README.md                     # instalação (FR-014, FR-014a)
 ├── docs/
 │   ├── dossie-sdd-borb.md
@@ -107,19 +112,20 @@ specs/001-base-executavel/
 │   └── 03-seed-questoes.sql
 └── app/
     ├── Dockerfile
+    ├── .dockerignore             # node_modules, npm-debug.log, .env (contexto de build é app/)
     ├── package.json              # scripts: start, test, verificar-carga
     ├── package-lock.json
     ├── src/
     │   ├── server.js             # sobe o Express na PORT
     │   ├── app.js                # monta static, rotas e 404 JSON (testável sem listen)
-    │   ├── config.js             # lê variáveis de ambiente com padrões
+    │   ├── config.js             # lê variáveis de ambiente com padrões (PUBLIC_BASE_URL deriva de PORT)
     │   ├── db.js                 # Pool do pg
     │   ├── routes/
     │   │   └── saude.js          # GET /api/saude
     │   ├── repositories/
-    │   │   └── conteudo-repository.js   # contagens (SQL puro)
+    │   │   └── conteudo-repository.js   # contagens e carga completa (SQL puro)
     │   └── verificacao/
-    │       ├── verificar-carga.js       # regras da carga + arquivos (research R11)
+    │       ├── verificar-carga.js       # regras da carga + arquivos em path.resolve(__dirname, '../../public') (research R11)
     │       └── cli.js                   # saída OK/ERRO/AVISO e código de saída
     ├── scripts/
     │   └── gerar-svgs-provisorios.js    # ferramenta de dev; saída commitada

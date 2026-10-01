@@ -6,7 +6,8 @@ regras da carga em [data-model.md](data-model.md).
 
 ## Pré-requisitos
 
-- Git e Docker com o plugin Compose v2 (`docker compose version`).
+- Git, Docker Engine ≥ 24.0 (ou Docker Desktop ≥ 4.22) e Docker Compose ≥ v2.20.2
+  (`docker version`, `docker compose version`; research R14).
 - Nenhum Node.js, PostgreSQL ou `.env` necessário na máquina.
 - Porta 3000 livre (ou outra, via `PORT`).
 
@@ -14,15 +15,16 @@ regras da carga em [data-model.md](data-model.md).
 
 ```bash
 git clone <url-do-repositório> portal-teste && cd portal-teste
-time docker compose up -d
+time docker compose up -d --wait
 docker compose ps
 ```
 
 Esperado:
-- `db` aparece como `healthy` e `app` como `running`, sem nenhum passo além do `up`.
+- `db` e `app` aparecem como `healthy`, sem nenhum passo além do `up` (o `--wait` só serve para
+  cronometrar; `docker compose up` sozinho também sobe tudo).
 - `http://localhost:3000` abre a página inicial mostrando "Portal no ar" e "Banco conectado".
 - `curl -s localhost:3000/api/saude` devolve `status: ok`, `banco: ok`, 12 temas, 48 questões,
-  192 alternativas, ≥ 12 materiais e `provisorio: true`.
+  192 alternativas, ≥ 12 materiais, `provisorio: true` e `cargaCompleta: true`.
 
 ## Cenário 2: conteúdo carregado e íntegro (História 2, SC-002, SC-003)
 
@@ -43,7 +45,8 @@ Esperado:
 ```bash
 docker compose exec db psql -U portal -d bdcertificacao -c \
   "insert into tbcandidato (cpf, nome, email, senha, data_aceite_termos)
-   values ('00000000191', 'Teste Persistência', 'teste@exemplo.com', 'x', now());"
+   values ('00000000191', 'Teste Persistência', 'teste@exemplo.com',
+           '\$2a\$10\$iF3Uyk5uDGHThv1WHmrEdOYjdV8034sc9IpVMoQ7mPZHP.2tH4Fb6', now());"
 for i in 1 2 3; do docker compose down && docker compose up -d --wait; done
 docker compose exec db psql -U portal -d bdcertificacao -c "select nome from tbcandidato;"
 docker compose exec app npm run verificar-carga
@@ -53,7 +56,11 @@ Esperado:
 - O candidato de teste continua presente após 3 ciclos.
 - A verificação continua com 12 / 48 / 192 (sem duplicação) e mostra `AVISO` de tabelas de uso
   não vazias.
-- Cada `up -d --wait` termina em até 1 minuto.
+- Cada `up -d --wait` termina em até 1 minuto. Como o `--wait` espera o healthcheck do `app`
+  (`GET /api/saude`), isso mede o portal respondendo com o banco conectado, não só os
+  containers iniciados (SC-005).
+- O candidato de teste usa um hash bcrypt fixo de exemplo (custo 10, da senha fictícia
+  `senha-de-exemplo`; nunca senha em texto puro, Princípio VI); ele é apagado no cenário 4.
 
 ## Cenário 4: recriar o banco do zero (FR-014, FR-014a)
 
@@ -68,11 +75,14 @@ Esperado: `0` (dados apagados) e verificação da carga novamente toda `OK`.
 
 - **Carga com erro**: em uma cópia local, duplicar uma alternativa correta no
   `03-seed-questoes.sql`, rodar `docker compose down -v && docker compose up`. O `db` para com
-  a mensagem do índice `ux_alternativa_correta` e o `app` não sobe. Desfazer a alteração e
-  rodar `down -v` de novo.
+  a mensagem do índice `ux_alternativa_correta` e o `app` não sobe. Rodar `docker compose up -d`
+  de novo **sem** `-v`: o initdb é pulado, o `app` sobe e `/api/saude` mostra
+  `cargaCompleta: false` (12 temas, 0 questões) e a página inicial mostra "Carga incompleta".
+  Desfazer a alteração e rodar `down -v` de novo.
 - **Porta ocupada**: `PORT=3100 docker compose up -d` e acessar `http://localhost:3100`.
-- **Banco fora do ar**: `docker compose stop db`; `/api/saude` responde `503`; `docker compose
-  start db` e o endpoint volta a `200` sem reiniciar o app.
+- **Banco fora do ar**: `docker compose stop db`; `/api/saude` responde `503` e o `app` passa a
+  `unhealthy` em `docker compose ps`; `docker compose start db` e o endpoint volta a `200` (e o
+  `app` a `healthy`) sem reiniciar o app.
 
 ## Cenário 6: acesso opcional ao banco
 
@@ -93,4 +103,5 @@ não conecta. Sem o override, a porta volta a ficar fechada.
 docker compose exec app npm test
 ```
 
-Esperado: todos os testes passam (verificação da carga e `/api/saude`).
+Esperado: todos os testes passam (verificação da carga, `/api/saude` e entrega de imagem).
+Para rodar um só arquivo: `docker compose exec app node --test test/saude.test.js`.

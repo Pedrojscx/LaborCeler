@@ -8,11 +8,13 @@ caminhos públicos e saída da verificação. O README (FR-014) é escrito a par
 | Comando | Efeito | Requisito |
 |---|---|---|
 | `docker compose up` (ou `up -d`) | constrói a imagem do app se preciso, sobe `db` e `app`; na primeira vez cria esquema e carga | FR-001 a FR-003 |
+| `docker compose up -d --wait` | idem, e só retorna quando `db` e `app` estão `healthy` (o healthcheck do `app` chama `GET /api/saude`) | SC-005 |
 | `docker compose up --build` | idem, reconstruindo o app após mudar código ou arquivos de `app/public` | — |
 | `docker compose down` | para e remove os containers; **mantém** os dados | FR-010 |
 | `docker compose down -v` | para e **apaga** o volume `dados_banco`; a próxima subida recria esquema e carga | FR-014, FR-014a |
 | `docker compose exec app npm run verificar-carga` | roda a verificação da carga (abaixo) | FR-016 |
-| `docker compose exec app npm test` | roda os testes `node:test` | Princípio IX, DoD |
+| `docker compose exec app npm test` | roda todos os testes: `node --test "test/**/*.test.js"` | Princípio IX, DoD |
+| `docker compose exec app node --test test/saude.test.js` | roda um arquivo de teste (filtro sempre por arquivo, nunca por nome de teste) | — |
 
 ## Variáveis de ambiente
 
@@ -21,7 +23,7 @@ Todas opcionais na 001: sem `.env`, valem os padrões (FR-015). `.env.example` l
 | Variável | Serviço | Padrão | Finalidade |
 |---|---|---|---|
 | `PORT` | app | `3000` | porta do portal, publicada no host com o mesmo número |
-| `PUBLIC_BASE_URL` | app | `http://localhost:3000` | endereço público do portal (usado no QR Code a partir da feature 005) |
+| `PUBLIC_BASE_URL` | app | `http://localhost:${PORT}` (derivado de `PORT` quando não definida) | endereço público do portal (usado no QR Code a partir da feature 005) |
 | `DATABASE_URL` | app | `postgres://portal:portal@db:5432/bdcertificacao` | conexão do app com o banco |
 | `JWT_SECRET` | app | — (sem padrão; vazio no `.env.example`) | assinatura de sessão; não usada na 001, regra definida na 002 (research P1) |
 | `POSTGRES_USER` | db | `portal` | usuário criado na primeira subida |
@@ -30,6 +32,10 @@ Todas opcionais na 001: sem `.env`, valem os padrões (FR-015). `.env.example` l
 
 `POSTGRES_*` só têm efeito na primeira subida (volume vazio) e precisam bater com
 `DATABASE_URL`. Por padrão a porta do banco não é publicada no host.
+
+## Versões mínimas
+
+Docker Engine ≥ 24.0 (ou Docker Desktop ≥ 4.22) e Docker Compose ≥ v2.20.2 (research R14).
 
 ## Acesso opcional ao banco por cliente SQL
 
@@ -58,8 +64,8 @@ Rota `/api/*` inexistente responde `404` em JSON (`{"erro": "Rota não encontrad
 - Uma linha por regra, prefixada por `OK`, `ERRO` ou `AVISO`, por exemplo:
 
   ```text
-  OK    12 temas com ordem de 1 a 12 e nomes oficiais
-  OK    4 questões em cada tema (48)
+  OK    12 temas com ordem de 1 a 12, nomes oficiais e descrição preenchida
+  OK    4 questões em cada tema (48), todas com enunciado preenchido
   OK    4 alternativas A-D em cada questão (192)
   OK    exatamente 1 alternativa correta em cada questão
   OK    pelo menos 1 material em cada tema
@@ -69,7 +75,10 @@ Rota `/api/*` inexistente responde `404` em JSON (`{"erro": "Rota não encontrad
   AVISO conteúdo provisório: 48 questões, 12 materiais e 60 imagens marcados com [PROVISÓRIO]
   ```
 
-- `ERRO` lista o que falhou (ex.: `tema 7 tem 3 questões`, `arquivo ausente: img/questoes/tema07-q2.svg`).
+- `ERRO` lista o que falhou (ex.: `tema 7 tem 3 questões`, `questão 12 com enunciado vazio`,
+  `arquivo ausente: img/questoes/tema07-q2.svg`).
+- Os arquivos são procurados na pasta pública resolvida a partir do módulo
+  (`path.resolve(__dirname, '../../public')`), independentemente do diretório de trabalho.
 - Código de saída: `0` sem nenhum `ERRO` (avisos não falham); `1` com pelo menos um `ERRO`;
   `2` se não conseguir conectar ao banco.
 - O aviso de conteúdo provisório sempre informa as três contagens e só desaparece quando

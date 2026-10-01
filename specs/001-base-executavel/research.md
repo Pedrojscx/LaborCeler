@@ -91,7 +91,8 @@ detalhe e as armadilhas encontradas ao encaixar essa stack na spec.
 - **Decision**: enunciado das questões começa com `[PROVISÓRIO]`; título do material começa
   com `[PROVISÓRIO]`; todo SVG traz a faixa "PROVISÓRIO"; `tbimagem.credito` começa com
   `[PROVISÓRIO]` (`'[PROVISÓRIO] Autoria própria'`). Os nomes e descrições dos 12 temas **não** levam
-  marca (são definitivos).
+  marca (são definitivos). As alternativas **não** levam marca própria: são provisórias porque
+  a sua questão é provisória (FR-009).
 - **Rationale**: atende o cenário 2 da História 2 (conteúdo identificável como provisório) sem
   coluna nova no esquema. A mesma marca nas três tabelas permite à verificação contar
   questões, materiais e imagens ainda provisórios, e uma busca por `[PROVISÓRIO]` encontra tudo o que a carga
@@ -104,15 +105,20 @@ detalhe e as armadilhas encontradas ao encaixar essa stack na spec.
   inicial: `img/questoes/tema01-q1.svg`, `img/materiais/tema01.svg`. O Express serve
   `app/public` em `/`, então a URL é `/` + `arquivo`.
 - **Rationale**: o mesmo valor serve para montar a URL no front e para a verificação conferir
-  o arquivo no disco (`app/public/` + `arquivo`).
+  o arquivo no disco (`app/public/` + `arquivo`). No código, a pasta pública é sempre resolvida a
+  partir do próprio módulo (`path.resolve(__dirname, ...)`), nunca do diretório de trabalho: no
+  container o `WORKDIR` é `/app`, e um caminho relativo como `app/public` viraria
+  `/app/app/public`.
 - **Alternatives considered**: URL absoluta (quebra ao mudar host/porta); só o nome do
   arquivo (exige convenção de pasta implícita).
 
 ## R9. Variáveis de ambiente e funcionamento sem `.env`
 
-- **Decision**: o `docker-compose.yml` usa `${VAR:-padrão}` em todas as variáveis (exceto `JWT_SECRET`), então
+- **Decision**: o `docker-compose.yml` usa `${VAR:-padrão}` em todas as variáveis (exceto `JWT_SECRET`, que não é
+  repassada, e `PUBLIC_BASE_URL`, repassada com padrão vazio para o app derivá-la de `PORT`), então
   `docker compose up` funciona sem `.env` (FR-015). `.env.example` documenta: `PORT` (3000),
-  `PUBLIC_BASE_URL` (`http://localhost:3000`), `DATABASE_URL`
+  `PUBLIC_BASE_URL` (sem padrão fixo: quando não definida, o app usa `http://localhost:${PORT}`,
+  para que mudar só a porta não deixe o endereço público errado), `DATABASE_URL`
   (`postgres://portal:portal@db:5432/bdcertificacao`), `JWT_SECRET` (só documentado,
   vazio e sem valor padrão no Compose; ver pendência P1) e, além das quatro pedidas, `POSTGRES_USER`,
   `POSTGRES_PASSWORD` e `POSTGRES_DB`, que o serviço `db` precisa e que têm de bater com
@@ -135,7 +141,9 @@ detalhe e as armadilhas encontradas ao encaixar essa stack na spec.
   consultas SQL de contagem e de regra (12 temas com ordem 1–12 e nomes da seção 6; 4 questões
   por tema; 4 alternativas A–D por questão; exatamente 1 correta; ≥ 1 material por tema;
   imagem exclusiva por questão com texto alternativo) e checagem de que cada
-  `tbimagem.arquivo` existe em `app/public`. Exposto de duas formas: comando
+  `tbimagem.arquivo` existe em `app/public` (resolvida por `path.resolve(__dirname,
+  '../../public')`, ver R8). Também confere que `tbtema.descricao` e `tbquestao.enunciado` não
+  ficam vazios após `trim` (o DDL garante `not null`, mas aceita `''`). Exposto de duas formas: comando
   `docker compose exec app npm run verificar-carga` (FR-016) e teste `node:test`.
 - **Rationale**: o banco não enxerga os arquivos do app, então só o container do app consegue
   verificar FR-008. Um módulo só evita duas implementações divergentes.
@@ -145,8 +153,10 @@ detalhe e as armadilhas encontradas ao encaixar essa stack na spec.
 ## R12. Testes
 
 - **Decision**: `node:test` + `supertest` (dossiê seção 5), rodando dentro do container do app
-  contra o banco do Compose: `docker compose exec app npm test`. Os testes desta feature só
-  leem dados, então não sujam o banco.
+  contra o banco do Compose: `docker compose exec app npm test`, com o script
+  `node --test "test/**/*.test.js"` (glob entre aspas, expandido pelo próprio Node). Para rodar
+  parte dos testes, filtra-se por arquivo (`node --test test/saude.test.js`), nunca por nome de
+  teste. Os testes desta feature só leem dados, então não sujam o banco.
 - **Rationale**: banco de teste separado só passa a ser necessário quando houver testes que
   escrevem (features 002 e 004); criar agora seria antecipar estrutura (YAGNI).
 - **Alternatives considered**: Testcontainers / serviço `db_teste` no Compose (adiado para a
@@ -159,6 +169,42 @@ detalhe e as armadilhas encontradas ao encaixar essa stack na spec.
 Entram nas features que os usam. A documentação da API desta feature fica em
 `docs/openapi.yaml` (só o endpoint de saúde); servi-la em `/api/docs` é da feature
 transversal (RNF06).
+
+## R14. Versões mínimas de Docker e Compose
+
+- **Decision**: o README exige **Docker Engine ≥ 24.0** (ou Docker Desktop ≥ 4.22) e
+  **Docker Compose ≥ v2.20.2** (plugin `docker compose`, não o `docker-compose` v1).
+- **Rationale** (documentação oficial do Docker e notas de versão do Compose, consultadas em
+  01/10/2026):
+  - `depends_on` com `condition: service_healthy` faz parte da sintaxe longa da Compose
+    Specification desde o início do Compose v2; a referência
+    (docs.docker.com/reference/compose-file/services, seção `depends_on`) não registra versão
+    mínima para `condition`, só para os campos `restart` (2.17.0) e `required` (2.20.0), que
+    esta feature não usa.
+  - `docker compose up --wait` entrou no Compose v2.1.1 ("Introduce up --wait condition",
+    docker/compose#8777).
+  - Os campos de duração do `healthcheck` (`interval`, `timeout`, `start_period`) constam como
+    introduzidos no Compose v2.20.2 na mesma referência; esta feature usa `start_period` nos
+    dois serviços, então esse é o piso efetivo.
+  - O Docker Desktop 4.22.0 traz Compose v2.20.2 e Docker Engine 24.0.5; usar o par
+    Engine 24.0 / Compose 2.20.2 dá um piso conservador e coerente para Linux, macOS e Windows.
+- **Alternatives considered**: exigir só "Compose v2" (vago, não atende FR-014); piso em
+  v2.1.1 (`--wait`), que não cobre o `start_period` usado.
+
+## R15. Healthcheck do app
+
+- **Decision**: o serviço `app` tem healthcheck com o `fetch` nativo do Node 24, sem instalar
+  `curl` na imagem slim: `["CMD", "node", "-e", "fetch('http://127.0.0.1:' + (process.env.PORT
+  || 3000) + '/api/saude').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]`,
+  com `interval: 5s`, `timeout: 3s`, `retries: 5`, `start_period: 20s`.
+- **Rationale**: `docker compose up -d --wait` passa a esperar o `app` ficar `healthy`, ou seja,
+  com o portal respondendo e o banco conectado. Isso é o que SC-005 e o cenário 3 do quickstart
+  medem; sem healthcheck, `--wait` só esperaria o container estar `running`. Com o banco fora do
+  ar, `/api/saude` responde 503 e o `app` fica `unhealthy` (o processo continua vivo e volta a
+  `healthy` quando o banco retorna). Carga incompleta não torna o app `unhealthy`: ele está no
+  ar e sinaliza o problema no corpo da resposta.
+- **Alternatives considered**: `curl`/`wget` na imagem (pacote extra só para isso); medir
+  SC-005 com um laço de `curl` no host (fora do comando documentado).
 
 ## Pendências para features seguintes
 

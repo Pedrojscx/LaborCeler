@@ -37,7 +37,7 @@ Cada seed roda em `begin; ... commit;` e termina com `setval` das sequências qu
 | 12 | Qualidade em Projetos Ágeis |
 
 - `id` = `ordem` na carga inicial. `descricao`: frase curta sobre o tema (≤ 500 caracteres),
-  sem marca de provisório.
+  sem marca de provisório e não vazia após `trim` (verificado).
 
 ### tbimagem
 
@@ -46,7 +46,9 @@ Cada seed roda em `begin; ... commit;` e termina com `setval` das sequências qu
 | 1–48 | uma por questão | `img/questoes/temaNN-qK.svg` (NN = 01–12, K = 1–4) | descreve o que a imagem mostra | `[PROVISÓRIO] Autoria própria` |
 | 101–112 | uma por tema, para o material | `img/materiais/temaNN.svg` | idem | idem |
 
-- `arquivo` é relativo a `app/public/`; a URL pública é `/` + `arquivo` (research R8).
+- `arquivo` é relativo a `app/public/`; a URL pública é `/` + `arquivo` (research R8). No
+  código, a pasta é resolvida a partir do módulo (`path.resolve(__dirname, ...)`), não do
+  diretório de trabalho.
 - Regra verificada: todo `arquivo` existe em `app/public/`.
 
 ### tbmaterial (≥ 12 linhas, provisórias)
@@ -58,7 +60,8 @@ Cada seed roda em `begin; ... commit;` e termina com `setval` das sequências qu
 ### tbquestao (48 linhas, provisórias)
 
 - `id` 1–48; questão `id = (tema − 1) × 4 + K`; `idimagem` = mesmo número do `id`.
-- `enunciado` começa com `[PROVISÓRIO]`; `justificativa` preenchida (curta).
+- `enunciado` começa com `[PROVISÓRIO]` e não é vazio após `trim` (verificado); `justificativa`
+  preenchida (curta).
 - Regras verificadas: exatamente 4 por tema; `idimagem` exclusiva (já garantido por `unique`).
 
 ### tbalternativa (192 linhas, provisórias)
@@ -67,6 +70,8 @@ Cada seed roda em `begin; ... commit;` e termina com `setval` das sequências qu
   A–D nessa ordem.
 - Exatamente uma `correta = true` por questão (garantido pelo índice parcial
   `ux_alternativa_correta`). A letra correta varia entre as questões (não é sempre A).
+- Sem marca `[PROVISÓRIO]` no `texto`: a alternativa é provisória porque a sua questão é
+  (FR-009, research R7).
 - Regra verificada: exatamente 4 alternativas por questão, letras A, B, C e D.
 
 ### Tabelas de uso (vazias na carga)
@@ -80,13 +85,16 @@ na carga, Princípio VI).
 | Regra (spec) | Banco (DDL) | Verificação (FR-016) |
 |---|---|---|
 | 12 temas, ordem 1–12 (FR-004) | `check (ordem between 1 and 12)`, `unique` | contagem = 12 e nomes da seção 6 |
+| descrição do tema preenchida (FR-004) | `not null` (aceita `''`) | `trim(descricao) <> ''` |
 | 4 questões por tema (FR-005) | — | contagem por tema = 4 |
+| enunciado preenchido (FR-005) | `not null` (aceita `''`) | `trim(enunciado) <> ''` |
 | imagem exclusiva por questão (FR-005) | `unique (idimagem)` | — |
 | 4 alternativas A–D (FR-006) | `check letra`, `unique (idquestao, letra)` | contagem por questão = 4 |
 | exatamente 1 correta (FR-006) | índice parcial garante "no máximo 1" | "pelo menos 1" por questão |
 | ≥ 1 material por tema (FR-007) | — | contagem por tema ≥ 1 |
 | arquivo de imagem existe (FR-008) | — | `fs` em `app/public/` |
-| conteúdo provisório marcado (FR-009) | — | `AVISO` (nunca `ERRO`) com a contagem de questões (`enunciado`), materiais (`titulo`) e imagens (`credito`) que começam com `[PROVISÓRIO]`; checagem antes da entrega final |
+| conteúdo provisório marcado (FR-009) | — | `AVISO` (nunca `ERRO`) com a contagem de questões (`enunciado`), materiais (`titulo`) e imagens (`credito`) que começam com `[PROVISÓRIO]`; alternativas seguem a questão, sem contagem própria; checagem antes da entrega final |
+| carga completa (FR-013) | — | não é regra da verificação: `/api/saude` devolve `cargaCompleta` = (temas = 12 e questões = 48 e alternativas = 192) e a página inicial mostra "carga incompleta" quando `false` |
 
 ## Transições de estado
 
