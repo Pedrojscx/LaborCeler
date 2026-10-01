@@ -97,7 +97,10 @@ estudada em aula.
 
 ### X. Padrões de Código, Banco e Versionamento
 
-- Código e identificadores de banco DEVEM estar em português.
+- Identificadores de domínio, identificadores de banco de dados, mensagens e textos exibidos ao
+  usuário DEVEM estar em português.
+- Nomes estruturais da stack (ex.: `server.js`, `app.js`, `config.js`, `db.js`, `routes/`,
+  `repositories/`, `test/`) seguem a convenção do ecossistema Node/Express.
 - Banco segue o padrão das aulas: tabelas com prefixo `tb` (ex.: `tbusuario`), chave primária
   `id`, chave estrangeira `id` + nome da tabela referenciada (ex.: `idusuario`).
 - Commits no Git DEVEM ser pequenos, coesos e com mensagem descritiva.
@@ -146,4 +149,4 @@ usado como revisor nessa conferência.
   desvios DEVEM ser registrados e justificados no plano, com alternativa mais simples
   considerada.
 
-**Version**: 2.0.1 | **Ratified**: 2026-09-30 | **Last Amended**: 2026-09-30
+**Version**: 2.0.2 | **Ratified**: 2026-09-30 | **Last Amended**: 2026-10-01

@@ -1,5 +1,5 @@
 # Dossiê-fonte SDD: Portal de Certificação em Metodologias Ágeis (BorB)
-> **Nota:** a seção 2 registra o texto original da constituição; a versão em vigor é `.specify/memory/constitution.md` (2.0.1), que prevalece em caso de divergência.
+> **Nota:** a seção 2 registra o texto original da constituição; a versão em vigor é `.specify/memory/constitution.md` (2.0.2), que prevalece em caso de divergência.
 
 
 Versão 1.0 (30/09/2026). Fonte para o Claude Code gerar as specs com GitHub Spec Kit.
