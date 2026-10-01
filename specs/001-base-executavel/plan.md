@@ -85,6 +85,7 @@ specs/001-base-executavel/
 ├── research.md
 ├── data-model.md
 ├── quickstart.md
+├── validacao.md          # registro das validações e da autoverificação da DoD
 ├── contracts/
 │   ├── api-saude.openapi.yaml
 │   └── execucao-e-verificacao.md
@@ -102,8 +103,11 @@ specs/001-base-executavel/
 ├── .env.example                  # PORT, PUBLIC_BASE_URL, DATABASE_URL, JWT_SECRET (vazio), POSTGRES_*
 ├── .gitignore                    # .env, node_modules/, pgdata/ + docker-compose.override.yml
 ├── README.md                     # instalação (FR-014, FR-014a)
+├── scripts/
+│   └── validar-001.sh            # validação final da 001 (T037 e medição do T038)
 ├── docs/
 │   ├── dossie-sdd-borb.md
+│   ├── requisitos-desafio.md     # texto integral de RF01-RF21, RNF01-RNF08, RP01-RP09
 │   ├── openapi.yaml              # novo: /api/saude
 │   └── modelagem/
 ├── db/                           # montado em /docker-entrypoint-initdb.d (somente leitura)

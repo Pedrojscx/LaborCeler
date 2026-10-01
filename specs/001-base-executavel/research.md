@@ -15,6 +15,9 @@ detalhe e as armadilhas encontradas ao encaixar essa stack na spec.
 - **Alternatives considered**: `node:26` (ainda não é LTS); `node:24-alpine` (menor, mas
   musl complica módulos nativos). Conferir a LTS de novo no `/speckit-implement`; se o Node 26
   já tiver virado LTS, a troca é só a tag da imagem.
+- **Conferência (T036, 01/10/2026)**: o Node 26 ainda é Current (v26.10.0, `lts: false` em
+  `nodejs.org/dist/index.json`) e o Node 24 é a LTS ativa (v24.21.0, "Krypton"); a imagem fica
+  em `node:24-bookworm-slim`. Reavaliar depois do fim de outubro de 2026, numa feature futura.
 
 ## R2. Healthcheck do banco sem falso positivo
 
