@@ -220,6 +220,31 @@ transversal (RNF06).
 - **Alternatives considered**: `curl`/`wget` na imagem (pacote extra só para isso); medir
   SC-005 com um laço de `curl` no host (fora do comando documentado).
 
+## R16. Imagem do app sempre reconstruída (`pull_policy: build`)
+
+- **Decision**: o serviço `app` declara `pull_policy: build`, e o README e o quickstart mantêm
+  `docker compose up -d --build --wait` como recomendação explícita depois de `git pull`, troca
+  de branch ou mudança no código.
+- **Rationale**: na validação do cenário 2 (01/10/2026), o Compose reaproveitou a imagem
+  `<pasta>-app` de uma execução anterior com o mesmo nome de projeto e rodou código
+  desatualizado: sem `--build`, uma imagem local existente não é reconstruída. Com
+  `pull_policy: build`, o próprio `docker compose up` reconstrói a imagem a cada subida (as
+  camadas sem mudança vêm do cache), o que protege o comando único do Princípio V.
+  Compatibilidade com o piso de R14 (Compose ≥ v2.2.1), conferida em 01/10/2026:
+  - A referência oficial (docs.docker.com/reference/compose-file/services, `pull_policy`)
+    descreve `build` ("Compose builds the image. Compose rebuilds the image if it's already
+    present"), mas não informa a versão em que o valor entrou.
+  - No código-fonte: o schema do compose-go aceita `build` em `pull_policy` desde a v1.0.1
+    (`PullPolicyBuild`), usada pelo Compose v2.0.0; o Compose v2.2.1 usa a v1.0.8. Em
+    `pkg/compose/build.go`, desde a v2.0.0, a imagem local só é reaproveitada quando
+    `service.PullPolicy != types.PullPolicyBuild`.
+  - Logo, funciona desde o Compose v2.0.0 e não muda o piso.
+- **Custo**: cada `up` passa pela etapa de build. Com o cache, leva segundos e não atrapalha
+  SC-005 (≤ 1 min). O build não força pull da imagem base (`node:24-bookworm-slim`), que vem
+  do cache local.
+- **Alternatives considered**: só documentar o `--build` (depende de a pessoa lembrar; foi o
+  que falhou no cenário 2); nomear a imagem com a versão do código (exige passo de release).
+
 ## Pendências para features seguintes
 
 ### P1. `JWT_SECRET` sem valor padrão (feature 002)

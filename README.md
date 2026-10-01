@@ -44,6 +44,21 @@ banco com o esquema oficial (`db/01-ddl.sql`) e carrega o conteúdo inicial. Var
 - `docker compose up -d --wait`: sobe em segundo plano e só retorna quando o portal já está
   respondendo com o banco conectado.
 
+### Depois de atualizar o código
+
+Depois de `git pull`, de trocar de branch ou de qualquer mudança no código, a recomendação é
+subir com:
+
+```bash
+docker compose up -d --build --wait
+```
+
+O próprio `docker compose up` já reconstrói a imagem da aplicação a cada subida (o que não mudou
+vem do cache), então não roda código antigo; o `--build` deixa isso explícito e o `--wait` só
+retorna quando o portal já responde. Os scripts de `db/*.sql`, por outro lado, só rodam com o
+banco vazio: mudanças neles exigem recriar o banco com `docker compose down -v`, o que **apaga
+todos os dados**.
+
 ### Acessar
 
 Abra **<http://localhost:3000>**. A página inicial mostra "Portal no ar" e "Banco conectado".

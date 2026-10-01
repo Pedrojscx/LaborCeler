@@ -28,6 +28,9 @@ services:
 
   app:
     build: ./app
+    # reconstrói a imagem a cada "up" (o que não mudou vem do cache), para nunca rodar código
+    # antigo de uma imagem <pasta>-app já existente (Compose >= v2.0.0, research R16)
+    pull_policy: build
     depends_on:
       db:
         condition: service_healthy

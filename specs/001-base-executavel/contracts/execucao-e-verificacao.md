@@ -9,7 +9,7 @@ caminhos públicos e saída da verificação. O README (FR-014) é escrito a par
 |---|---|---|
 | `docker compose up` (ou `up -d`) | constrói a imagem do app se preciso, sobe `db` e `app`; na primeira vez cria esquema e carga | FR-001 a FR-003 |
 | `docker compose up -d --wait` | idem, e só retorna quando `db` e `app` estão `healthy` (o healthcheck do `app` chama `GET /api/saude`) | SC-005 |
-| `docker compose up --build` | idem, reconstruindo o app após mudar código ou arquivos de `app/public` | — |
+| `docker compose up -d --build --wait` | idem, reconstruindo a imagem do `app` de forma explícita; **recomendado** depois de `git pull`, troca de branch ou mudança em código e `app/public`. O `app` já declara `pull_policy: build` (research R16), então o `up` simples também reconstrói em vez de reaproveitar a imagem `<pasta>-app` antiga | FR-001, FR-014 |
 | `docker compose down` | para e remove os containers; **mantém** os dados | FR-010 |
 | `docker compose down -v` | para e **apaga** o volume `dados_banco`; a próxima subida recria esquema e carga | FR-014, FR-014a |
 | `docker compose exec app npm run verificar-carga` | roda a verificação da carga (abaixo) | FR-016 |
