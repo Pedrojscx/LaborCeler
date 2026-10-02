@@ -346,10 +346,10 @@ class Component extends DCLogic {
     ].map((c, i) => ({ nome: c[0], tema: c[1], cor: c[2], r: c[3], anel: c[4], ordem: String(i + 1).padStart(2, '0') }));
     const empresaAtiva = (this.state && this.state.empresa != null) ? this.state.empresa : null;
     const listaEmpresas = [
-      { nome: 'Google', posicao: 'top: 9%; left: 4%', fato: 'Em 2006, o time do AdWords introduziu o Scrum aos poucos, uma prática de cada vez.' },
-      { nome: 'Salesforce', posicao: 'top: 3%; right: 10%', fato: 'Trocou o modelo em cascata pelo Scrum em 2006. Hoje, a maioria dos times de nuvem usa alguma variação dele.' },
-      { nome: 'Spotify', posicao: 'top: 42%; right: 0', fato: 'Nos primeiros anos, era praticamente uma empresa Scrum. O squad nasceu como o nome interno do time Scrum.' },
-      { nome: 'Saab', posicao: 'bottom: 22%; left: 0', fato: 'Desenvolve o caça Gripen E, o mesmo da Força Aérea Brasileira, com centenas de times em sprints de três semanas.' },
+      { nome: 'Google', posicao: 'top: 9%; left: 4%', fato: 'O time do AdWords adotou o Scrum aos poucos, uma prática de cada vez.' },
+      { nome: 'Salesforce', posicao: 'top: 3%; right: 10%', fato: 'Trocou o modelo em cascata pelo Scrum em 2006. Segundo a própria empresa, hoje ele é o framework principal de 70% dos seus times.' },
+      { nome: 'Spotify', posicao: 'top: 42%; right: 0', fato: 'Nos primeiros anos, era praticamente uma empresa Scrum; "squad" era o nome interno do time Scrum.' },
+      { nome: 'Saab', posicao: 'bottom: 22%; left: 0', fato: 'Desenvolve o caça Gripen E, o mesmo da Força Aérea Brasileira, com mais de 100 times em sprints de três semanas.' },
       { nome: 'Adobe', posicao: 'bottom: 14%; right: 6%', fato: 'O time do Premiere Pro adotou o Scrum em 2008 e relatou ganhos de qualidade no produto.' }
     ];
     const empresas = listaEmpresas.map((e, i) => ({

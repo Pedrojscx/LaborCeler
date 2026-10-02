@@ -80,3 +80,8 @@
   projeto, a criar); P-09 registrada para a 007; P-03 pesquisada, com três fatos sustentados só
   em parte (`docs/referencias.md`). Revalidação: todos os itens continuam aprovados; o SC-011 só
   passa a ser atendido depois da decisão sobre os textos de Google, Salesforce e Saab.
+- Segunda rodada de decisões (2026-10-02): textos finais de Google, Salesforce e Saab, os cinco
+  fatos sustentados em `docs/referencias.md` (P-03 resolvida; SC-011 atendível); regra geral de
+  disponibilidade (FR-050, SC-016), com a página "Disponível em breve" como exceção para links;
+  "Entre e use 100%" oculta até a primeira vantagem (FR-038). Novos cenários: US1 9, US4 8 e US5
+  6 reescrito. Revalidação: todos os itens continuam aprovados.

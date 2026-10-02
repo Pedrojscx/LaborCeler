@@ -4,6 +4,8 @@ Versão 1.1 (02/10/2026). Descreve as telas do protótipo (canvas do projeto, ac
 
 Convenções: as rotas são sugestões para o plano de cada feature; "Logado" significa que a tela exige sessão e redireciona para Entrar sem ela; textos entre colchetes são dados dinâmicos ou pendências.
 
+Disponibilidade (regra geral, FR-050 da spec da 002): as telas podem descrever qualquer funcionalidade a qualquer momento, mas textos que afirmam disponibilidade ("a área de estudos é aberta", "com uma conta você tem...") e links que levam direto a um recurso só aparecem quando ele existe; links para recursos ainda não entregues levam à tela 6.
+
 ---
 
 ## Estrutura comum

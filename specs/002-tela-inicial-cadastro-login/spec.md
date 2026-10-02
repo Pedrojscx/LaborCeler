@@ -28,14 +28,16 @@ escolhe o próximo passo: criar a conta, entrar, estudar ou validar um certifica
 não entende a certificação nem encontra os demais caminhos.
 
 **Independent Test**: abrir o endereço do portal sem estar logado, em um celular (360 px) e em um
-computador, e conferir que as oito seções aparecem na ordem, que as seis regras e as instruções
-estão visíveis em linguagem direta e que os caminhos levam aos destinos corretos.
+computador, e conferir que as seções aparecem na ordem (nesta feature, sem "Entre e use 100%",
+que espera a primeira vantagem da conta), que as seis regras e as instruções estão visíveis em
+linguagem direta e que os caminhos levam aos destinos corretos.
 
 **Acceptance Scenarios**:
 
 1. **Given** um visitante sem login, **When** ele abre o portal, **Then** vê, nesta ordem: o
    hero, "O que é Scrum", a trilha dos 12 temas, "Por que estudar aqui funciona", "Entre e use
-   100% do Lunar Celer", "De onde vem este portal", as perguntas frequentes e a chamada final.
+   100% do Lunar Celer" (só quando existir pelo menos uma vantagem da conta, FR-050), "De onde
+   vem este portal", as perguntas frequentes e a chamada final.
 2. **Given** o hero, **When** o visitante o lê, **Then** encontra o título "Um aprendizado
    astronômico", o parágrafo com as regras, os botões "Criar minha conta" e "Começar pelos
    estudos" e o bloco "Como funciona" com três passos numerados.
@@ -62,6 +64,9 @@ estão visíveis em linguagem direta e que os caminhos levam aos destinos corret
    teclado), **Then** encontra as respostas sobre estudar antes, pausar, internet caindo durante
    uma questão, refazer a certificação e como alguém confere um certificado.
 
+9. **Given** qualquer tela desta feature, **When** o visitante procura frases que afirmam a
+   disponibilidade de um recurso ainda não entregue (por exemplo, "a área de estudos é aberta"),
+   **Then** não as encontra; os links para esses recursos levam à página "Disponível em breve".
 ---
 
 ### User Story 2 - Cadastrar-se como candidato (Priority: P1)
@@ -183,6 +188,9 @@ ao sair e entrar de novo, o candidato volta à mesma escolha.
 7. **Given** a área do candidato, **When** o candidato lê o bloco "Antes de cada questão",
    **Then** fica sabendo que o cronômetro de 150 segundos começa quando a questão aparece e que
    sair da página encerra a questão aberta, e encontra o link "Rever as regras".
+8. **Given** a área do candidato nesta feature, **When** o candidato lê o estado "não iniciada",
+   **Then** nenhum texto promete começar a certificação agora nem diz que a área de estudos está
+   aberta, e o botão "Iniciar a certificação" leva à página "Disponível em breve".
 
 ---
 
@@ -213,10 +221,10 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
    à área de estudos (ou à página "Disponível em breve" enquanto ela não existir).
 5. **Given** a seção "Por que estudar aqui funciona", **When** o visitante a lê, **Then** não
    encontra nenhum número de eficácia que não tenha sido medido.
-6. **Given** a seção "Entre e use 100% do Lunar Celer", **When** o visitante a lê, **Then**
-   fica sabendo que a área de estudos é aberta, encontra os botões "Criar minha conta" e "Já
-   tenho conta" e vê, na lista do que a conta libera, só as funcionalidades já entregues (nesta
-   feature, nenhuma, e a lista não aparece).
+6. **Given** a tela inicial nesta feature, **When** o visitante a percorre, **Then** a seção
+   "Entre e use 100% do Lunar Celer" não aparece, porque nenhuma vantagem da conta existe ainda;
+   **When** uma feature seguinte entrega a primeira vantagem, **Then** a seção aparece, com os
+   botões "Criar minha conta" e "Já tenho conta" e só as vantagens já entregues.
 7. **Given** a seção "De onde vem este portal", **When** o visitante a lê, **Then** encontra a
    origem acadêmica, os orientadores, o colaborador e o aviso de que o certificado não substitui
    certificações oficiais de Scrum.
@@ -269,6 +277,8 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
 - Destinos ainda não entregues (área de estudos e página do tema da 003, fluxo da certificação
   da 004, validação de certificado da 005, flashcards e perfil da 007): o caminho existe e leva à
   página "Disponível em breve" com o texto daquela funcionalidade.
+- Feature seguinte entregue: os textos e links que dependiam do recurso dela (FR-050) passam a
+  aparecer, e o destino provisório dela some.
 - Navegador sem JavaScript ou sem suporte a desenho em canvas: a Lua em rede aparece como imagem
   estática, e o conteúdo da tela inicial continua legível.
 - Navegador sem acesso à internet (só à rede local do portal): todas as telas carregam com as
@@ -285,8 +295,9 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
 - **FR-001**: A tela inicial MUST ser acessível a qualquer pessoa, com ou sem login, e apresentar,
   nesta ordem, as oito seções da tela 1 de `docs/telas.md`: (1) hero; (2) O que é Scrum; (3) A
   trilha; (4) Por que estudar aqui funciona; (5) Entre e use 100% do Lunar Celer; (6) De onde vem
-  este portal; (7) Perguntas frequentes; (8) Chamada final. Juntas, elas apresentam a descrição
-  da certificação, seus objetivos, as regras e as instruções para realizar a avaliação (RF01).
+  este portal; (7) Perguntas frequentes; (8) Chamada final. A seção 5 segue o FR-050 e fica
+  oculta nesta feature. Juntas, elas apresentam a descrição da certificação, seus objetivos, as
+  regras e as instruções para realizar a avaliação (RF01).
 - **FR-002**: As regras MUST incluir, no mínimo: 12 temas; uma questão por tema, sorteada para
   cada candidato; 150 segundos por questão; resposta única (cada tema é respondido uma só
   vez); aprovação com 65% ou mais de acertos (8 de 12); certificado eletrônico com QR Code para
@@ -349,11 +360,12 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
   ciclo Estudar e Responder em volta da Lua e o botão "Começar pelos estudos", e três blocos
   menores (correção na hora, situações reais, progresso visível). A seção MUST NOT apresentar
   números de eficácia que não tenham sido medidos.
-- **FR-038**: A seção "Entre e use 100% do Lunar Celer" MUST convidar a criar conta, explicar
-  que a área de estudos é aberta e oferecer os botões "Criar minha conta" e "Já tenho conta". A
-  lista do que a conta libera MUST mostrar só o que já existe: a certificação entra com a
-  feature 004; flashcards, evolução por tema e conquistas entram com a feature 007. Enquanto
-  nenhum item existir, como nesta feature, a lista não aparece.
+- **FR-038**: A seção "Entre e use 100% do Lunar Celer" MUST ficar oculta até existir pelo menos
+  uma vantagem da conta (FR-050). Quando aparecer, MUST convidar a criar conta, oferecer os
+  botões "Criar minha conta" e "Já tenho conta" e listar só as vantagens que já existem: a
+  certificação entra com a feature 004; flashcards, evolução por tema e conquistas entram com a
+  feature 007. A frase de que a área de estudos é aberta entra com a feature 003. Nesta feature,
+  a seção não aparece.
 - **FR-039**: A seção "De onde vem este portal" MUST trazer a origem acadêmica (ABP do 1º
   semestre de DSM da Fatec Jacareí, Centro Paula Souza), o problema que motivou o projeto, o
   aviso de que o certificado não substitui certificações oficiais de Scrum e a ficha com
@@ -476,7 +488,9 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
   funcionalidade, e os botões "Voltar para a área do candidato" e "Ir para o início". Os textos
   existem para área de estudos (003), certificação (004) e validação (005), e, para os links do
   cabeçalho logado, flashcards e perfil (007). Cada feature, ao ser entregue, substitui o seu
-  destino provisório; a página some quando o último deles for substituído.
+  destino provisório; a página some quando o último deles for substituído. Esses links são a
+  exceção da regra de disponibilidade (FR-050): continuam visíveis porque levam a esta página,
+  que diz que o recurso está a caminho.
 - **FR-047**: A área do candidato tem quatro estados: não iniciada, em andamento, aprovada e
   reprovada. Nesta feature, MUST aparecer só o estado "não iniciada": título "Sua Lua ainda está
   nova", botão "Iniciar a certificação", aviso de que a primeira questão começa só depois de
@@ -516,6 +530,27 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
 - **FR-049**: Todas as telas desta feature MUST ter ao fundo o céu estrelado animado da
   identidade visual, que nunca recebe clique e fica parado quando o usuário pede menos
   movimento.
+
+**Disponibilidade (regra geral, vale para todas as features)**
+
+- **FR-050**: O portal pode descrever qualquer funcionalidade a qualquer momento, mas textos que
+  afirmam disponibilidade (por exemplo, "a área de estudos é aberta" ou "com uma conta você
+  tem...") e links que levam direto a um recurso MUST aparecer só quando o recurso existe. A
+  exceção são os links para destinos ainda não entregues que levam à página "Disponível em
+  breve" (FR-024). Cada feature, ao entregar um recurso, passa a exibir os textos e links que
+  dependem dele. Nesta feature, os trechos do protótipo abaixo ficam ocultos até a feature
+  indicada:
+
+  | Tela | Trecho oculto | Aparece com |
+  |---|---|---|
+  | Tela inicial | Seção "Entre e use 100% do Lunar Celer" inteira | primeira vantagem da conta (certificação, 004) |
+  | Tela inicial, perguntas frequentes | "A área de estudos é aberta", na resposta de "Preciso estudar antes de começar?" | 003 |
+  | Cadastro | "depois do cadastro, você escolhe se começa agora ou estuda antes", depois de "Criar a conta não inicia a prova" | 004 |
+  | Cadastro, bloco "Já tem conta?" | "e continue de onde parou" | 004 |
+  | Entrar | "Depois de entrar, você decide se começa a certificação agora ou volta para estudar." | 004 |
+  | Entrar, bloco "Quer estudar antes?" | "A área de estudos é aberta, sem login" | 003 |
+  | Área do candidato, estado "não iniciada" | "Você pode começar a certificação agora ou estudar antes e voltar depois." e o aviso "A primeira questão [...] aparece assim que você confirmar." | 004 |
+  | Área do candidato, bloco "Estudar antes" | "e fica aberta a qualquer momento" | 003 |
 
 **Operação (Princípio V)**
 
@@ -576,8 +611,9 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
   sustenta.
 - **SC-012**: Em revisão lado a lado das 6 telas com o protótipo e com `docs/telas.md`, 100% das
   seções, textos e estados das telas 1 a 6 estão presentes (exceto os estados da área do
-  candidato que dependem das features 004 e 005), e toda diferença visual em relação ao
-  protótipo é uma correção prevista em `docs/identidade-visual.md`.
+  candidato que dependem das features 004 e 005 e dos trechos ocultos pelo FR-050), e toda
+  diferença visual em relação ao protótipo é uma correção prevista em
+  `docs/identidade-visual.md`.
 - **SC-013**: Navegando só com teclado, 100% dos elementos acionáveis das 6 telas são alcançados
   com foco visível; 100% dos alvos de toque medem pelo menos 44 px; com a redução de movimento
   ativada, 0 animações ficam em execução.
@@ -585,6 +621,9 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
   imagens, e 0 requisições saem para outros domínios.
 - **SC-015**: Em conferência da seção "O que é Scrum" contra o Scrum Guide 2020, 0 divergências
   de definição ou de termo.
+- **SC-016**: Em revisão das 6 telas, 0 textos afirmam a disponibilidade de um recurso que ainda
+  não existe e 0 links levam direto a ele; todo link para recurso ainda não entregue leva à
+  página "Disponível em breve".
 
 ## Assumptions
 
@@ -632,12 +671,6 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
   pessoais (Princípio VI), ainda a ser criado pelo mantenedor. Não usar as issues do repositório
   nem inventar endereço. Sem ele, os termos não são publicados e, como o cadastro exige o aceite
   (FR-011), a feature não pode ser entregue (FR-012a).
-- **P-03**: fontes dos fatos sobre empresas. Pesquisa feita em 02/10/2026 e registrada em
-  `docs/referencias.md` (FR-034): Spotify e Adobe sustentados; Google (o ano de 2006 e "o
-  Scrum"), Salesforce ("times de nuvem" e "variação") e Saab ("centenas de times") sustentados
-  em parte, aguardando decisão do mantenedor sobre o texto. Enquanto isso, o SC-011 não é
-  atendido. A fonte da Adobe citada na identidade visual (Scrum Alliance) difere da real
-  (conferência Agile 2012).
 - **P-04**: decisão D1 (refazer a certificação), que define a resposta da pergunta frequente
   (FR-040); padrão assumido: tentativa única.
 - **P-05**: decisão D3 (os 12 temas), que afeta a trilha (FR-036) e a chamada final (FR-041).
@@ -656,7 +689,7 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
 | IV. Dados derivados não são armazenados | A Lua e a trilha da área do candidato são calculadas, nunca gravadas (FR-047). | ✅ |
 | V. Comando único | O portal continua subindo com um só comando e sem segredo versionado (FR-029, SC-008). | ✅ |
 | VI. LGPD e minimização | Só CPF, nome, e-mail e senha no cadastro (FR-005); senha protegida e irreversível (FR-010, FR-045); aceite registrado (FR-011); CPF mascarado e e-mail nunca na validação, conforme os termos (FR-012); contato privado, nunca issues públicas (FR-012, FR-012a). | ⚠ P-01 em aberto: bloqueia a entrega |
-| VII. Escopo do site final e ordem de entrega | Primeira das features obrigatórias (002 a 006). Os caminhos para 003 a 005 e para os complementos da 007 levam à página "Disponível em breve" (FR-024), sem implementar nada deles; a lista de "Entre e use 100%" só mostra o que já existe (FR-038). As notificações (FR-044) são infraestrutura do kit entregue nesta feature, não complemento (`docs/telas.md`, item 21). | ✅ |
+| VII. Escopo do site final e ordem de entrega | Primeira das features obrigatórias (002 a 006). Os caminhos para 003 a 005 e para os complementos da 007 levam à página "Disponível em breve" (FR-024), sem implementar nada deles; textos e links que afirmam disponibilidade só aparecem com o recurso (FR-050), e "Entre e use 100%" fica oculta até a primeira vantagem (FR-038). As notificações (FR-044) são infraestrutura do kit entregue nesta feature, não complemento (`docs/telas.md`, item 21). | ✅ |
 | VIII. Rastreabilidade | Requisitos citam RF, RNF e as telas de `docs/telas.md`. | ✅ |
 | IX. Testes das regras críticas | Nenhuma das regras críticas (sorteio, prazo, resposta única, nota, certificado) é tocada. | Não se aplica |
 | X. Padrões de código | Textos, mensagens e identificadores de domínio em português. | ✅ |

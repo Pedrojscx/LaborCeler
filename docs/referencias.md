@@ -5,7 +5,8 @@ conferência e as fontes (título, autor ou organização, data e URL). Pesquisa
 em 02/10/2026, data de acesso de todas as URLs (feature 002, FR-034).
 
 Situações possíveis: **sustentado** (a fonte apoia a frase inteira) e **sustentado em parte** (há
-trecho que a fonte não apoia; o texto só muda por decisão do mantenedor).
+trecho que a fonte não apoia; o texto só muda por decisão do mantenedor). Em 02/10/2026, os
+cinco fatos estão sustentados.
 
 ## Empresas da tela inicial
 
@@ -13,42 +14,50 @@ Fatos da seção 9 de `docs/identidade-visual.md`, exibidos no hero da tela inic
 
 ### Google
 
-**Texto exibido**: "Em 2006, o time do AdWords introduziu o Scrum aos poucos, uma prática de cada
-vez."
+**Texto exibido**: "O time do AdWords adotou o Scrum aos poucos, uma prática de cada vez."
 
-**Situação**: sustentado em parte, aguardando decisão do mantenedor.
+**Situação**: sustentado.
 
-- Sustentado: práticas ágeis foram introduzidas aos poucos nos times do front-end do AdWords; a
-  seção 3 do artigo se chama "Adding agility – one practice at a time", e o autor só apresentou o
-  processo Scrum completo aos times depois das primeiras entregas.
-- Não sustentado: o ano. 2006 é a data de publicação do artigo; o texto não diz quando a
-  introdução começou.
-- Ressalva: o artigo fala em "práticas ágeis" (reuniões diárias, backlog, estimativa em pontos,
-  gráfico de burndown), não em adotar "o Scrum" desde o início.
-- A identidade visual cita também um relato de Jeff Sutherland, que não foi localizado.
+- Na palestra de 2006, Jeff Sutherland diz que o AdWords introduziu o Scrum no Google "em
+  pequenos passos" (fonte 1). O artigo de Striebeck relata como as práticas foram acrescentadas
+  uma de cada vez; a seção 3 se chama "Adding agility – one practice at a time" (fonte 2). Na
+  retrospectiva publicada em 2008, Sutherland fala da estratégia de inserir o Scrum "passo a
+  passo" nos times de engenharia do Google (fonte 3).
+- Texto anterior, "Em 2006, o time do AdWords introduziu o Scrum...", trocado em 02/10/2026:
+  nenhuma fonte data o início da adoção.
 
 **Fontes**:
 
-1. Mark Striebeck (Google). "Ssh! We Are Adding a Process...". AGILE 2006 (IEEE), 08/08/2006,
+1. Jeff Sutherland. "Scrum Tuning: Lessons learned from Scrum implementation at Google", Google
+   Tech Talks, 07/12/2006 (vídeo publicado em 22/08/2012 no canal GoogleTalksArchive).
+   https://www.youtube.com/watch?v=WUQfuhdOZ8s
+2. Mark Striebeck (Google). "Ssh! We Are Adding a Process...". AGILE 2006 (IEEE), 08/08/2006,
    p. 185-193. https://doi.org/10.1109/AGILE.2006.48. Texto integral:
    https://agileconsortium.pbworks.com/f/XR7+mstriebeck-ShtAddingProcess.pdf
+3. Jeff Sutherland. "Agile Project Management: Lessons Learned at Google", InfoQ, 03/07/2008.
+   https://www.infoq.com/presentations/Agile-Management-Google-Jeff-Sutherland
 
 ### Salesforce
 
-**Texto exibido**: "Trocou o modelo em cascata pelo Scrum em 2006; hoje a maioria dos times de
-nuvem usa alguma variação dele."
+**Texto exibido**: "Trocou o modelo em cascata pelo Scrum em 2006. Segundo a própria empresa, hoje
+ele é o framework principal de 70% dos seus times."
 
-**Situação**: sustentado em parte, aguardando decisão do mantenedor.
+**Situação**: sustentado.
 
-- Sustentado: em 2006, a Salesforce trocou o modelo em cascata pelo Scrum em todo o P&D (fontes
-  1 e 2; a fonte 3 relata a mesma transformação, de 200 pessoas em três meses).
-- Sustentado em parte: "a maioria". A Salesforce diz que o Scrum "continua sendo o framework
-  principal de 70% dos nossos times" (fonte 1), sem falar em "times de nuvem" nem em "variação".
+- Em 2006, a Salesforce trocou o modelo em cascata pelo Scrum em todo o P&D (fontes 1 e 2; a
+  fonte 3 relata a mesma transformação, de 200 pessoas em três meses).
+- A Salesforce diz que o Scrum "continua sendo o framework principal de 70% dos nossos times"
+  (fonte 1).
+- Data da afirmação dos 70%: a página não tem data. A frase já aparece na cópia mais antiga da
+  página no Internet Archive, de 27/11/2020
+  (https://web.archive.org/web/20201127054813/https://trailhead.salesforce.com/de/content/learn/modules/scrum-and-kanban-at-salesforce/learn-about-scrum?trail_id=learn-salesforce-agile-practices),
+  e continuava no ar em 02/10/2026. Ela vale, portanto, pelo menos desde novembro de 2020.
 
 **Fontes**:
 
 1. Salesforce. "Learn About Scrum", módulo "Scrum and Kanban at Salesforce", Trailhead, sem
-   data. https://trailhead.salesforce.com/content/learn/modules/scrum-and-kanban-at-salesforce/learn-about-scrum
+   data (afirmação presente desde pelo menos 27/11/2020).
+   https://trailhead.salesforce.com/content/learn/modules/scrum-and-kanban-at-salesforce/learn-about-scrum
 2. Scrum Alliance. "Salesforce: An Agile Case Study", sem autor nem data.
    https://resources.scrumalliance.org/Article/salesforce-an-agile-case-study
 3. Chris Fry e Steve Greene (Salesforce). "Large Scale Agile Transformation in an On-Demand
@@ -78,16 +87,17 @@ interno do time Scrum."
 
 ### Saab
 
-**Texto exibido**: "Desenvolve o caça Gripen E, o mesmo da Força Aérea Brasileira, com centenas de
+**Texto exibido**: "Desenvolve o caça Gripen E, o mesmo da Força Aérea Brasileira, com mais de 100
 times em sprints de três semanas."
 
-**Situação**: sustentado em parte, aguardando decisão do mantenedor.
+**Situação**: sustentado.
 
-- Sustentado: o Gripen E é desenvolvido com Scrum, e todos os times têm Sprints de três semanas
-  que começam e terminam no mesmo dia (fontes 1 e 2); a Força Aérea Brasileira opera o Gripen E,
-  chamado F-39 no Brasil, desde 19/12/2022 (fonte 3).
-- Não sustentado: "centenas de times". As fontes falam em "mais de 100 times" (fonte 1) e em
-  cerca de 2.000 engenheiros no projeto (fonte 2).
+- O Gripen E é desenvolvido com Scrum por "mais de 100 times", e todos têm Sprints de três
+  semanas que começam e terminam no mesmo dia (fonte 1; a fonte 2 confirma as Sprints e fala em
+  cerca de 2.000 engenheiros no projeto). A Força Aérea Brasileira opera o Gripen E, chamado F-39
+  no Brasil, desde 19/12/2022 (fonte 3).
+- Texto anterior, "com centenas de times", trocado em 02/10/2026: as fontes falam em "mais de
+  100".
 
 **Fontes**:
 
