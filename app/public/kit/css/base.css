@@ -1,0 +1,117 @@
+/* Lunar Celer: base das páginas (estrutura, céu, tipografia, cabeçalho e rodapé) */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: var(--fonte);
+  font-size: var(--tamanho-corpo);
+  line-height: var(--altura-linha);
+  -webkit-font-smoothing: antialiased;
+}
+img, svg, canvas { max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: var(--texto); }
+a:hover { color: var(--acento); }
+:focus-visible { outline: 2px solid var(--acento); outline-offset: 3px; }
+input:focus-visible { outline-offset: 1px; }
+
+/* ---------- página e céu ---------- */
+.lc-pagina {
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--fundo);
+  background-image:
+    linear-gradient(118deg, rgba(5,5,5,0) 30%, rgba(150,140,215,0.05) 45%, rgba(242,164,58,0.035) 53%, rgba(5,5,5,0) 66%),
+    radial-gradient(ellipse 70% 45% at 12% 0%, rgba(88,78,170,0.12), rgba(5,5,5,0) 70%),
+    radial-gradient(ellipse 55% 40% at 95% 100%, rgba(242,164,58,0.06), rgba(5,5,5,0) 70%);
+}
+.lc-ceu { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.lc-ceu__estrelas {
+  position: absolute; top: -1200px; left: -1200px; right: 0; bottom: 0;
+  background: url('../img/ceu.svg') repeat;
+  background-size: 1200px 1200px;
+  animation: lc-deriva 420s linear infinite;
+  will-change: transform;
+}
+.lc-ceu__brilho {
+  position: absolute; inset: 0;
+  background: url('../img/ceu-brilho-1.svg') repeat;
+  background-size: 900px 900px;
+  animation: lc-cintila 7s ease-in-out infinite;
+}
+.lc-ceu__brilho--2 {
+  background-image: url('../img/ceu-brilho-2.svg');
+  background-size: 700px 700px;
+  animation-duration: 9s;
+  animation-delay: -4s;
+}
+.lc-pagina--ceu-parado .lc-ceu__estrelas,
+.lc-pagina--ceu-parado .lc-ceu__brilho { animation: none; }
+@keyframes lc-deriva { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(1200px, 1200px, 0); } }
+@keyframes lc-cintila { 0%, 100% { opacity: 0.15; } 50% { opacity: 0.9; } }
+
+/* ---------- largura e faixas ---------- */
+.lc-container { width: 100%; max-width: var(--largura-conteudo); margin: 0 auto; padding-inline: 24px; }
+.lc-container--estreito { max-width: var(--largura-estreita); }
+.lc-principal { flex: 1 0 auto; width: 100%; max-width: var(--largura-estreita); margin: 0 auto; padding: 32px 24px 72px; }
+.lc-faixa { background: rgba(10, 10, 11, 0.55); border-block: 1px solid var(--borda); }
+.lc-secao { padding-block: 88px; }
+
+/* ---------- tipografia ---------- */
+.lc-destaque { margin: 0; font-weight: 300; font-size: var(--destaque); line-height: 0.95; letter-spacing: -0.045em; }
+.lc-titulo { margin: 0; font-weight: 300; font-size: var(--titulo-pagina); line-height: 1.12; letter-spacing: -0.02em; }
+.lc-titulo-secao { margin: 0; font-weight: 300; font-size: var(--titulo-secao); line-height: 1.15; letter-spacing: -0.02em; }
+.lc-subtitulo { margin: 0; font-weight: 400; font-size: 20px; line-height: 1.25; letter-spacing: -0.01em; }
+.lc-lead { margin: 0; font-weight: 300; font-size: 20px; line-height: 1.5; color: var(--texto-suave); max-width: 30em; }
+.lc-texto-suave { color: var(--texto-suave); }
+.lc-legenda { font-size: var(--tamanho-legenda); color: var(--texto-apagado); }
+.lc-numeros { font-variant-numeric: tabular-nums; }
+.lc-apenas-leitor {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ---------- cabeçalho ---------- */
+.lc-cabecalho {
+  width: 100%; max-width: var(--largura-estreita); margin: 0 auto; padding: 20px 24px;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;
+}
+.lc-cabecalho--largo { max-width: var(--largura-conteudo); }
+.lc-marca { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 300; font-size: 17px; }
+.lc-marca svg { width: 28px; height: 28px; flex: 0 0 auto; }
+.lc-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; font-size: 16px; }
+.lc-nav a:not(.lc-botao) { text-decoration: none; color: var(--texto-suave); }
+.lc-nav a:not(.lc-botao):hover, .lc-nav a[aria-current="page"] { color: var(--texto); }
+.lc-cabecalho__acoes { display: flex; flex-wrap: nowrap; align-items: center; gap: 10px; flex: 1 1 auto; justify-content: flex-end; min-width: 0; }
+
+/* ---------- rodapé ---------- */
+.lc-rodape {
+  width: 100%; max-width: var(--largura-estreita); margin: 0 auto; padding: 24px 24px 40px;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;
+  font-size: var(--tamanho-legenda); color: var(--texto-suave); border-top: 1px solid var(--borda);
+}
+.lc-rodape a { color: var(--texto-suave); }
+.lc-rodape__links { display: flex; flex-wrap: wrap; gap: 20px; }
+.lc-status { display: inline-flex; align-items: center; gap: 8px; }
+.lc-status::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--sucesso); }
+.lc-status--falha::before { background: var(--erro); }
+
+/* ---------- movimento reduzido ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+  .lc-ceu__estrelas, .lc-ceu__brilho { animation: none !important; }
+}
+
+/* ---------- impressão ---------- */
+@media print {
+  body { background: #FFFFFF; color: #000000; }
+  .lc-pagina { background: none; min-height: 0; }
+  .lc-ceu, .lc-cabecalho, .lc-rodape, .lc-nao-imprimir, .lc-toasts { display: none !important; }
+}

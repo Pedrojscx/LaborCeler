@@ -1,0 +1,87 @@
+/* Lunar Celer: tokens de design (docs/identidade-visual.md, versão 2.0) */
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('../fonts/inter-latin-300-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/inter-latin-400-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/inter-latin-500-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  /* cores */
+  --fundo: #050505;
+  --superficie-1: #0A0A0B;
+  --superficie-2: #111113;
+  --superficie-3: #141416;
+  --superficie-cartao: #0E0E10;
+  --borda: #1F1F23;
+  --borda-media: #26262B;
+  --borda-forte: #2E2E33;
+  --texto: #F5F5F4;
+  --texto-claro: #D4D4D8;
+  --texto-suave: #A1A1AA;
+  --texto-apagado: #8A8A93;
+  --decorativo: #71717A;
+  --acento: #F2A43A;
+  --acento-fundo: rgba(242, 164, 58, 0.07);
+  --acento-borda: #3A2E1C;
+  --primario: #FAFAF9;
+  --primario-texto: #050505;
+  --sucesso: #4CC38A;
+  --sucesso-fundo: #12291F;
+  --sucesso-borda: #2C6A4C;
+  --erro: #F07178;
+  --erro-texto: #F7A5AC;
+  --erro-fundo: #2A1820;
+  --erro-borda: #5A2A35;
+  --aviso: #E9B949;
+  --info: #7FB2FF;
+  --painel-claro: #F7F6F2;
+  --texto-sobre-claro: #1A2140;
+  --texto-sobre-claro-suave: #4A5270;
+  --lua: #E7E5E4;
+  --vidro-fundo: rgba(5, 5, 5, 0.55);
+  --vidro-borda: rgba(255, 255, 255, 0.14);
+
+  /* tipografia */
+  --fonte: 'Inter', system-ui, sans-serif;
+  --tamanho-corpo: 17px;
+  --tamanho-apoio: 15px;
+  --tamanho-legenda: 14px;
+  --altura-linha: 1.55;
+  --destaque: clamp(48px, 7vw, 100px);
+  --titulo-pagina: clamp(28px, 3.2vw, 38px);
+  --titulo-secao: clamp(28px, 3.2vw, 36px);
+
+  /* forma */
+  --raio-pilula: 999px;
+  --raio-campo: 12px;
+  --raio-cartao: 18px;
+  --raio-bloco: 24px;
+  --largura-conteudo: 1160px;
+  --largura-estreita: 1040px;
+  --alvo-minimo: 44px;
+
+  /* movimento */
+  --rapido: 0.15s;
+  --medio: 0.35s;
+  --curva: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
