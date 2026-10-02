@@ -1,0 +1,171 @@
+# Telas do Lunar Celer
+
+Versão 1.0 (02/10/2026). Descreve as telas do protótipo (canvas do projeto, acesso do mantenedor: https://claude.ai/artifact/5MK3DegETGbv3t81EsqtZF) para orientar specs e implementação. Tokens, componentes e regras visuais estão em `docs/identidade-visual.md`. Requisitos citados pelo ID de `docs/requisitos-desafio.md`.
+
+Convenções: as rotas são sugestões para o plano de cada feature; "Logado" significa que a tela exige sessão e redireciona para Entrar sem ela; textos entre colchetes são dados dinâmicos ou pendências.
+
+---
+
+## Estrutura comum
+
+**Cabeçalho público:** marca Lunar Celer à esquerda; à direita, link "Voltar ao início" (páginas internas) ou, na tela inicial, abas deslizantes (Scrum, Trilha, Método, Sobre) e o botão "Entrar".
+
+**Cabeçalho logado:** marca (leva à área do candidato); links "Área de estudos", "Flashcards", nome do candidato (leva ao perfil) e botão "Sair".
+
+**Cabeçalho de foco** (questão, correção e revisão de flashcards): só a marca, sem link, e à direita o tema atual e a saída explícita ("Interromper" ou "Encerrar revisão"). Evita que um clique distraído tire a pessoa da tarefa.
+
+**Rodapé:** estado do portal discreto (ponto verde e "Portal no ar e banco conectado"; se o banco falhar, aviso de instabilidade), "Projeto acadêmico da Fatec Jacareí", links "Termos de uso e privacidade" e "Validar certificado". As telas de foco não têm rodapé.
+
+**Fundo:** céu estrelado animado em todas as telas, parado na tela da questão e com redução de movimento.
+
+---
+
+## Mapa
+
+| # | Tela | Rota sugerida | Acesso | Feature | Requisitos |
+|---|---|---|---|---|---|
+| 1 | Tela inicial | `/` | Público | 002 | RF01, RF02 |
+| 2 | Criar conta | `/cadastro` | Público | 002 | RF03, RNF03 |
+| 3 | Entrar | `/entrar` | Público | 002 | RF04 |
+| 4 | Área do candidato | `/candidato` | Logado | 002 e 004 | RF02, RF13, RF21 |
+| 5 | Termos de uso e privacidade | `/termos` | Público | 002 | RNF03 |
+| 6 | Disponível em breve | `/em-breve` | Público | 002 (temporária) | |
+| 7 | Área de estudos | `/estudos` | Público | 003 | RF07, RP07 (a desenhar) |
+| 8 | Página do tema | `/estudos/:tema` | Público | 003 | RF07, RP07 (a desenhar) |
+| 9 | Antes de começar | `/certificacao/inicio` | Logado | 004 | RF02, RF05, RF10 |
+| 10 | Questão com cronômetro | `/certificacao/questao` | Logado | 004 | RF05, RF06, RF08, RF10, RF14 |
+| 11 | Correção da questão | `/certificacao/correcao` | Logado | 004 | RF09, RF11, RF12, RF14 |
+| 12 | Resultado final | `/certificacao/resultado` | Logado | 005 | RF16, RF17 |
+| 13 | Certificado | `/certificado` | Logado | 005 | RF18 |
+| 14 | Validação pública | `/validar` e `/validar/:codigo` | Público | 005 | RF19, RP08 |
+| 15 | Histórico | `/historico` | Logado | 006 | RF20 |
+| 16 | Flashcards: escolher | `/flashcards` | Logado | 007 | complemento |
+| 17 | Flashcards: revisão | `/flashcards/revisao` | Logado | 007 | complemento |
+| 18 | Flashcards: fim da sessão | `/flashcards/resumo` | Logado | 007 | complemento |
+| 19 | Perfil e evolução | `/perfil` | Logado | 007 | complemento |
+| 20 | Página não encontrada | qualquer rota inexistente | Público | 008 | |
+| 21 | Notificações | componente | Todas | 008 | |
+
+As telas 7 e 8 ainda não foram desenhadas; os links para elas levam provisoriamente à tela 6.
+
+---
+
+## 1. Tela inicial
+
+Seções, na ordem:
+
+1. **Hero.** À esquerda: título "Um aprendizado astronômico"; parágrafo com as regras em linguagem direta (12 temas, uma questão por tema, 150 segundos por questão, certificado com QR Code para 65% ou mais); botões "Criar minha conta" (principal) e "Começar pelos estudos"; bloco "Como funciona" com três passos numerados (Estude os 12 temas, Responda dentro do tempo, Alcance 65% de acertos). À direita: Lua em rede com cinco rótulos de vidro (Google, Salesforce, Spotify, Saab, Adobe) e o cartão de fato abaixo, que mostra "Quem usa Scrum." até a pessoa interagir.
+2. **O que é Scrum.** Definição em uma frase (framework leve, ciclos curtos chamados Sprints de no máximo um mês), os três pilares do empirismo, blocos recolhíveis com as três responsabilidades e os três artefatos com seus compromissos, a Sprint desenhada como órbita com os quatro eventos numerados e o link "Aprofundar em Terra · Introdução ao Scrum". Conteúdo fiel ao Scrum Guide 2020.
+3. **A trilha.** Os 12 corpos celestes em ordem, com tamanho relativo e o nome do tema, cada um levando à área de estudos.
+4. **Por que estudar aqui funciona.** Grade em bento: bloco largo com o princípio "Estudar e depois se testar" (efeito de testagem), ilustração do ciclo Estudar e Responder em volta da Lua e o botão "Começar pelos estudos"; três blocos menores (correção na hora, situações reais, progresso visível). Sem números de eficácia não medidos.
+5. **Entre e use 100% do Lunar Celer.** Convite para criar conta, explicando que a área de estudos é aberta e listando o que a conta libera: flashcards, evolução por tema, conquistas e a certificação. Botões "Criar minha conta" e "Já tenho conta".
+6. **De onde vem este portal.** Origem acadêmica na ABP do 1º semestre de DSM da Fatec Jacareí (Centro Paula Souza), o problema que motivou o projeto e o aviso de que o certificado não substitui certificações oficiais de Scrum. Ficha: instituição, curso, programa, orientação (Prof. Antonio Egydio, Prof. Marcelo Sudo e Prof. Arley Souza), colaboradores (Pedro Lucas) e tecnologias.
+7. **Perguntas frequentes.** Itens recolhíveis: estudar antes, pausar, internet caindo, refazer a certificação [resposta conforme a decisão D1] e como conferir um certificado.
+8. **Chamada final.** "Sua jornada começa em Mercúrio", com os dois botões.
+
+## 2. Criar conta
+
+Grade em bento. Bloco largo: à esquerda, Lua nova apagada, título "Criar conta" e os avisos "Sua Lua começa nova" e "Criar a conta não inicia a prova"; à direita, formulário: CPF (com ou sem pontuação, teclado numérico), nome completo ("do jeito que deve aparecer no certificado"), e-mail, senha e confirmação lado a lado com botão de mostrar, aceite obrigatório dos termos com link. Blocos menores: "Já tem conta?" e "Como seus dados são usados".
+
+Estados: normal; erros por campo; CPF já cadastrado (sem revelar dados do titular, com atalho para Entrar); senha longa demais para o limite de 72 bytes.
+
+## 3. Entrar
+
+Mesmo bento. Formulário só com CPF e senha (com mostrar e ocultar) e o aviso de que não há recuperação de senha nesta versão. Blocos menores: "Ainda não tem conta?" e "Quer estudar antes?".
+
+Estados: normal; erro genérico ("CPF ou senha inválidos"); bloqueio por excesso de tentativas, sem revelar se o CPF existe; tentativa com e-mail ("O login é feito com o CPF cadastrado").
+
+## 4. Área do candidato
+
+Bloco largo com saudação, título e texto que mudam com a situação, e à direita a Lua grande com a trilha de 12 marcos. Blocos menores: "Estudar antes" e "Antes de cada questão".
+
+Estados: não iniciada ("Sua Lua ainda está nova", botão "Iniciar a certificação", aviso de que a primeira questão começa só após confirmar); em andamento ("Você parou em [tema]", botão "Continuar a certificação"); aprovada (Lua cheia, botões "Ver meu certificado" e "Ver meu histórico"); reprovada (resultado, revisão pelos temas errados e [próximo passo conforme a decisão D1]).
+
+## 5. Termos de uso e privacidade
+
+Índice lateral e texto em linguagem simples: quem somos; dados coletados (cadastro e respostas); para que são usados (o endereço de rede só no momento do acesso, para limitar tentativas, sem gravação); o que fica público (nome, CPF mascarado, resultado e data na validação; e-mail nunca); por quanto tempo [prazo a definir]; direitos pela LGPD; contato [canal privado do projeto, como um e-mail dedicado; não usar issues públicas].
+
+## 6. Disponível em breve
+
+Ilustração de eclipse, título e texto conforme a funcionalidade (estudos, certificação ou validação), botões para a área do candidato e para o início. Temporária: some quando as features 003 a 005 forem entregues.
+
+## 7 e 8. Área de estudos e página do tema
+
+A desenhar. Requisitos já definidos: organizada pelos mesmos 12 temas, aberta sem login, conteúdo coerente com as questões (RP07), imagens com texto alternativo, link para os flashcards (exige conta).
+
+## 9. Antes de começar
+
+Lista das seis regras em linguagem direta (12 temas em ordem, 150 segundos, resposta única, sair da página encerra a questão aberta, pausa permitida entre temas, aprovação com 8 acertos) e cartão lateral com o primeiro tema (Mercúrio · Fundamentos da Agilidade), botão "Começar agora" e "Voltar e estudar mais".
+
+## 10. Questão com cronômetro
+
+Cabeçalho de foco com "Tema [n] de 12" e "Interromper". Coluna do tempo: Lua dentro do anel do cronômetro, tempo em número, "restantes de 02:30", trilha de 12 marcos e o aviso de que o tempo é contado pelo servidor. Coluna da questão: chip do tema, enunciado, imagem em painel claro com legenda, quatro alternativas como botões de opção reais (A a D) e o botão "Confirmar resposta", desativado até escolher, com o aviso de que não é possível trocar depois.
+
+Estados: tempo normal; menos de 30 segundos (anel e número em vermelho e aviso escrito). O céu fica parado nesta tela.
+
+## 11. Correção da questão
+
+Faixa de resultado com ícone e texto; chip, enunciado e alternativas marcadas ("Alternativa correta", "Sua resposta", "Correta, sua resposta"); bloco "Por que a alternativa [X]" com a justificativa; e o painel "O que você quer fazer agora?" (RF12) com trilha, próximo tema, "Seguir para o próximo tema" e "Encerrar a sessão e continuar depois".
+
+Estados: resposta certa; resposta errada; tempo esgotado; questão encerrada por interrupção. Todos terminam na mesma escolha de seguir ou encerrar.
+
+## 12. Resultado final
+
+Lua cheia, título e texto conforme o resultado; três números (acertos de 12, percentual, nota de 0 a 10 [conforme a decisão D2]); lista tema a tema com "Acertou", "Errou" ou "Tempo esgotado".
+
+Estados: aprovado (botões "Ver meu certificado" e "Ver o histórico completo"); reprovado ("faltaram [n] acertos", "Revisar os temas que errei" e [próximo passo conforme a decisão D1]).
+
+## 13. Certificado
+
+Botões "Imprimir ou salvar em PDF" e "Copiar link de validação" (confirma com notificação). Documento claro com todos os campos do RF18: nome completo, CPF, e-mail, acertos, percentual, nota, data e hora de emissão, código de validação, QR Code, selo lunar e o aviso de projeto acadêmico. A versão impressa sai sem cabeçalho, botões nem fundo escuro.
+
+## 14. Validação pública
+
+Campo "Código do certificado" e botão "Validar"; quem chega pelo QR Code vê o código preenchido e o resultado direto.
+
+Estados: entrada; certificado autêntico (nome, CPF mascarado como `***.456.789-**`, resultado, nota e data; e-mail nunca); nenhum certificado encontrado.
+
+## 15. Histórico
+
+Resumo (início, conclusão, resultado, situação) e tabela com uma linha por tema: tema, questão sorteada, sua resposta (acertou, errou ou sem resposta por tempo esgotado), resposta correta e data e hora. No celular, a tabela rola para o lado dentro do próprio contêiner.
+
+## 16. Flashcards: escolher
+
+Grade dos 12 temas como botões de seleção múltipla, cada um com o total de cartões e quantos a pessoa domina; opções "Só os que ainda não domino" e "Todos os cartões dos temas escolhidos"; tamanho da sessão (10, 20 ou todos); resumo da sessão e "Começar revisão".
+
+Estado de visitante: a grade aparece esmaecida e um cartão de vidro diz "Entre para usar 100% do Lunar Celer", com "Criar minha conta" e "Entrar", lembrando que a área de estudos continua aberta.
+
+## 17. Flashcards: revisão
+
+Cabeçalho de foco com "Encerrar revisão"; progresso "Cartão [n] de [total]"; cartão grande com chip do tema e a frente; "Mostrar resposta" vira o cartão em 3D; no verso, a resposta e três botões de autoavaliação: "Não sabia", "Quase" e "Sabia". Teclado: espaço vira o cartão; 1, 2 e 3 avaliam.
+
+## 18. Flashcards: fim da sessão
+
+Quatro números (sabia, quase, não sabia, novos dominados), domínio por tema revisado com o ganho da sessão, botões "Revisar os [n] que errei", "Escolher outros temas" e "Ver minha evolução", e a notificação "Sessão salva".
+
+## 19. Perfil e evolução
+
+Coluna de conquistas: número grande de conquistas desbloqueadas, três em destaque (a do meio mais alta) com raridade ("[x]% dos estudantes", exibida só a partir de 30 contas ativas) e a lista completa com anel de progresso nas que estão em andamento e a data nas obtidas. Coluna de evolução: domínio por tema (12 barras), cartões dominados nos últimos 14 dias e "Próximo foco" com o tema de menor domínio.
+
+Conquistas iniciais: Primeira órbita (primeira revisão concluída), Explorador de [corpo] (todos os cartões de um tema dominados, uma por tema), Meio caminho (cartões dominados em 6 temas), Cem revisões, Constância (revisões em 5 dias diferentes, não precisam ser seguidos), Sistema completo (todos os cartões dos 12 temas) e Lua cheia (aprovação na certificação).
+
+Regras de cálculo: tudo derivado do histórico, sem dado calculado armazenado (Princípio IV). Cartão dominado: as duas últimas avaliações dele foram "Sabia". A data de uma conquista é o momento em que a condição passou a valer.
+
+## 20. Página não encontrada
+
+"Erro 404", título "Esta página caiu num buraco negro", texto curto, botões "Voltar ao início" e "Validar um certificado" e a ilustração do buraco negro.
+
+## 21. Notificações
+
+Componente descrito em `docs/identidade-visual.md`, seção 8.1. Usos previstos: conta criada, sessão de flashcards salva, conquista desbloqueada, link copiado, conexão instável e falha ao salvar.
+
+---
+
+## Pendências que afetam telas
+
+- **D1** (refazer a certificação): telas 1, 4 e 12.
+- **D2** (escala da nota): telas 12, 13 e 14.
+- **D3** (os 12 temas): todas as que mostram temas.
+- **D6** (recarregar durante a questão): telas 10 e 11.
+- Contato privado e prazo de guarda dos dados: tela 5.
+- Áreas de estudo (telas 7 e 8): a desenhar.
