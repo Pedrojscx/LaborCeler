@@ -2,6 +2,7 @@
 
 **Purpose**: Validate specification completeness and quality before proceeding to planning
 **Created**: 2026-10-01
+**Revalidated**: 2026-10-02 (revisão para a constituição 3.0.0 e a nova interface)
 **Feature**: [spec.md](../spec.md)
 
 ## Content Quality
@@ -52,8 +53,30 @@
   SC-009 e SC-010 acrescentados. Revalidação: todos os itens continuam aprovados.
 - Decisões do analyze (2026-10-02): FR-017a passa a valer também no cadastro, com 60 tentativas
   malsucedidas por minuto (sucessos não contam); FR-012 ganha o uso momentâneo do IP e o contato
-  pela página de issues do repositório; FR-026 deixa as regras de linguagem só no FR-004b; SC-001
-  é medido após a entrega. Revalidação: todos os itens continuam aprovados.
+  pela página de issues do repositório (substituído na revisão de 2026-10-02: canal privado,
+  P-01); FR-026 deixa as regras de linguagem só no FR-004b; SC-001 é medido após a entrega.
+  Revalidação: todos os itens continuam aprovados.
 - FR-029 transforma a pendência P1 da feature 001 (`JWT_SECRET` sem valor padrão) em requisito:
   subida sem passo manual e nenhum segredo de sessão versionado ou com padrão conhecido; o
   "como" fica para o `/speckit-plan`.
+- Revisão de 2026-10-02 (constituição 3.0.0, identidade visual 2.0, telas 1 a 6, protótipo e
+  kit). Primeira iteração: falhou "All functional requirements have clear acceptance criteria",
+  porque FR-038 (Entre e use 100%), FR-040 (perguntas frequentes) e FR-045 (texto sobre a senha)
+  não tinham cenário próprio; foram acrescentados US1 cenário 8, US2 cenário 8 e US5 cenário 6.
+  Segunda iteração: todos os itens aprovados.
+- Exceções aceitas em "No implementation details", por decisão explícita do mantenedor: o kit em
+  `app/public/kit` (FR-026), `LunarCeler.notificar` (FR-044) e a classe `lc-status--falha`
+  (FR-004a). Menções a CDN, JavaScript inline, canvas e domínios externos (FR-026, FR-028,
+  FR-032, SC-014) vêm dos Princípios II e XI da constituição, como as exceções da primeira
+  validação.
+- Nenhum marcador [NEEDS CLARIFICATION]. As pendências da spec são decisões externas,
+  registradas com padrão ou bloqueio explícito.
+- Decisões do mantenedor sobre o relatório da revisão (2026-10-02): notificações passam a ser
+  infraestrutura do kit na 002 (`docs/telas.md`, item 21; P-08 removida); kit 1.1 com alvos de
+  44 px e foco com afastamento de 3 px nos campos; texto da senha sem "cifrada" (FR-045);
+  "Começar pelos estudos" leva à trilha até a 003 (FR-004); lista de "Entre e use 100%" conforme
+  as features existem (FR-038); prazo de guarda adotado (FR-012; P-02 resolvida); Figma fora da
+  ficha (FR-039; P-07 resolvida); P-01 confirmada como bloqueio da entrega (e-mail exclusivo do
+  projeto, a criar); P-09 registrada para a 007; P-03 pesquisada, com três fatos sustentados só
+  em parte (`docs/referencias.md`). Revalidação: todos os itens continuam aprovados; o SC-011 só
+  passa a ser atendido depois da decisão sobre os textos de Google, Salesforce e Saab.

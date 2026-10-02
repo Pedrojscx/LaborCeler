@@ -4,46 +4,63 @@
 
 **Created**: 2026-10-01
 
+**Revisão**: 2026-10-02, alinhamento à constituição 3.0.0, à identidade visual 2.0, às telas 1 a 6
+de `docs/telas.md`, ao protótipo em `docs/prototipo/` e ao kit de interface
+(`docs/kit-interface.md`).
+
 **Status**: Draft
 
 **Input**: User description: "Visitantes chegam a uma tela inicial que apresenta a certificação em metodologias ágeis: descrição, objetivos, regras (12 temas, uma questão por tema, 150 segundos por questão, resposta única, aprovação com 65% ou mais, certificado com QR Code) e instruções. A partir dela o visitante pode se cadastrar, entrar, ir para a área de estudos ou validar um certificado. O cadastro pede CPF, nome completo, e-mail, senha e aceite dos termos de uso e privacidade; o CPF identifica o candidato de forma única e deve ser válido. O login é feito exclusivamente com CPF e senha. Depois de entrar, o candidato decide se inicia a certificação agora ou volta depois, podendo estudar antes. Contexto em docs/dossie-sdd-borb.md seção 4.2, requisitos em docs/requisitos-desafio.md e identidade visual em docs/identidade-visual.md."
 
 **Requisitos atendidos**: RF01, RF02, RF03, RF04, RNF01, RNF03, conforme dossiê seções 3 e 8 e
-texto integral em `docs/requisitos-desafio.md`. Princípios da constituição envolvidos: II
-(front sem frameworks, mobile-first), V (comando único) e VI (LGPD e minimização de dados).
+texto integral em `docs/requisitos-desafio.md`; telas 1 a 6 de `docs/telas.md`. A conformidade com
+a constituição 3.0.0 está na seção "Conformidade com a constituição", no fim deste documento.
 
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Conhecer a certificação na tela inicial (Priority: P1)
 
-Um visitante, sem conta e sem login, abre o portal e encontra a apresentação da certificação em
-metodologias ágeis: o que é, para que serve, como funciona e quais são as regras. Dali ele
-escolhe o próximo passo: cadastrar-se, entrar, estudar ou validar um certificado.
+Um visitante, sem conta e sem login, abre o Lunar Celer e encontra a apresentação da certificação
+em metodologias ágeis: o que é, para que serve, como funciona e quais são as regras. Dali ele
+escolhe o próximo passo: criar a conta, entrar, estudar ou validar um certificado.
 
 **Why this priority**: é a porta de entrada do portal e o requisito RF01; sem ela o visitante
 não entende a certificação nem encontra os demais caminhos.
 
-**Independent Test**: abrir o endereço do portal sem estar logado, em um celular e em um
-computador, e conferir que a descrição, os objetivos, as seis regras e as instruções estão
-visíveis e que os quatro caminhos levam aos destinos corretos.
+**Independent Test**: abrir o endereço do portal sem estar logado, em um celular (360 px) e em um
+computador, e conferir que as oito seções aparecem na ordem, que as seis regras e as instruções
+estão visíveis em linguagem direta e que os caminhos levam aos destinos corretos.
 
 **Acceptance Scenarios**:
 
-1. **Given** um visitante sem login, **When** ele abre o portal, **Then** vê a descrição da
-   certificação, seus objetivos, as regras e as instruções para realizar a avaliação.
-2. **Given** a tela inicial, **When** o visitante lê as regras, **Then** encontra: 12 temas;
-   uma questão por tema; 150 segundos por questão; resposta única (cada tema é respondido uma
-   só vez); aprovação com 65% ou mais de acertos; certificado eletrônico com QR Code para
-   validação.
-3. **Given** a tela inicial, **When** o visitante lê as instruções, **Then** fica sabendo que
-   pode estudar antes de começar, que pode interromper a certificação e retomá-la depois a
-   partir do próximo tema não respondido, e que fechar ou recarregar a página, perder a conexão
-   ou deixar o tempo acabar durante uma questão encerra aquela questão sem nova chance.
-4. **Given** a tela inicial, **When** o visitante escolhe "cadastrar", "entrar", "estudar" ou
-   "validar certificado", **Then** é levado ao destino correspondente.
-5. **Given** a tela inicial aberta em uma tela estreita de celular, **When** o visitante a
-   percorre, **Then** todo o conteúdo e os quatro caminhos ficam legíveis e acionáveis sem
+1. **Given** um visitante sem login, **When** ele abre o portal, **Then** vê, nesta ordem: o
+   hero, "O que é Scrum", a trilha dos 12 temas, "Por que estudar aqui funciona", "Entre e use
+   100% do Lunar Celer", "De onde vem este portal", as perguntas frequentes e a chamada final.
+2. **Given** o hero, **When** o visitante o lê, **Then** encontra o título "Um aprendizado
+   astronômico", o parágrafo com as regras, os botões "Criar minha conta" e "Começar pelos
+   estudos" e o bloco "Como funciona" com três passos numerados.
+3. **Given** a tela inicial, **When** o visitante lê as regras, **Then** encontra: 12 temas; uma
+   questão por tema, sorteada para cada candidato; 150 segundos por questão; resposta única (cada
+   tema é respondido uma só vez); aprovação com 65% ou mais de acertos (8 de 12); certificado
+   eletrônico com QR Code para validação.
+4. **Given** a tela inicial, **When** o visitante lê as instruções, **Then** fica sabendo que
+   pode estudar antes de começar, que pode pausar entre um tema e outro e retomar a partir do
+   próximo tema pendente, e que fechar ou recarregar a página, perder a conexão ou deixar o tempo
+   acabar durante uma questão encerra aquela questão, que conta como erro e não tem nova chance.
+5. **Given** a tela inicial, **When** o visitante escolhe "Criar minha conta", "Entrar" ou "Já
+   tenho conta" ou "Validar certificado", **Then** é levado ao destino correspondente, e
+   destinos ainda não entregues levam à página "Disponível em breve"; **When** ele escolhe
+   "Começar pelos estudos", **Then** vai à seção da trilha na própria página enquanto a área de
+   estudos não existir, e à área de estudos depois.
+6. **Given** a tela inicial aberta em uma tela de celular a partir de 360 px, **When** o
+   visitante a percorre, **Then** todo o conteúdo e os caminhos ficam legíveis e acionáveis sem
    rolagem horizontal.
+7. **Given** qualquer tela desta feature, **When** o portal está no ar e o banco responde,
+   **Then** o rodapé mostra de forma discreta "Portal no ar e banco conectado"; **When** o banco
+   falha, **Then** o rodapé mostra a mensagem de instabilidade no lugar.
+8. **Given** as perguntas frequentes, **When** o visitante abre cada item (com mouse, toque ou
+   teclado), **Then** encontra as respostas sobre estudar antes, pausar, internet caindo durante
+   uma questão, refazer a certificação e como alguém confere um certificado.
 
 ---
 
@@ -57,15 +74,16 @@ O cadastro não inicia a certificação.
 (RF03); é também o ponto em que o portal passa a tratar dados pessoais (RNF03).
 
 **Independent Test**: cadastrar um CPF válido (com e sem máscara), conferir que a conta foi
-criada e que o candidato ficou conectado; tentar CPFs inválidos, um CPF repetido e um cadastro
-sem aceite dos termos, e conferir que todos são recusados com mensagens claras.
+criada, que o candidato ficou conectado e que a notificação "Conta criada" apareceu; tentar CPFs
+inválidos, um CPF repetido, uma senha longa demais e um cadastro sem aceite dos termos, e
+conferir que todos são recusados com mensagens claras.
 
 **Acceptance Scenarios**:
 
 1. **Given** um visitante no formulário de cadastro, **When** ele informa CPF válido, nome
    completo, e-mail válido, senha que atende às regras, a mesma senha na confirmação e aceita
-   os termos, **Then** a conta é criada, ele passa a estar conectado e é levado à área do
-   candidato, sem que a certificação seja iniciada.
+   os termos, **Then** a conta é criada, ele passa a estar conectado, é levado à área do
+   candidato e vê a notificação de conta criada, sem que a certificação seja iniciada.
 2. **Given** o formulário de cadastro, **When** o CPF é digitado com máscara (000.000.000-00)
    ou só com os 11 dígitos, **Then** os dois formatos são aceitos e tratados como o mesmo CPF.
 3. **Given** o formulário de cadastro, **When** o CPF tem dígitos verificadores errados, tem
@@ -73,7 +91,7 @@ sem aceite dos termos, e conferir que todos são recusados com mensagens claras.
    letras, **Then** o cadastro é recusado com a mensagem de CPF inválido.
 4. **Given** um CPF já cadastrado, **When** alguém tenta cadastrá-lo de novo, **Then** o
    cadastro é recusado com uma mensagem clara de que o CPF já tem conta, sem revelar nenhum
-   outro dado do titular, e com o caminho para entrar.
+   outro dado do titular, e com o atalho para entrar.
 5. **Given** o formulário de cadastro, **When** o visitante não marca o aceite dos termos,
    **Then** o cadastro não é concluído e ele é avisado de que o aceite é obrigatório.
 6. **Given** o formulário de cadastro, **When** o visitante abre os termos de uso e privacidade,
@@ -81,6 +99,14 @@ sem aceite dos termos, e conferir que todos são recusados com mensagens claras.
 7. **Given** um cadastro recusado por qualquer motivo, **When** a mensagem aparece, **Then** ela
    indica qual campo corrigir, e os campos já preenchidos (exceto as senhas) continuam
    preenchidos.
+8. **Given** a tela de cadastro, **When** o visitante a abre, **Then** vê os avisos "Sua Lua
+   começa nova" e "Criar a conta não inicia a prova", o formulário e os blocos "Já tem conta?" e
+   "Como seus dados são usados", este dizendo que a senha é guardada de forma irreversível: nem
+   a equipe do projeto consegue vê-la.
+9. **Given** a página de termos de uso e privacidade, **When** o visitante a lê, **Then**
+   encontra um índice das seções, a data da última atualização e, em linguagem simples, quem
+   somos, quais dados são coletados, para que servem, o que fica público, por quanto tempo são
+   guardados, os direitos pela LGPD e o canal de contato privado do projeto.
 
 ---
 
@@ -105,8 +131,8 @@ candidato deixa de estar acessível.
    dos dois falhou.
 3. **Given** a tela de login, **When** a pessoa digita um e-mail no lugar do CPF, **Then** o
    login é recusado e ela é orientada a usar o CPF.
-4. **Given** um candidato conectado, **When** ele escolhe sair, **Then** a sessão é encerrada e
-   a área do candidato só volta a ser acessível após novo login.
+4. **Given** um candidato conectado, **When** ele escolhe sair, **Then** a sessão é encerrada, ele
+   volta à tela inicial e a área do candidato só volta a ser acessível após novo login.
 5. **Given** um candidato conectado há mais de 8 horas, **When** ele tenta usar a área do
    candidato, **Then** é levado ao login com a explicação de que a sessão expirou.
 6. **Given** 5 tentativas de login malsucedidas para o mesmo CPF em 15 minutos, **When** alguém
@@ -115,36 +141,92 @@ candidato deixa de estar acessível.
 7. **Given** várias pessoas entrando ao mesmo tempo a partir da mesma rede (por exemplo, a sala
    da apresentação), **When** cada uma usa o seu próprio CPF, **Then** nenhuma é bloqueada pelas
    falhas das outras.
+8. **Given** a tela de login, **When** a pessoa a abre, **Then** vê o formulário só com CPF e
+   senha (com mostrar e ocultar), o aviso de que não há recuperação de senha nesta versão e os
+   blocos "Ainda não tem conta?" e "Quer estudar antes?".
 
 ---
 
 ### User Story 4 - Decidir entre iniciar agora ou voltar depois (Priority: P2)
 
-Já conectado, o candidato chega à área do candidato, onde escolhe entre iniciar a certificação
-agora, estudar antes ou sair e voltar depois. Começar a certificação é sempre uma ação
-explícita, nunca consequência automática do cadastro ou do login.
+Já conectado, o candidato chega à área do candidato, onde vê que sua Lua ainda está nova e
+escolhe entre iniciar a certificação agora, estudar antes ou sair e voltar depois. Começar a
+certificação é sempre uma ação explícita, nunca consequência automática do cadastro ou do login.
 
 **Why this priority**: atende RF02 e liga esta feature às seguintes (área de estudos e fluxo da
 certificação); depende do login (US3), por isso P2.
 
-**Independent Test**: entrar como candidato e conferir que a área do candidato oferece os três
-caminhos, que nenhum deles inicia a certificação sem escolha explícita e que, ao sair e entrar
-de novo, o candidato volta à mesma escolha.
+**Independent Test**: entrar como candidato e conferir o estado "não iniciada" da área do
+candidato, os três caminhos, que nenhum deles inicia a certificação sem escolha explícita e que,
+ao sair e entrar de novo, o candidato volta à mesma escolha.
 
 **Acceptance Scenarios**:
 
 1. **Given** um candidato recém-cadastrado ou recém-conectado, **When** ele chega à área do
-   candidato, **Then** é saudado pelo nome e vê três caminhos: iniciar a certificação, estudar
-   antes e sair para voltar depois.
+   candidato, **Then** é saudado pelo nome, lê "Sua Lua ainda está nova", vê a Lua sem nenhuma
+   parte acesa com a trilha de 12 marcos e "0 de 12 temas concluídos", e encontra três caminhos:
+   "Iniciar a certificação", ir para a área de estudos e sair.
 2. **Given** a área do candidato, **When** ele escolhe estudar, **Then** é levado à área de
-   estudos e pode voltar à área do candidato depois.
+   estudos (ou à página "Disponível em breve" enquanto ela não existir) e pode voltar à área do
+   candidato depois.
 3. **Given** a área do candidato, **When** ele escolhe iniciar a certificação, **Then** é levado
-   ao início do fluxo da certificação, antes do qual uma confirmação lembra as regras
-   principais (150 segundos por questão, resposta única, interrupção encerra a questão).
+   ao início do fluxo da certificação, antes do qual uma confirmação lembra as regras principais
+   (enquanto o fluxo não existir, à página "Disponível em breve").
 4. **Given** um candidato que saiu sem iniciar, **When** ele entra de novo em outro momento,
    **Then** volta à mesma área do candidato, com os mesmos três caminhos.
-5. **Given** um candidato conectado, **When** ele abre a tela inicial, o cadastro ou o login,
-   **Then** é direcionado à área do candidato em vez de ver formulários de cadastro ou login.
+5. **Given** um candidato conectado, **When** ele abre o cadastro ou o login, **Then** é
+   direcionado à área do candidato em vez de ver os formulários; **When** ele abre a tela
+   inicial, **Then** consegue lê-la normalmente.
+6. **Given** a área do candidato, **When** o candidato usa os links do cabeçalho para
+   funcionalidades ainda não entregues (área de estudos, flashcards, perfil), **Then** é levado à
+   página "Disponível em breve" correspondente.
+7. **Given** a área do candidato, **When** o candidato lê o bloco "Antes de cada questão",
+   **Then** fica sabendo que o cronômetro de 150 segundos começa quando a questão aparece e que
+   sair da página encerra a questão aberta, e encontra o link "Rever as regras".
+
+---
+
+### User Story 5 - Explorar a apresentação do Scrum e do portal (Priority: P2)
+
+Na tela inicial, o visitante se aprofunda: descobre empresas que usam Scrum, lê o que é Scrum, vê
+a trilha dos 12 temas, entende por que estudar e depois se testar funciona, sabe o que a conta
+libera e de onde vem o portal. As abas do cabeçalho levam a essas seções e acompanham a rolagem.
+
+**Why this priority**: dá contexto e credibilidade à certificação, mas o RF01 já fica atendido
+pela US1; por isso P2.
+
+**Independent Test**: percorrer as seções 2 a 6 da tela inicial com mouse, toque e só teclado;
+conferir os fatos das cinco empresas contra as fontes de `docs/referencias.md`, o conteúdo de
+Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
+
+**Acceptance Scenarios**:
+
+1. **Given** o hero, **When** nenhuma empresa foi escolhida, **Then** o cartão abaixo da Lua em
+   rede mostra "Quem usa Scrum."; **When** o visitante passa o mouse, foca ou toca em uma das
+   cinco empresas, **Then** o rótulo dela acende e o cartão mostra o fato daquela empresa.
+2. **Given** qualquer fato exibido, **When** alguém o confere em `docs/referencias.md`, **Then**
+   encontra a URL da fonte, e a fonte sustenta tudo o que a frase afirma.
+3. **Given** a seção "O que é Scrum", **When** o visitante a lê e abre os blocos recolhíveis,
+   **Then** encontra a definição, os três pilares, as três responsabilidades, os três artefatos
+   com seus compromissos e a Sprint com os quatro eventos, tudo fiel ao Scrum Guide 2020.
+4. **Given** a trilha, **When** o visitante escolhe um dos 12 corpos celestes, **Then** é levado
+   à área de estudos (ou à página "Disponível em breve" enquanto ela não existir).
+5. **Given** a seção "Por que estudar aqui funciona", **When** o visitante a lê, **Then** não
+   encontra nenhum número de eficácia que não tenha sido medido.
+6. **Given** a seção "Entre e use 100% do Lunar Celer", **When** o visitante a lê, **Then**
+   fica sabendo que a área de estudos é aberta, encontra os botões "Criar minha conta" e "Já
+   tenho conta" e vê, na lista do que a conta libera, só as funcionalidades já entregues (nesta
+   feature, nenhuma, e a lista não aparece).
+7. **Given** a seção "De onde vem este portal", **When** o visitante a lê, **Then** encontra a
+   origem acadêmica, os orientadores, o colaborador e o aviso de que o certificado não substitui
+   certificações oficiais de Scrum.
+8. **Given** o cabeçalho da tela inicial, **When** o visitante passa o mouse ou o foco pelas abas
+   Scrum, Trilha, Método e Sobre, **Then** o cursor desliza até a aba; **When** ele escolhe uma
+   aba, **Then** vai à seção correspondente; **When** ele rola a página, **Then** a aba marcada
+   acompanha a seção visível, e nenhuma aba está marcada no topo da página.
+9. **Given** o sistema configurado para reduzir movimento, **When** o visitante abre a tela
+   inicial, **Then** o céu, os rótulos flutuantes, a Lua em rede e o cursor das abas ficam
+   parados ou mudam sem animação.
 
 ---
 
@@ -175,44 +257,121 @@ de novo, o candidato volta à mesma escolha.
   reconhecido como o mesmo CPF.
 - Portal sem conexão com o banco no momento do cadastro ou do login: mensagem amigável de
   indisponibilidade temporária, sem perder o que foi digitado (exceto senhas) e sem criar
-  cadastro pela metade.
+  cadastro pela metade; o rodapé mostra a mensagem de instabilidade.
 - Sessão expirada no meio da navegação: ao agir, o candidato é levado ao login e, depois de
   entrar, volta à área do candidato.
 - Visitante acessa diretamente o endereço da área do candidato sem estar conectado: é levado
   ao login.
-- Destinos ainda não entregues (área de estudos, validação de certificado e fluxo da
-  certificação, das features 003 a 005): o caminho existe e leva a uma página que informa que
-  a funcionalidade estará disponível em breve, com retorno à tela de origem.
+- Visitante sem sessão, na página "Disponível em breve", escolhe "Voltar para a área do
+  candidato": é levado ao login.
+- Candidato conectado na tela inicial escolhe "Entrar" ou "Criar minha conta": é levado à área
+  do candidato, sem ver os formulários.
+- Destinos ainda não entregues (área de estudos e página do tema da 003, fluxo da certificação
+  da 004, validação de certificado da 005, flashcards e perfil da 007): o caminho existe e leva à
+  página "Disponível em breve" com o texto daquela funcionalidade.
+- Navegador sem JavaScript ou sem suporte a desenho em canvas: a Lua em rede aparece como imagem
+  estática, e o conteúdo da tela inicial continua legível.
+- Navegador sem acesso à internet (só à rede local do portal): todas as telas carregam com as
+  fontes, imagens e estilos completos.
+- Carga de conteúdo do banco diferente de 12 temas, 48 questões e 192 alternativas: o rodapé
+  sinaliza a carga incompleta no mesmo padrão discreto de falha (FR-013 da 001).
 
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
 
-**Tela inicial (RF01)**
+**Tela inicial (RF01, tela 1)**
 
-- **FR-001**: A tela inicial MUST ser acessível sem login e apresentar a descrição da
-  certificação, seus objetivos, as regras e as instruções para realizar a avaliação (RF01).
+- **FR-001**: A tela inicial MUST ser acessível a qualquer pessoa, com ou sem login, e apresentar,
+  nesta ordem, as oito seções da tela 1 de `docs/telas.md`: (1) hero; (2) O que é Scrum; (3) A
+  trilha; (4) Por que estudar aqui funciona; (5) Entre e use 100% do Lunar Celer; (6) De onde vem
+  este portal; (7) Perguntas frequentes; (8) Chamada final. Juntas, elas apresentam a descrição
+  da certificação, seus objetivos, as regras e as instruções para realizar a avaliação (RF01).
 - **FR-002**: As regras MUST incluir, no mínimo: 12 temas; uma questão por tema, sorteada para
   cada candidato; 150 segundos por questão; resposta única (cada tema é respondido uma só
-  vez); aprovação com 65% ou mais de acertos; certificado eletrônico com QR Code para
-  validação pública.
-- **FR-003**: As instruções MUST explicar que o candidato pode estudar antes de começar, pode
-  interromper a certificação e retomá-la a partir do próximo tema não respondido, e que fechar
-  ou recarregar a página, perder a conexão ou esgotar o tempo durante uma questão encerra a
-  questão sem nova chance (RF13, RF14).
-- **FR-004**: A tela inicial MUST oferecer quatro caminhos: cadastrar-se, entrar, ir para a área
-  de estudos e validar um certificado.
-- **FR-004a**: A tela inicial MUST manter, de forma discreta, a indicação de que o portal está no
-  ar e conectado ao banco, e MUST exibir com destaque os avisos de banco indisponível e de carga
-  incompleta, preservando o FR-013 da feature 001.
+  vez); aprovação com 65% ou mais de acertos (8 de 12); certificado eletrônico com QR Code para
+  validação pública. Elas MUST aparecer no hero (parágrafo e "Como funciona"), mesmo onde o texto
+  do protótipo não traz todas.
+- **FR-003**: As instruções MUST explicar, no hero e nas perguntas frequentes, que o candidato
+  pode estudar antes de começar, pode pausar entre um tema e outro e retomar a partir do próximo
+  tema pendente, e que fechar ou recarregar a página, perder a conexão ou esgotar o tempo durante
+  uma questão encerra a questão, que conta como erro, sem nova chance (RF11, RF13, RF14).
+- **FR-004**: A tela inicial MUST oferecer os caminhos: criar conta ("Criar minha conta"),
+  entrar ("Entrar" e "Já tenho conta"), ir para a área de estudos (cada corpo da trilha e
+  "Aprofundar em Terra · Introdução ao Scrum") e validar um certificado (link do rodapé). Todo
+  botão "Começar pelos estudos" (hero, "Por que estudar aqui funciona" e chamada final) MUST
+  levar à seção da trilha na própria página enquanto a área de estudos (feature 003) não existir,
+  e à área de estudos depois. Os demais destinos ainda não entregues seguem o FR-024.
+- **FR-004a**: Todas as telas desta feature MUST ter o rodapé de `docs/telas.md`: o estado do
+  portal de forma discreta ("Portal no ar e banco conectado"), "Projeto acadêmico da Fatec
+  Jacareí" e os links "Termos de uso e privacidade" e "Validar certificado". Quando o banco
+  falhar, o estado MUST dar lugar à mensagem de instabilidade no estilo de falha do kit (classe
+  `lc-status--falha`, "Instabilidade no portal. Tente de novo em alguns minutos."). A sinalização
+  de carga incompleta do FR-013 da feature 001 MUST continuar existindo, no mesmo estilo
+  discreto de falha.
 - **FR-004b**: As regras e instruções da certificação (12 temas, uma questão por tema, 150
   segundos por questão, resposta única, aprovação com 65% ou mais, interrupção encerra a
   questão) MUST ser exibidas em linguagem direta, sem metáfora astronômica, em todos os lugares
   onde aparecem (tela inicial, confirmação de início e demais telas). O tema visual pode
   aparecer em rótulos de ação e na decoração, conforme `docs/identidade-visual.md`, mas MUST NOT
   substituir termos ágeis nem o enunciado de uma regra.
+- **FR-031**: O hero MUST trazer, à esquerda, o título "Um aprendizado astronômico", o parágrafo
+  com as regras, os botões "Criar minha conta" (principal) e "Começar pelos estudos" e o bloco
+  "Como funciona" com três passos numerados (Estude os 12 temas, Responda dentro do tempo,
+  Alcance 65% de acertos); à direita, a Lua em rede com cinco rótulos de vidro (Google,
+  Salesforce, Spotify, Saab e Adobe) e, abaixo dela, o cartão de fato, que mostra "Quem usa
+  Scrum." até a pessoa interagir. Passar o mouse, focar ou tocar em um rótulo MUST acendê-lo e
+  mostrar no cartão o fato daquela empresa; os rótulos MUST ser acionáveis por teclado.
+- **FR-032**: A Lua em rede MUST girar de forma lenta e contínua, MUST pausar quando a aba do
+  navegador estiver oculta ou quando ela sair da tela, MUST ficar parada quando o usuário pedir
+  menos movimento e MUST aparecer como imagem estática quando não houver JavaScript ou suporte a
+  desenho. Ela é decorativa: não carrega informação que não esteja também em texto.
+- **FR-033**: Os fatos das empresas MUST afirmar só o que suas fontes sustentam, com o texto da
+  seção 9 de `docs/identidade-visual.md` (que prevalece sobre o texto do protótipo), e as
+  empresas MUST aparecer só pelo nome, em texto, nunca com logotipo.
+- **FR-034**: Cada um dos cinco fatos (Google, Salesforce, Spotify, Saab e Adobe) MUST ter a URL
+  da sua fonte registrada em `docs/referencias.md`, com a frase exibida, a fonte citada na
+  identidade visual, a URL e a data de acesso. Cada fonte MUST ser pesquisada e conferida: a URL
+  abre e o conteúdo sustenta a frase inteira. Um fato que a fonte encontrada não sustenta por
+  inteiro MUST ser reescrito até caber nela; se nenhuma fonte for encontrada, o fato MUST sair da
+  página e a troca da empresa MUST ser levada ao mantenedor.
+- **FR-035**: A seção "O que é Scrum" MUST trazer a definição em uma frase (framework leve,
+  ciclos curtos chamados Sprints, de no máximo um mês), os três pilares do empirismo, blocos
+  recolhíveis com as três responsabilidades e com os três artefatos e seus compromissos, a Sprint
+  desenhada como órbita com os quatro eventos que ela contém numerados (Sprint Planning, Daily
+  Scrum, Sprint Review e Sprint Retrospective) e o link "Aprofundar em Terra · Introdução ao
+  Scrum". Todo o conteúdo MUST ser fiel ao Scrum Guide 2020, com os termos usados no guia.
+- **FR-036**: A trilha MUST mostrar os 12 corpos celestes na ordem de `docs/identidade-visual.md`,
+  seção 7, com tamanho relativo e o nome no formato "Corpo · Tema", cada um levando à área de
+  estudos.
+- **FR-037**: A seção "Por que estudar aqui funciona" MUST seguir a grade em bento da tela 1: um
+  bloco largo com o princípio "Estudar e depois se testar" (efeito de testagem), a ilustração do
+  ciclo Estudar e Responder em volta da Lua e o botão "Começar pelos estudos", e três blocos
+  menores (correção na hora, situações reais, progresso visível). A seção MUST NOT apresentar
+  números de eficácia que não tenham sido medidos.
+- **FR-038**: A seção "Entre e use 100% do Lunar Celer" MUST convidar a criar conta, explicar
+  que a área de estudos é aberta e oferecer os botões "Criar minha conta" e "Já tenho conta". A
+  lista do que a conta libera MUST mostrar só o que já existe: a certificação entra com a
+  feature 004; flashcards, evolução por tema e conquistas entram com a feature 007. Enquanto
+  nenhum item existir, como nesta feature, a lista não aparece.
+- **FR-039**: A seção "De onde vem este portal" MUST trazer a origem acadêmica (ABP do 1º
+  semestre de DSM da Fatec Jacareí, Centro Paula Souza), o problema que motivou o projeto, o
+  aviso de que o certificado não substitui certificações oficiais de Scrum e a ficha com
+  instituição, curso, programa, orientação (Prof. Antonio Egydio, Prof. Marcelo Sudo e Prof.
+  Arley Souza), colaboradores (Pedro Lucas) e tecnologias (HTML, CSS e JavaScript, Node.js,
+  PostgreSQL, Docker e Scrum; Figma só entra quando o protótipo existir no Figma).
+- **FR-040**: As perguntas frequentes MUST ser itens recolhíveis sobre: estudar antes, pausar,
+  internet caindo durante uma questão, refazer a certificação (resposta conforme a decisão D1) e
+  como conferir um certificado.
+- **FR-041**: A chamada final MUST trazer "Sua jornada começa em Mercúrio", o texto de apoio e os
+  botões "Criar minha conta" e "Começar pelos estudos".
+- **FR-042**: O cabeçalho da tela inicial MUST ter, à direita, as abas deslizantes Scrum, Trilha,
+  Método e Sobre (que levam às seções 2, 3, 4 e 6) e o botão "Entrar". O cursor das abas MUST
+  deslizar até a aba sob o mouse ou o foco; nenhuma aba começa marcada; ao rolar, a aba marcada
+  MUST acompanhar a seção visível, e essa marcação MUST ser anunciada como a localização atual
+  para tecnologias assistivas.
 
-**Cadastro (RF03, RNF03)**
+**Cadastro (RF03, RNF03, tela 2)**
 
 - **FR-005**: O cadastro MUST pedir CPF, nome completo, e-mail, senha, confirmação da senha e
   aceite dos termos de uso e privacidade, e nenhum outro dado pessoal (Princípio VI).
@@ -231,19 +390,45 @@ de novo, o candidato volta à mesma escolha.
   (RNF03, Princípio VI).
 - **FR-011**: O cadastro MUST exigir o aceite explícito dos termos de uso e privacidade e
   registrar a data e a hora do aceite (Princípio VI).
-- **FR-012**: Os termos de uso e privacidade MUST estar em uma página própria, acessível sem
-  login a partir do cadastro e da tela inicial, explicando quais dados são coletados (CPF,
-  nome, e-mail e senha), para que servem (identificar o candidato, emitir e permitir a
-  validação pública do certificado), que a validação pública mostra o CPF mascarado e nunca o
-  e-mail, que o endereço de rede é usado só momentaneamente para limitar tentativas, sem ser
-  gravado, e como pedir esclarecimentos sobre os dados (pela página de issues do repositório do
-  projeto, sem publicar dados pessoais na mensagem).
+- **FR-012**: Os termos de uso e privacidade MUST estar em uma página própria (tela 5), acessível
+  sem login a partir do cadastro e do rodapé, com índice lateral, a data da última atualização no
+  topo e, em linguagem simples, as seções: quem somos; quais dados são coletados (no cadastro:
+  CPF, nome completo, e-mail, senha e data e hora do aceite; durante a certificação: tema,
+  questão sorteada, alternativa escolhida, alternativa correta e data e hora de cada resposta);
+  para que servem (identificar o candidato, compor o certificado, formar o histórico e calcular
+  a nota), incluindo que o endereço de rede é usado só no momento do acesso para limitar
+  tentativas, sem ser gravado; o que fica público (nome, CPF mascarado, resultado e data na
+  validação; o e-mail nunca); por quanto tempo os dados são guardados ("os dados ficam guardados
+  enquanto a conta existir; a exclusão pode ser pedida a qualquer momento e é atendida em até 15
+  dias; ao fim do projeto acadêmico, a base é apagada"); os direitos pela LGPD (acesso, correção
+  e exclusão da conta); e o contato. O contato MUST ser o e-mail exclusivo do projeto (pendência
+  P-01) e MUST NOT ser as issues públicas do repositório nem outro canal público (Princípio
+  VI).
+- **FR-012a**: Os termos MUST NOT ser publicados com marcadores pendentes. Enquanto o e-mail
+  exclusivo do projeto (pendência P-01) não existir, a página de termos fica bloqueada para
+  publicação e nenhum endereço pode ser inventado para preenchê-la; como o cadastro exige o
+  aceite dos termos (FR-011), a feature não pode ser entregue antes disso.
 - **FR-013**: Concluído o cadastro, o candidato MUST ficar conectado e ser levado à área do
   candidato; o cadastro MUST NOT iniciar a certificação (RF02).
 - **FR-014**: Mensagens de recusa MUST indicar o campo a corrigir e preservar os campos já
   preenchidos, exceto senha e confirmação.
+- **FR-043**: A tela de cadastro MUST seguir a grade em bento da tela 2: no bloco largo, à
+  esquerda, a Lua nova apagada, o título "Criar conta" e os avisos "Sua Lua começa nova" e
+  "Criar a conta não inicia a prova"; à direita, o formulário com CPF (com ou sem pontuação,
+  teclado numérico), nome completo ("do jeito que deve aparecer no certificado"), e-mail, senha
+  e confirmação lado a lado com botão de mostrar e ocultar, e o aceite obrigatório dos termos com
+  link; nos blocos menores, "Já tem conta?" e "Como seus dados são usados". A tela MUST ter os
+  estados: normal; erros por campo; CPF já cadastrado (sem revelar dados do titular, com atalho
+  para Entrar); senha longa demais para ser protegida por inteiro.
+- **FR-044**: Ao concluir o cadastro, além de levar o candidato à área do candidato, o portal
+  MUST confirmar a criação da conta com uma notificação de sucesso do kit
+  (`LunarCeler.notificar`, título "Conta criada"); as notificações são infraestrutura do kit,
+  entregue nesta feature (`docs/telas.md`, item 21). A notificação MUST NOT ser o único sinal: a
+  própria área do candidato, com a saudação pelo nome, confirma que a conta existe.
+- **FR-045**: Os textos que falam da senha (bloco "Como seus dados são usados" e termos) MUST
+  dizer que ela é guardada de forma irreversível: nem a equipe do projeto consegue vê-la.
 
-**Login e sessão (RF04)**
+**Login e sessão (RF04, tela 3)**
 
 - **FR-015**: O login MUST aceitar exclusivamente CPF (com ou sem máscara) e senha; tentativas
   com e-mail ou qualquer outro identificador MUST ser recusadas com orientação para usar o CPF.
@@ -264,35 +449,73 @@ de novo, o candidato volta à mesma escolha.
 - **FR-020**: A identidade do candidato conectado MUST ser determinada pelo servidor a cada
   acesso; nenhum dado enviado pelo navegador pode, sozinho, fazer alguém passar por outro
   candidato (Princípio I).
+- **FR-046**: A tela de login MUST seguir a grade em bento da tela 3: formulário só com CPF e
+  senha (com mostrar e ocultar), o aviso de que não há recuperação de senha nesta versão e os
+  blocos menores "Ainda não tem conta?" e "Quer estudar antes?". A tela MUST ter os estados:
+  normal; erro genérico ("CPF ou senha inválidos"); bloqueio por excesso de tentativas, sem
+  revelar se o CPF existe; tentativa com e-mail ("O login é feito com o CPF cadastrado"); sessão
+  expirada.
 
-**Área do candidato (RF02)**
+**Área do candidato (RF02, tela 4)**
 
-- **FR-021**: A área do candidato MUST exigir login, saudar o candidato pelo nome e oferecer três
-  caminhos: iniciar a certificação, estudar antes e sair para voltar depois (RF02).
+- **FR-021**: A área do candidato MUST exigir login e seguir a tela 4: no bloco largo, a
+  saudação pelo nome, título e texto conforme a situação e, à direita, a Lua grande com a trilha
+  de 12 marcos; nos blocos menores, "Estudar antes" (com o caminho para a área de estudos) e
+  "Antes de cada questão" (o cronômetro de 150 segundos começa quando a questão aparece; sair da
+  página encerra a questão aberta; link "Rever as regras", que leva às regras da tela inicial).
+  Ela MUST oferecer três caminhos: iniciar a certificação, estudar antes e sair para voltar
+  depois (RF02).
 - **FR-022**: Iniciar a certificação MUST ser sempre uma ação explícita do candidato, precedida
   de uma confirmação que lembre as regras principais; nem o cadastro nem o login iniciam a
   certificação.
-- **FR-023**: Candidato conectado que abrir a tela inicial, o cadastro ou o login MUST ser
-  direcionado à área do candidato; visitante não conectado que abrir a área do candidato MUST
-  ser direcionado ao login.
-- **FR-024**: Enquanto a área de estudos (003), a validação de certificado (005) e o fluxo da
-  certificação (004) não forem entregues, os caminhos para eles MUST existir e levar a uma
-  página que informe que a funcionalidade estará disponível em breve, com retorno à tela de
-  origem; cada feature seguinte substitui a sua página provisória.
+- **FR-023**: Candidato conectado que abrir o cadastro ou o login MUST ser direcionado à área do
+  candidato; a tela inicial continua acessível a ele, para que o link "Rever as regras"
+  funcione. Visitante não conectado que abrir a área do candidato MUST ser direcionado ao login.
+- **FR-024**: Enquanto um destino não for entregue, o caminho para ele MUST existir e levar à
+  página "Disponível em breve" (tela 6): ilustração de eclipse, título e texto conforme a
+  funcionalidade, e os botões "Voltar para a área do candidato" e "Ir para o início". Os textos
+  existem para área de estudos (003), certificação (004) e validação (005), e, para os links do
+  cabeçalho logado, flashcards e perfil (007). Cada feature, ao ser entregue, substitui o seu
+  destino provisório; a página some quando o último deles for substituído.
+- **FR-047**: A área do candidato tem quatro estados: não iniciada, em andamento, aprovada e
+  reprovada. Nesta feature, MUST aparecer só o estado "não iniciada": título "Sua Lua ainda está
+  nova", botão "Iniciar a certificação", aviso de que a primeira questão começa só depois de
+  confirmar, Lua sem nenhuma parte acesa e "0 de 12 temas concluídos". Os estados "em andamento"
+  (feature 004), "aprovada" e "reprovada" (feature 005) só passam a aparecer quando essas
+  features existirem, e esta feature MUST NOT simulá-los. A Lua acende 1/12 por tema concluído,
+  nunca por acerto, e esse progresso é calculado, não armazenado (Princípio IV).
 
-**Experiência, identidade visual e acessibilidade (RNF01)**
+**Experiência, identidade visual e acessibilidade (RNF01, Princípios II e XI)**
 
 - **FR-025**: Todas as telas desta feature (inicial, cadastro, login, termos, área do candidato
-  e páginas provisórias) MUST ser projetadas primeiro para celular e funcionar de telas
-  estreitas a telas largas sem rolagem horizontal (RNF01, Princípio II).
-- **FR-026**: As telas MUST seguir a identidade visual de `docs/identidade-visual.md`: céu escuro,
-  a Lua como elemento central da tela inicial, cores e tipografia definidas; as regras de
-  linguagem (termos ágeis e enunciado das regras sem metáfora) estão no FR-004b.
-- **FR-027**: As telas MUST atender ao contraste mínimo AA, ter foco visível em todos os
-  elementos acionáveis, ser utilizáveis só com teclado, ter texto alternativo em toda imagem
-  e desligar animações quando o usuário pedir menos movimento.
+  e "Disponível em breve") MUST ser projetadas primeiro para celular e funcionar a partir de 360
+  px de largura, sem rolagem horizontal (RNF01, Princípio II).
+- **FR-026**: Toda a interface desta feature MUST usar o kit de interface em `app/public/kit`
+  (`docs/kit-interface.md`) e portar, sem redesenhar, as telas Main, Cadastro, Entrar,
+  AreaCandidato, Termos e EmBreve de `docs/prototipo/`: layout, textos e estilos vêm do
+  protótipo, convertidos para as classes e os tokens do kit, sem bibliotecas de terceiros nem
+  JavaScript inline (Princípio II). Onde o protótipo divergir de `docs/identidade-visual.md`,
+  vale a identidade visual (Princípio XI), por exemplo: cinza `#8A8A93` em todo texto abaixo de
+  18 px, Inter só nos pesos 300, 400 e 500 e os textos dos fatos da seção 9.
+- **FR-027**: As telas MUST atender ao contraste mínimo AA em todo texto (o cinza `#71717A` do
+  protótipo só em elementos decorativos), ter foco visível em âmbar em todos os elementos
+  acionáveis, ter alvos de toque de pelo menos 44 px (incluindo abas, botão de mostrar senha e
+  botão de fechar notificação), ser utilizáveis só com teclado, ter rótulos visíveis nos campos e
+  mensagens de erro ligadas ao campo, ter texto alternativo em toda imagem informativa (as
+  decorativas ficam ocultas para leitores de tela) e respeitar o pedido de menos movimento em
+  toda animação (Princípio XI).
 - **FR-028**: O portal MUST funcionar sem acesso à internet durante a apresentação: nenhuma tela
-  desta feature pode depender de recursos externos (fontes, imagens ou scripts de terceiros).
+  desta feature pode carregar fontes, imagens, estilos ou scripts de outro domínio ou de CDN
+  (Princípio II).
+- **FR-048**: O portal MUST se apresentar como Lunar Celer: a marca (círculo com Lua crescente e
+  o nome) abre o cabeçalho de todas as telas, e o título de cada página termina em "· Lunar
+  Celer". O cabeçalho público MUST ter "Voltar ao início" nas páginas internas e, na tela
+  inicial, as abas e o botão "Entrar" (FR-042). O cabeçalho logado MUST ter a marca (que leva à
+  área do candidato) e os links "Área de estudos", "Flashcards", o nome do candidato (que leva ao
+  perfil) e o botão "Sair", que encerra a sessão e leva à tela inicial.
+- **FR-049**: Todas as telas desta feature MUST ter ao fundo o céu estrelado animado da
+  identidade visual, que nunca recebe clique e fica parado quando o usuário pede menos
+  movimento.
 
 **Operação (Princípio V)**
 
@@ -312,8 +535,10 @@ de novo, o candidato volta à mesma escolha.
 - **Sessão do candidato**: estado de "conectado" de um candidato, com início e validade de até 8
   horas; termina ao sair ou ao expirar. Não guarda dados pessoais além da identificação do
   candidato.
-- **Termos de uso e privacidade**: texto público e estático, com data de vigência, cujo aceite
-  é registrado no candidato.
+- **Termos de uso e privacidade**: texto público e estático, com data da última atualização,
+  cujo aceite é registrado no candidato.
+- **Referência de fato**: registro em `docs/referencias.md` de cada fato exibido sobre uma
+  empresa: frase, fonte, URL e data de acesso. É documentação do projeto, não dado do banco.
 
 ## Success Criteria *(mandatory)*
 
@@ -324,8 +549,8 @@ de novo, o candidato volta à mesma escolha.
   respondem corretamente, após até 2 minutos de leitura, quanto tempo há por questão e qual o
   percentual mínimo para aprovação (teste com pessoas medido após a entrega; antes dela, a
   presença das regras e instruções é conferida no cenário 1 do quickstart).
-- **SC-002**: Um visitante conclui o cadastro em até 2 minutos, do clique em "cadastrar" até a
-  área do candidato.
+- **SC-002**: Um visitante conclui o cadastro em até 2 minutos, do clique em "Criar minha conta"
+  até a área do candidato.
 - **SC-003**: Um candidato cadastrado entra no portal em até 30 segundos.
 - **SC-004**: 100% de um conjunto de teste com CPFs válidos (com e sem máscara) é aceito, e 100%
   dos inválidos (dígitos verificadores errados, dígitos todos iguais, tamanho errado, letras) é
@@ -333,49 +558,106 @@ de novo, o candidato volta à mesma escolha.
 - **SC-005**: Em 100% das tentativas de login malsucedidas, a mensagem é idêntica para CPF não
   cadastrado e senha errada, e a mensagem de bloqueio é idêntica para CPF cadastrado e não
   cadastrado.
+- **SC-006**: 0 senhas legíveis armazenadas ou registradas em logs, conferido em inspeção do
+  banco e dos registros após uma rodada de testes de cadastro e login.
+- **SC-007**: Todas as telas desta feature ficam utilizáveis, sem rolagem horizontal, de 360 px a
+  1920 px de largura, e passam na verificação de contraste AA.
+- **SC-008**: O portal continua subindo com um único comando a partir de um clone limpo, e o
+  fluxo cadastro → área do candidato → sair → entrar funciona logo na primeira subida, sem
+  nenhum passo manual de configuração.
 - **SC-009**: Pelo menos 30 pessoas conseguem entrar no mesmo minuto a partir da mesma rede sem
   nenhum bloqueio, enquanto um mesmo CPF fica bloqueado na 6ª tentativa errada dentro de 15
   minutos.
 - **SC-010**: Em revisão das telas desta feature, 100% das regras e instruções aparecem com os
   termos ágeis e os números oficiais (12 temas, 150 segundos, 65%), sem nenhuma metáfora
   astronômica no enunciado.
-- **SC-006**: 0 senhas legíveis armazenadas ou registradas em logs, conferido em inspeção do
-  banco e dos registros após uma rodada de testes de cadastro e login.
-- **SC-007**: Todas as telas desta feature ficam utilizáveis, sem rolagem horizontal, de 320 px a
-  1920 px de largura, e passam na verificação de contraste AA.
-- **SC-008**: O portal continua subindo com um único comando a partir de um clone limpo, e o
-  fluxo cadastro → área do candidato → sair → entrar funciona logo na primeira subida, sem
-  nenhum passo manual de configuração.
+- **SC-011**: Os 5 fatos sobre empresas têm fonte registrada em `docs/referencias.md` com URL que
+  abre, e, em conferência frase a frase contra cada fonte, 0 frases afirmam mais do que a fonte
+  sustenta.
+- **SC-012**: Em revisão lado a lado das 6 telas com o protótipo e com `docs/telas.md`, 100% das
+  seções, textos e estados das telas 1 a 6 estão presentes (exceto os estados da área do
+  candidato que dependem das features 004 e 005), e toda diferença visual em relação ao
+  protótipo é uma correção prevista em `docs/identidade-visual.md`.
+- **SC-013**: Navegando só com teclado, 100% dos elementos acionáveis das 6 telas são alcançados
+  com foco visível; 100% dos alvos de toque medem pelo menos 44 px; com a redução de movimento
+  ativada, 0 animações ficam em execução.
+- **SC-014**: Com a máquina sem acesso à internet, as 6 telas carregam por completo, com fontes e
+  imagens, e 0 requisições saem para outros domínios.
+- **SC-015**: Em conferência da seção "O que é Scrum" contra o Scrum Guide 2020, 0 divergências
+  de definição ou de termo.
 
 ## Assumptions
 
-- O texto da tela inicial (descrição, objetivos, regras e instruções) e o dos termos de uso e
-  privacidade são escritos pela equipe do projeto com base no documento do desafio; não há
-  revisão jurídica no escopo acadêmico. Pedidos sobre os dados pessoais (correção ou exclusão)
-  são atendidos fora do sistema, pela página de issues do repositório do projeto no GitHub
-  (decisão do mantenedor; sem e-mail pessoal), com a orientação de não publicar dados pessoais
-  na mensagem.
+- O texto das telas vem do protótipo e de `docs/telas.md`, escrito pela equipe do projeto com
+  base no documento do desafio e no Scrum Guide 2020; não há revisão jurídica dos termos no
+  escopo acadêmico. Pedidos sobre os dados pessoais (acesso, correção ou exclusão) são atendidos
+  fora do sistema, pelo e-mail exclusivo do projeto, ainda a criar (pendência P-01).
 - Não há edição de perfil (decisão D5 do dossiê: o certificado lê do cadastro) nem recuperação
-  de senha (fora do MVP, Princípio VII).
+  de senha (fora do escopo, Princípio VII). O link do nome do candidato para o perfil leva à
+  página "Disponível em breve" até a feature 007.
 - Cada candidato faz uma única certificação (decisão D1, padrão assumido a confirmar com o
-  professor); a tela inicial e a confirmação de início não prometem novas tentativas.
+  professor); a resposta da pergunta frequente sobre refazer segue esse padrão e nada na tela
+  inicial promete novas tentativas.
 - Interromper ou recarregar a página durante uma questão encerra a questão (RF14 e decisão D6,
   padrão assumido); por isso as instruções avisam isso explicitamente.
 - A área de estudos não exige login (decisão D8).
+- Os 12 temas e seus corpos celestes seguem `docs/identidade-visual.md`, seção 7, que depende da
+  decisão D3; se a lista mudar, a trilha acompanha.
 - Os padrões do dossiê seção 4.2 são adotados: senha com no mínimo 8 caracteres, sessão de 8
   horas, mensagem de login genérica. O limite de tentativas do dossiê (5 por minuto por IP)
   foi substituído, por decisão do mantenedor, pela contagem por CPF (5 falhas em 15 minutos,
   bloqueio de 15 minutos) mais um limite folgado por endereço de rede (cerca de 60
   tentativas malsucedidas por minuto, no login e no cadastro), para não bloquear a sala
-  inteira durante a apresentação. O limite de 64 caracteres
-  na senha é um padrão desta spec para evitar entradas abusivas.
+  inteira durante a apresentação. O limite de 64 caracteres na senha é um padrão desta spec
+  para evitar entradas abusivas.
 - O campo de confirmação da senha é um padrão de usabilidade; ele não é armazenado.
-- A indicação de progresso pela Lua (RF21, identidade visual) e o conteúdo real da área de
-  estudos, da validação e da prova pertencem às features 003 a 005; nesta feature a área do
-  candidato só oferece os caminhos.
-- A identidade visual de `docs/identidade-visual.md` vale a partir desta feature, que também cria
-  a base de estilos (cores e tipografia) usada pelas seguintes. A página inicial de status da
-  feature 001 dá lugar à tela inicial de apresentação, que mantém o estado do portal de forma
-  discreta (FR-004a); o quickstart e o README da 001 serão ajustados no plano desta feature.
+- O kit de interface (`app/public/kit`, versão 1.1) já existe e é a base de estilos e
+  componentes desta feature e das seguintes; esta feature não cria outra base de estilos. A
+  página de estado da feature 001 dá lugar à tela inicial, que mantém o estado do portal no
+  rodapé (FR-004a); o quickstart e o README da 001 serão ajustados no plano desta feature.
+- O protótipo é a referência de layout e texto, mas não de comportamento: os dados dele são
+  fictícios, e os eventos no HTML viram código em arquivos próprios (`docs/prototipo/LEIAME.md`).
+- Divergências entre as fontes resolvidas nesta spec: a ordem das seções segue `docs/telas.md`
+  (o protótipo põe as perguntas frequentes antes de "Entre e use 100%"); "Começar pelos
+  estudos" leva à trilha na própria página até a feature 003 e depois à área de estudos (decisão
+  do mantenedor); o link "Rever as regras" leva às regras do hero (o protótipo aponta para uma
+  âncora que não existe); a tela inicial deixa de redirecionar o candidato conectado (FR-023),
+  para que esse link funcione.
 - O ambiente-alvo continua sendo a execução local definida na feature 001; publicação em
   servidor com HTTPS está fora do escopo, mas nada nesta feature deve impedi-la.
+
+## Pendências
+
+- **P-01 (bloqueia a entrega da feature)**: e-mail exclusivo do projeto para pedidos sobre dados
+  pessoais (Princípio VI), ainda a ser criado pelo mantenedor. Não usar as issues do repositório
+  nem inventar endereço. Sem ele, os termos não são publicados e, como o cadastro exige o aceite
+  (FR-011), a feature não pode ser entregue (FR-012a).
+- **P-03**: fontes dos fatos sobre empresas. Pesquisa feita em 02/10/2026 e registrada em
+  `docs/referencias.md` (FR-034): Spotify e Adobe sustentados; Google (o ano de 2006 e "o
+  Scrum"), Salesforce ("times de nuvem" e "variação") e Saab ("centenas de times") sustentados
+  em parte, aguardando decisão do mantenedor sobre o texto. Enquanto isso, o SC-011 não é
+  atendido. A fonte da Adobe citada na identidade visual (Scrum Alliance) difere da real
+  (conferência Agile 2012).
+- **P-04**: decisão D1 (refazer a certificação), que define a resposta da pergunta frequente
+  (FR-040); padrão assumido: tentativa única.
+- **P-05**: decisão D3 (os 12 temas), que afeta a trilha (FR-036) e a chamada final (FR-041).
+- **P-06**: decisão D6 (recarregar durante a questão), que afeta as instruções (FR-003).
+- **P-09 (para a feature 007)**: a spec da 007 deve atualizar os termos (FR-012) com as revisões
+  de flashcards e a evolução entre os dados coletados (Princípio VI); registrada também nas
+  pendências de `docs/telas.md`.
+
+## Conformidade com a constituição (versão 3.0.0)
+
+| Princípio | Como esta spec atende | Situação |
+|---|---|---|
+| I. Servidor é a autoridade | A identidade do candidato é determinada pelo servidor a cada acesso (FR-020); a validação de CPF, senha e aceite é do servidor. | ✅ |
+| II. Front-end sem bibliotecas de terceiros | Kit próprio em CSS e JavaScript puros, sem JavaScript inline (FR-026); nada de CDN (FR-028); mobile-first a partir de 360 px (FR-025). | ✅ |
+| III. PostgreSQL com SQL explícito | Cadastro e login usam o esquema oficial existente; nenhum requisito pede ORM ou mudança de esquema. | ✅ |
+| IV. Dados derivados não são armazenados | A Lua e a trilha da área do candidato são calculadas, nunca gravadas (FR-047). | ✅ |
+| V. Comando único | O portal continua subindo com um só comando e sem segredo versionado (FR-029, SC-008). | ✅ |
+| VI. LGPD e minimização | Só CPF, nome, e-mail e senha no cadastro (FR-005); senha protegida e irreversível (FR-010, FR-045); aceite registrado (FR-011); CPF mascarado e e-mail nunca na validação, conforme os termos (FR-012); contato privado, nunca issues públicas (FR-012, FR-012a). | ⚠ P-01 em aberto: bloqueia a entrega |
+| VII. Escopo do site final e ordem de entrega | Primeira das features obrigatórias (002 a 006). Os caminhos para 003 a 005 e para os complementos da 007 levam à página "Disponível em breve" (FR-024), sem implementar nada deles; a lista de "Entre e use 100%" só mostra o que já existe (FR-038). As notificações (FR-044) são infraestrutura do kit entregue nesta feature, não complemento (`docs/telas.md`, item 21). | ✅ |
+| VIII. Rastreabilidade | Requisitos citam RF, RNF e as telas de `docs/telas.md`. | ✅ |
+| IX. Testes das regras críticas | Nenhuma das regras críticas (sorteio, prazo, resposta única, nota, certificado) é tocada. | Não se aplica |
+| X. Padrões de código | Textos, mensagens e identificadores de domínio em português. | ✅ |
+| XI. Interface fiel e acessível | Kit e protótipo portado sem redesenho (FR-026); identidade visual prevalece; AA com o cinza `#8A8A93`, foco visível, alvos de 44 px e menos movimento (FR-027, FR-032, FR-049, SC-013). | ✅ kit 1.1: abas e fechar notificação com 44 px; foco com afastamento de 3 px também nos campos |

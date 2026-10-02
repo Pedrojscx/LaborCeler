@@ -1,3 +1,6 @@
+# DESATUALIZADO (2026-10-02): gerado a partir da versão anterior da spec, antes da
+# constituição 3.0.0, da identidade visual 2.0 e do kit de interface; não vale como
+# referência. Será regenerado depois que todas as specs estiverem prontas.
 openapi: 3.1.0
 info:
   title: Portal de Certificação em Metodologias Ágeis - Autenticação

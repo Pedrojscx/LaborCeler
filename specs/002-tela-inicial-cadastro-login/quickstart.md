@@ -1,3 +1,7 @@
+> **⚠ DESATUALIZADO (2026-10-02).** Este artefato foi gerado a partir da versão anterior da
+> spec, antes da constituição 3.0.0, da identidade visual 2.0 e do kit de interface, e não vale
+> como referência. Será regenerado depois que todas as specs estiverem prontas.
+
 # Quickstart: validação da feature 002
 
 Roteiro para provar, de ponta a ponta, que a tela inicial, o cadastro e o login atendem a spec.

@@ -1,6 +1,6 @@
 # Telas do Lunar Celer
 
-Versão 1.0 (02/10/2026). Descreve as telas do protótipo (canvas do projeto, acesso do mantenedor: https://claude.ai/artifact/5MK3DegETGbv3t81EsqtZF) para orientar specs e implementação. Tokens, componentes e regras visuais estão em `docs/identidade-visual.md`. Requisitos citados pelo ID de `docs/requisitos-desafio.md`.
+Versão 1.1 (02/10/2026). Descreve as telas do protótipo (canvas do projeto, acesso do mantenedor: https://claude.ai/artifact/5MK3DegETGbv3t81EsqtZF) para orientar specs e implementação. Tokens, componentes e regras visuais estão em `docs/identidade-visual.md`. Requisitos citados pelo ID de `docs/requisitos-desafio.md`.
 
 Convenções: as rotas são sugestões para o plano de cada feature; "Logado" significa que a tela exige sessão e redireciona para Entrar sem ela; textos entre colchetes são dados dinâmicos ou pendências.
 
@@ -44,9 +44,11 @@ Convenções: as rotas são sugestões para o plano de cada feature; "Logado" si
 | 18 | Flashcards: fim da sessão | `/flashcards/resumo` | Logado | 007 | complemento |
 | 19 | Perfil e evolução | `/perfil` | Logado | 007 | complemento |
 | 20 | Página não encontrada | qualquer rota inexistente | Público | 008 | |
-| 21 | Notificações | componente | Todas | 008 | |
+| 21 | Notificações | componente | Todas | 002 | |
 
-As telas 7 e 8 ainda não foram desenhadas; os links para elas levam provisoriamente à tela 6.
+As telas 7 e 8 ainda não foram desenhadas; os links para elas levam provisoriamente à tela 6, exceto "Começar pelos estudos", que leva à seção da trilha na própria tela inicial até a feature 003 existir.
+
+As notificações (21) são infraestrutura do kit de interface, entregue na feature 002, e não complemento; a 008 fica só com a página não encontrada (20).
 
 ---
 
@@ -83,7 +85,7 @@ Estados: não iniciada ("Sua Lua ainda está nova", botão "Iniciar a certifica�
 
 ## 5. Termos de uso e privacidade
 
-Índice lateral e texto em linguagem simples: quem somos; dados coletados (cadastro e respostas); para que são usados (o endereço de rede só no momento do acesso, para limitar tentativas, sem gravação); o que fica público (nome, CPF mascarado, resultado e data na validação; e-mail nunca); por quanto tempo [prazo a definir]; direitos pela LGPD; contato [canal privado do projeto, como um e-mail dedicado; não usar issues públicas].
+Índice lateral e texto em linguagem simples: quem somos; dados coletados (cadastro e respostas); para que são usados (o endereço de rede só no momento do acesso, para limitar tentativas, sem gravação); o que fica público (nome, CPF mascarado, resultado e data na validação; e-mail nunca); por quanto tempo (os dados ficam guardados enquanto a conta existir; a exclusão pode ser pedida a qualquer momento e é atendida em até 15 dias; ao fim do projeto acadêmico, a base é apagada); direitos pela LGPD; contato [e-mail exclusivo do projeto, ainda a criar; nunca as issues públicas do repositório].
 
 ## 6. Disponível em breve
 
@@ -131,7 +133,7 @@ Resumo (início, conclusão, resultado, situação) e tabela com uma linha por t
 
 ## 16. Flashcards: escolher
 
-Grade dos 12 temas como botões de seleção múltipla, cada um com o total de cartões e quantos a pessoa domina; opções "Só os que ainda não domino" e "Todos os cartões dos temas escolhidos"; tamanho da sessão (10, 20 ou todos); resumo da sessão e "Começar revisão".
+Grade dos 12 temas como botões de seleção múltipla, cada um com o total de cartões e quantos a pessoa domina; opções "Só os que ainda não domino" e "Todos os cartões dos temas escolhidos"; tamanho da sessão (10, 20 ou todos); resumo da sessão e "Começar revisão". Na sessão, os cartões avaliados como "Não sabia" ou "Quase" voltam antes dos outros.
 
 Estado de visitante: a grade aparece esmaecida e um cartão de vidro diz "Entre para usar 100% do Lunar Celer", com "Criar minha conta" e "Entrar", lembrando que a área de estudos continua aberta.
 
@@ -157,7 +159,7 @@ Regras de cálculo: tudo derivado do histórico, sem dado calculado armazenado (
 
 ## 21. Notificações
 
-Componente descrito em `docs/identidade-visual.md`, seção 8.1. Usos previstos: conta criada, sessão de flashcards salva, conquista desbloqueada, link copiado, conexão instável e falha ao salvar.
+Componente descrito em `docs/identidade-visual.md`, seção 8.1, e implementado no kit de interface (`docs/kit-interface.md`), entregue na feature 002; cada feature usa o componente nos seus próprios eventos. Usos previstos: conta criada, sessão de flashcards salva, conquista desbloqueada, link copiado, conexão instável e falha ao salvar.
 
 ---
 
@@ -167,5 +169,6 @@ Componente descrito em `docs/identidade-visual.md`, seção 8.1. Usos previstos:
 - **D2** (escala da nota): telas 12, 13 e 14.
 - **D3** (os 12 temas): todas as que mostram temas.
 - **D6** (recarregar durante a questão): telas 10 e 11.
-- Contato privado e prazo de guarda dos dados: tela 5.
+- Contato privado (e-mail exclusivo do projeto, ainda a criar): tela 5. Sem ele, a feature 002 não pode ser entregue.
+- Termos (tela 5): incluir as revisões de flashcards e a evolução entre os dados coletados, na spec da feature 007 (Princípio VI).
 - Áreas de estudo (telas 7 e 8): a desenhar.

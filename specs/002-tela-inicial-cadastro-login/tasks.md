@@ -3,6 +3,10 @@
 description: "Lista de tarefas da feature 002-tela-inicial-cadastro-login"
 ---
 
+> **⚠ DESATUALIZADO (2026-10-02).** Este artefato foi gerado a partir da versão anterior da
+> spec, antes da constituição 3.0.0, da identidade visual 2.0 e do kit de interface, e não vale
+> como referência. Será regenerado depois que todas as specs estiverem prontas.
+
 # Tasks: Tela Inicial, Cadastro e Login
 
 **Input**: Design documents from `/specs/002-tela-inicial-cadastro-login/`

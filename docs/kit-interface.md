@@ -1,6 +1,6 @@
 # Kit de interface do Lunar Celer
 
-Versão 1.0 (02/10/2026). Implementação real, em CSS e JavaScript puros, dos tokens e componentes de `docs/identidade-visual.md`. Toda página do portal usa este kit; o protótipo em `docs/prototipo/` mostra como as telas ficam, e este kit é o que se usa para construí-las.
+Versão 1.1 (02/10/2026; na 1.1, alvos de 44 px nas abas e no botão de fechar notificação, e foco com afastamento de 3 px também nos campos). Implementação real, em CSS e JavaScript puros, dos tokens e componentes de `docs/identidade-visual.md`. Toda página do portal usa este kit; o protótipo em `docs/prototipo/` mostra como as telas ficam, e este kit é o que se usa para construí-las.
 
 Para ver tudo funcionando, abra `docs/kit-demo.html` direto no navegador (não precisa do servidor).
 

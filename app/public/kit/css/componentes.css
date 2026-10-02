@@ -60,7 +60,7 @@ button.lc-vidro { cursor: pointer; }
 .lc-ajuda { font-size: var(--tamanho-legenda); color: var(--texto-suave); }
 .lc-erro { font-size: var(--tamanho-legenda); color: var(--erro-texto); }
 .lc-senha { display: flex; align-items: stretch; border-radius: var(--raio-campo); border: 1px solid var(--borda-forte); background: var(--superficie-2); overflow: hidden; }
-.lc-senha:focus-within { outline: 2px solid var(--acento); outline-offset: 1px; }
+.lc-senha:focus-within { outline: 2px solid var(--acento); outline-offset: 3px; }
 .lc-senha .lc-entrada { border: 0; background: transparent; min-height: 46px; }
 .lc-senha .lc-entrada:focus-visible { outline: none; }
 .lc-senha__alternar { flex: 0 0 auto; width: 48px; border: 0; border-left: 1px solid var(--borda-forte); background: transparent; color: var(--texto-suave); cursor: pointer; }
@@ -104,7 +104,7 @@ button.lc-vidro { cursor: pointer; }
 }
 .lc-abas__aba {
   position: relative; z-index: 1; display: flex; align-items: center; justify-content: center;
-  min-height: 40px; padding: 0 4px; border-radius: var(--raio-pilula);
+  min-height: var(--alvo-minimo); padding: 0 4px; border-radius: var(--raio-pilula);
   color: #FFFFFF; mix-blend-mode: difference; text-decoration: none; font-size: 15px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
@@ -129,7 +129,8 @@ button.lc-vidro { cursor: pointer; }
 .lc-toast__titulo { font-weight: 500; font-size: 17px; }
 .lc-toast__texto { color: var(--texto-suave); font-size: 15px; }
 .lc-toast__fechar {
-  flex: 0 0 auto; width: 32px; height: 32px; margin: -6px -6px 0 0; border: 0; border-radius: var(--raio-pilula);
+  /* alvo de 44 px; as margens negativas mantêm o ícone no lugar */
+  flex: 0 0 auto; width: var(--alvo-minimo); height: var(--alvo-minimo); margin: -12px -12px -6px -6px; border: 0; border-radius: var(--raio-pilula);
   background: transparent; color: var(--texto-apagado); cursor: pointer; display: flex; align-items: center; justify-content: center;
 }
 .lc-toast__fechar:hover { color: var(--texto); background: var(--borda); }
