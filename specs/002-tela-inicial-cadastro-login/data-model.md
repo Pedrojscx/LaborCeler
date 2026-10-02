@@ -31,7 +31,7 @@ demais dados (sessão, tentativas de login, segredo) ficam fora do banco, como d
 |---|---|---|
 | inserir candidato | cadastro | `insert ... values ($1, $2, $3, $4, now()) returning id, nome, data_cadastro`; erro `23505` em `cpf` vira "CPF já cadastrado" (`409`) |
 | buscar por CPF | login | devolve `id`, `nome`, `senha`, `data_cadastro` |
-| buscar por id e data de cadastro | sessão | confirma que o token pertence a um cadastro que ainda existe (R2) |
+| buscar por id | sessão | devolve `id`, `nome`, `data_cadastro`; o app compara em JS `Math.floor(data_cadastro / 1000) === cad` para confirmar que o token pertence a um cadastro que ainda existe (R2) |
 
 ## Sessão do candidato (fora do banco)
 
@@ -69,7 +69,8 @@ Os dados somem quando o app reinicia (aceito no MVP).
 
 ## Limite por endereço de rede (memória do `express-rate-limit`)
 
-30 requisições por minuto por IP, contadas separadamente para `POST /api/auth/login` e
+60 tentativas **malsucedidas** por minuto por IP (respostas com status a partir de 400; as
+bem-sucedidas não contam), contadas separadamente para `POST /api/auth/login` e
 `POST /api/auth/cadastro` (FR-017a, R6).
 
 ## Segredo da sessão (volume `segredo_sessao`)
@@ -77,7 +78,7 @@ Os dados somem quando o app reinicia (aceito no MVP).
 | Fonte | Prioridade | Regra |
 |---|---|---|
 | `JWT_SECRET` do ambiente | 1 | usada se não vazia; menos de 32 caracteres impede a subida |
-| `/app/segredo/segredo-sessao` | 2 | lido se existir |
+| arquivo `segredo-sessao` na pasta do segredo (`/app/segredo`, ou `PASTA_SEGREDO` fora do container) | 2 | lido se existir |
 | geração na subida | 3 | 64 bytes aleatórios em base64url, gravados com permissão `0600` |
 
 `docker compose down` preserva o volume (sessões continuam válidas); `docker compose down -v`

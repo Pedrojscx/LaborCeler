@@ -50,6 +50,8 @@ paths:
                 erro: Este CPF já tem cadastro. Entre com o seu CPF e senha.
                 campos:
                   cpf: Este CPF já tem cadastro. Entre com o seu CPF e senha.
+        '413':
+          $ref: '#/components/responses/GrandeDemais'
         '415':
           $ref: '#/components/responses/SomenteJson'
         '429':
@@ -79,7 +81,7 @@ paths:
                 $ref: '#/components/schemas/CandidatoConectado'
         '400':
           description: >
-            E-mail no lugar do CPF, CPF inválido ou campo vazio. Não conta como tentativa
+            E-mail no lugar do CPF, CPF inválido, campo vazio ou JSON malformado. Não conta como tentativa
             para o bloqueio por CPF.
           content:
             application/json:
@@ -101,12 +103,15 @@ paths:
                 erro: CPF ou senha inválidos.
         '403':
           $ref: '#/components/responses/OrigemNegada'
+        '413':
+          $ref: '#/components/responses/GrandeDemais'
         '415':
           $ref: '#/components/responses/SomenteJson'
         '429':
           description: >
             Bloqueio por CPF (5 falhas em 15 minutos, por 15 minutos; mesma mensagem para CPF
-            cadastrado ou não) ou limite por endereço de rede (30 por minuto). O cabeçalho
+            cadastrado ou não) ou limite por endereço de rede (60 tentativas malsucedidas por
+            minuto). O cabeçalho
             Retry-After informa os segundos de espera.
           headers:
             Retry-After:
@@ -165,7 +170,9 @@ components:
         type: string
   responses:
     ErroValidacao:
-      description: Um ou mais campos inválidos; campos lista a mensagem de cada um.
+      description: >
+        Um ou mais campos inválidos (campos lista a mensagem de cada um), ou JSON malformado
+        ("Envie os dados em JSON.", sem campos).
       content:
         application/json:
           schema:
@@ -175,8 +182,18 @@ components:
             campos:
               cpf: CPF inválido. Confira os 11 dígitos.
               aceiteTermos: Para se cadastrar, é preciso aceitar os termos de uso e privacidade.
+    GrandeDemais:
+      description: Corpo acima de 10 kB.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Erro'
+          example:
+            erro: Dados grandes demais.
     OrigemNegada:
-      description: Requisição vinda de outra origem (proteção contra CSRF).
+      description: >
+        O host do cabeçalho Origin difere do cabeçalho Host da requisição, ou Origin não é URL
+        válida (proteção contra CSRF).
       content:
         application/json:
           schema:
@@ -192,7 +209,9 @@ components:
           example:
             erro: Envie os dados em JSON.
     LimiteRede:
-      description: Mais de 30 requisições por minuto vindas do mesmo endereço de rede.
+      description: >
+        Mais de 60 tentativas malsucedidas por minuto vindas do mesmo endereço de rede (as
+        bem-sucedidas não contam).
       content:
         application/json:
           schema:

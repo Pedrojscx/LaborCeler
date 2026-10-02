@@ -50,6 +50,10 @@
   (regras e instruções em linguagem direta, sem metáfora astronômica) e FR-017/FR-017a
   (bloqueio por CPF, 5 falhas em 15 minutos, mais limite folgado por endereço de rede);
   SC-009 e SC-010 acrescentados. Revalidação: todos os itens continuam aprovados.
+- Decisões do analyze (2026-10-02): FR-017a passa a valer também no cadastro, com 60 tentativas
+  malsucedidas por minuto (sucessos não contam); FR-012 ganha o uso momentâneo do IP e o contato
+  pela página de issues do repositório; FR-026 deixa as regras de linguagem só no FR-004b; SC-001
+  é medido após a entrega. Revalidação: todos os itens continuam aprovados.
 - FR-029 transforma a pendência P1 da feature 001 (`JWT_SECRET` sem valor padrão) em requisito:
   subida sem passo manual e nenhum segredo de sessão versionado ou com padrão conhecido; o
   "como" fica para o `/speckit-plan`.

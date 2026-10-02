@@ -99,6 +99,7 @@ specs/002-tela-inicial-cadastro-login/
 ├── .env.example                  # JWT_SECRET: comentário sobre geração automática
 ├── README.md                     # nova tela inicial, variáveis, efeito do down -v nas sessões
 ├── docs/openapi.yaml             # + /api/auth/*
+├── scripts/validar-002.sh        # validação em clone limpo (DoD item 3), no modelo do validar-001.sh
 ├── specs/001-base-executavel/quickstart.md   # cenários 1 e 5: estado no rodapé (FR-004a)
 └── app/
     ├── Dockerfile                # cria /app/segredo com dono node antes do USER node
@@ -106,7 +107,7 @@ specs/002-tela-inicial-cadastro-login/
     ├── src/
     │   ├── app.js                # helmet, cookies, JSON, páginas, rotas de API, erros
     │   ├── server.js             # carrega o segredo antes do listen
-    │   ├── config.js             # + cookieSeguro (PUBLIC_BASE_URL em https)
+    │   ├── config.js             # + cookieSeguro (PUBLIC_BASE_URL em https), pastaSegredo (PASTA_SEGREDO)
     │   ├── db.js
     │   ├── seguranca/
     │   │   ├── segredo-sessao.js # JWT_SECRET > arquivo > geração (R4)
@@ -114,7 +115,7 @@ specs/002-tela-inicial-cadastro-login/
     │   ├── middlewares/
     │   │   ├── verificar-origem.js   # Origin / Sec-Fetch-Site / JSON (R3)
     │   │   ├── exigir-sessao.js      # API: 401; páginas: redireciona (R8)
-    │   │   └── limite-rede.js        # express-rate-limit, 30/min por IP (R6)
+    │   │   └── limite-rede.js        # express-rate-limit, 60 falhas/min por IP, login e cadastro (R6)
     │   ├── validacao/
     │   │   └── cadastro.js           # nome, e-mail, senha (caracteres e bytes) e termos
     │   ├── services/
@@ -124,11 +125,11 @@ specs/002-tela-inicial-cadastro-login/
     │   │   └── auth-controller.js        # HTTP <-> serviços, códigos e mensagens
     │   ├── repositories/
     │   │   ├── conteudo-repository.js    # (001)
-    │   │   └── candidato-repository.js   # inserir, buscar por CPF, buscar por id + cadastro
+    │   │   └── candidato-repository.js   # inserir, buscar por CPF, buscar por id (data comparada em JS, R2)
     │   ├── routes/
     │   │   ├── saude.js                  # (001)
     │   │   ├── auth.js                   # /api/auth/*
-    │   │   └── paginas.js                # redirecionamentos, termos, em breve (R8)
+    │   │   └── paginas.js                # *.html → URL limpa, redirecionamentos, em breve (R8)
     │   └── verificacao/                  # (001)
     ├── public/
     │   ├── index.html            # tela inicial (substitui a página de status da 001)
@@ -146,6 +147,7 @@ specs/002-tela-inicial-cadastro-login/
     │       └── (inicio.js e css/estilo.css da 001 são substituídos)
     └── test/
         ├── saude.test.js  verificacao-carga.test.js   # (001)
+        ├── apoio.js                       # transação desfeita e criarApp de teste (R12)
         ├── cpf.test.js                    # validação compartilhada
         ├── cadastro.test.js  login.test.js            # supertest + transação desfeita
         ├── sessao.test.js                 # cookie, 8 h, amarração ao cadastro, saída
@@ -167,7 +169,8 @@ Nenhuma violação da constituição a justificar.
 ## Riscos e decisões abertas
 
 - **Docker Desktop e IP único (R6)**: o limite por rede pode virar limite da sala inteira; ele é
-  folgado (30/min) e o cenário 5 do quickstart mede o comportamento real.
+  folgado e só conta falhas (60/min, sucessos não contam), e o cenário 5 do quickstart mede o
+  comportamento real.
 - **Contador por CPF em memória (R6)**: reiniciar o app libera bloqueios em curso; aceitável no
   MVP, a revisar se houver mais de um processo.
 - **Texto dos termos de uso**: escrito pela equipe, sem revisão jurídica (Assumptions da spec);

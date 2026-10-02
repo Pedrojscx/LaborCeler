@@ -16,6 +16,7 @@ execução. Os endpoints estão em [api-auth.openapi.yaml](api-auth.openapi.yaml
 | `/estudos` | `em-breve.html` | página "disponível em breve" | idem | FR-024 (até a 003) |
 | `/validar` | `em-breve.html` | idem | idem | FR-024 (até a 005) |
 | `/certificacao` | `em-breve.html` | `302` → `/entrar` | página "disponível em breve" | FR-022, FR-024 (até a 004) |
+| qualquer `*.html` | — | `301` → URL limpa (`/index.html` → `/`, `/candidato.html` → `/candidato`) | idem | FR-023 |
 
 - As respostas de `/`, `/cadastro`, `/entrar` e `/candidato` levam `Cache-Control: no-store`
   (o redirecionamento depende da sessão).
@@ -24,26 +25,32 @@ execução. Os endpoints estão em [api-auth.openapi.yaml](api-auth.openapi.yaml
 - Na área do candidato, "Iniciar a certificação" abre uma confirmação com as regras principais
   (150 segundos por questão, resposta única, interrupção encerra a questão); só a confirmação
   leva a `/certificacao`.
-- Toda página tem o rodapé com o estado do portal e o link para os termos; a tela inicial
-  também mostra os alertas de banco indisponível e de carga incompleta (FR-004a).
+- Todas as páginas (inicial, cadastro, entrar, termos, candidato e "em breve") têm o rodapé
+  com o estado do portal ("Portal no ar · banco conectado") e o link para os termos, e mostram
+  em destaque os alertas de banco indisponível e de carga incompleta (FR-004a).
+- O redirecionamento de `*.html` acontece antes do estático, para que o acesso direto ao
+  arquivo não escape das regras desta tabela.
 
 ## Sessão
 
 - Cookie `sessao` com JWT HS256 (`sub`, `cad`, `iat`, `exp`); `HttpOnly`, `SameSite=Lax`,
   `Path=/`, `Max-Age=28800` (8 h) e `Secure` só quando `PUBLIC_BASE_URL` é HTTPS.
-- A cada uso, o servidor confere a assinatura, a validade e se o candidato (`id` +
-  `data_cadastro`) ainda existe; se não, a sessão é inválida e o cookie é apagado.
+- A cada uso, o servidor confere a assinatura e a validade, busca o candidato só por `id` e
+  compara em JS `Math.floor(data_cadastro / 1000) === cad`; se o candidato não existir ou a
+  data não bater, a sessão é inválida e o cookie é apagado.
 - Sair apaga o cookie (idempotente). Cadastro e login emitem um cookie novo.
 
 ## Proteção contra CSRF e formato
 
 Em `POST`, `PUT`, `PATCH` e `DELETE` sob `/api`:
 
-1. `Origin` presente e diferente do endereço pelo qual a requisição chegou (protocolo +
-   cabeçalho `Host` da própria requisição) → `403`. Não se usa `PUBLIC_BASE_URL` fixo, para
-   funcionar em `localhost` e pelo IP da rede local.
+1. `Origin` presente cujo host (nome e porta) é diferente do cabeçalho `Host` da própria
+   requisição, isto é, `new URL(origin).host !== req.get('host')`, ou `Origin` que não é URL
+   válida (como `null`) → `403`. Não se compara o protocolo nem `PUBLIC_BASE_URL`: funciona em
+   `localhost`, pelo IP da rede local e atrás de um proxy HTTPS.
 2. Sem `Origin`, `Sec-Fetch-Site` presente e diferente de `same-origin` e `none` → `403`.
 3. Corpo que não é `application/json` (quando a rota espera corpo) → `415`.
+4. JSON malformado → `400`; corpo acima de 10 kB → `413`.
 
 Sem CORS: nenhuma resposta envia `Access-Control-Allow-Origin`.
 
@@ -52,8 +59,8 @@ Sem CORS: nenhuma resposta envia `Access-Control-Allow-Origin`.
 | Limite | Chave | Janela | Efeito | Resposta |
 |---|---|---|---|---|
 | Por CPF (login) | CPF válido digitado, cadastrado ou não | 5 falhas em 15 min | bloqueio de 15 min a partir da 5ª falha; senha não conferida | `429` + `Retry-After` |
-| Por rede (login) | IP da conexão | 30 req/min | recusa até virar o minuto | `429` + `Retry-After` |
-| Por rede (cadastro) | IP da conexão | 30 req/min | idem | `429` + `Retry-After` |
+| Por rede (login) | IP da conexão | 60 tentativas malsucedidas/min (as bem-sucedidas não contam) | recusa até virar o minuto | `429` + `Retry-After` |
+| Por rede (cadastro) | IP da conexão | 60 tentativas malsucedidas/min (as bem-sucedidas não contam) | idem | `429` + `Retry-After` |
 
 E-mail no lugar do CPF e CPF inválido são recusados com `400` e não contam para o bloqueio por
 CPF. Login bem-sucedido zera a contagem do CPF.
@@ -90,7 +97,8 @@ Consequência para o front: nenhum HTML tem `<script>` inline, atributo de event
 | Sessão ausente ou inválida (API) | Sessão expirada ou inexistente. Entre de novo. | `GET /api/auth/me` |
 | Banco indisponível | O portal está temporariamente sem acesso ao banco. Tente de novo em instantes. | cadastro, login |
 | Origem negada | Origem da requisição não permitida. | rotas POST |
-| Corpo fora de JSON | Envie os dados em JSON. | rotas POST |
+| Corpo fora de JSON ou JSON malformado | Envie os dados em JSON. | rotas POST |
+| Corpo acima de 10 kB | Dados grandes demais. | rotas POST |
 
 Nenhuma mensagem ecoa o CPF, o e-mail ou a senha digitados.
 
@@ -100,6 +108,7 @@ Nenhuma mensagem ecoa o CPF, o e-mail ou a senha digitados.
 |---|---|
 | Volume | novo volume nomeado `segredo_sessao`, montado em `/app/segredo` no serviço `app` |
 | `JWT_SECRET` | repassada ao `app` como `${JWT_SECRET:-}`; opcional; tem prioridade sobre o segredo gerado; com menos de 32 caracteres o app não sobe |
+| `PASTA_SEGREDO` | opcional, só para desenvolvimento e testes fora do container; padrão `/app/segredo`; não é repassada pelo Compose |
 | `docker compose down` | mantém o segredo: sessões abertas continuam válidas até expirar |
 | `docker compose down -v` | apaga também o segredo: todas as sessões ficam inválidas |
 | `.env.example` | `JWT_SECRET` continua vazia, com comentário explicando a geração automática |

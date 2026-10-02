@@ -29,9 +29,12 @@ conferidas nas fontes em 01/10/2026 e as armadilhas encontradas. As decisões da
   candidato), `cad` (data de cadastro em segundos), `iat` e `exp` = 8 h, gravado no cookie
   `sessao` com `HttpOnly`, `SameSite=Lax`, `Path=/`, `Max-Age=28800` e `Secure` quando
   `PUBLIC_BASE_URL` começa com `https://`. A verificação usa `algorithms: ['HS256']`
-  explícito. A cada requisição autenticada, o servidor confere o token e busca o candidato
-  por `id` **e** `data_cadastro`; se não existir, a sessão é tratada como inválida e o cookie é
-  apagado. Sair (`POST /api/auth/logout`) apaga o cookie com os mesmos atributos usados para
+  explícito. A cada requisição autenticada, o servidor confere o token, busca o candidato só
+  por `id` e compara em JS `Math.floor(data_cadastro / 1000) === cad`; se o candidato não
+  existir ou a data não bater, a sessão é tratada como inválida e o cookie é apagado. A
+  comparação fica em JS, nos dois lados com o mesmo `Date` devolvido pelo `pg`, porque
+  `data_cadastro` é `timestamp` com microssegundos e uma igualdade no SQL contra segundos
+  recusaria tokens válidos (achado U1 do analyze). Sair (`POST /api/auth/logout`) apaga o cookie com os mesmos atributos usados para
   criá-lo.
 - **Rationale**: atende FR-018 a FR-020 (identidade decidida pelo servidor, 8 horas) sem tabela
   nova. O `cad` amarra o token ao cadastro: se o banco for recriado com o mesmo segredo (por
@@ -46,14 +49,18 @@ conferidas nas fontes em 01/10/2026 e as armadilhas encontradas. As decisões da
 
 - **Decision**: além de `SameSite=Lax`, um middleware em todas as rotas `/api` que mudam estado
   (`POST`, `PUT`, `PATCH`, `DELETE`), inclusive login e cadastro:
-  1. se a requisição tem cabeçalho `Origin`, ele precisa ser igual ao endereço pelo qual a
-     requisição chegou, montado com o protocolo e o cabeçalho `Host` da própria requisição
-     (`req.protocol + '://' + req.get('host')`); senão, `403`. **Não** se compara com
-     `PUBLIC_BASE_URL`, que é fixo e não acompanha o acesso por outro endereço;
+  1. se a requisição tem cabeçalho `Origin`, o host dele (nome e porta) precisa ser igual ao
+     cabeçalho `Host` da própria requisição: `new URL(origin).host === req.get('host')`;
+     senão, `403`. Um `Origin` que não é URL válida (por exemplo, `null`) também dá `403`. Não
+     se compara o protocolo (para funcionar atrás de um proxy HTTPS no futuro, com `trust
+     proxy` desligado) nem `PUBLIC_BASE_URL`, que é fixo e não acompanha o acesso por outro
+     endereço (achado S2 do analyze);
   2. sem `Origin`, se houver `Sec-Fetch-Site` com valor diferente de `same-origin` ou `none`,
      `403`;
   3. sem nenhum dos dois (cliente que não é navegador, como `curl` e os testes), segue.
-  Essas rotas também só aceitam corpo `application/json` (`415` caso contrário).
+  Essas rotas também só aceitam corpo `application/json` (`415` caso contrário). Erros do
+  leitor de JSON são respeitados pelo tratador de erros: JSON malformado dá `400` "Envie os
+  dados em JSON." e corpo acima de 10 kB dá `413` "Dados grandes demais." (achado U2).
 - **Rationale**: `SameSite=Lax` impede o envio do cookie em `POST` vindo de **outro site**, mas
   "site" ignora a porta: uma página maliciosa em `http://localhost:8080` é *same-site* com
   `http://localhost:3000` e o cookie `Lax` seria enviado. A checagem de `Origin` fecha esse
@@ -78,13 +85,18 @@ conferidas nas fontes em 01/10/2026 e as armadilhas encontradas. As decisões da
 - **Decision**: o segredo é resolvido na subida do app, nesta ordem:
   1. `JWT_SECRET` do ambiente, se definida e não vazia; se tiver menos de 32 caracteres, o app
      **se recusa a subir** com mensagem clara;
-  2. senão, o arquivo `/app/segredo/segredo-sessao`, se existir;
+  2. senão, o arquivo `segredo-sessao` na pasta do segredo, se existir; a pasta é
+     `/app/segredo` no container e pode ser trocada pela variável `PASTA_SEGREDO` (uso de
+     desenvolvimento e de testes fora do container; achado U3);
   3. senão, gera 64 bytes aleatórios (`crypto.randomBytes`, codificados em base64url), grava o
      arquivo com permissão `0600` e usa.
   A pasta `/app/segredo` é um **volume nomeado dedicado** (`segredo_sessao`) do serviço `app`.
   O `Dockerfile` cria a pasta com dono `node` antes do `USER node`, para que o volume novo nasça
   com esse dono e seja gravável. O Compose repassa `JWT_SECRET: ${JWT_SECRET:-}` (vazio quando
   não definida). Nenhum valor padrão é versionado; o segredo nunca é registrado em log.
+  O `server.js` resolve o segredo antes do `listen` (falha cedo); dentro de `criarApp()`, sem
+  segredo injetado, ele só é resolvido no primeiro uso de uma sessão, para que testes que não
+  usam sessão (como os da 001) não dependam da pasta do container.
 - **Rationale**: concilia FR-029 com o Princípio V: `docker compose up` continua sem passo
   manual e sem `.env`, e nenhum segredo conhecido fica no repositório. O volume próprio
   separa o segredo dos dados do banco e do código (o `pull_policy: build` da 001 recria a
@@ -122,9 +134,11 @@ conferidas nas fontes em 01/10/2026 e as armadilhas encontradas. As decisões da
     mensagem para CPF cadastrado ou não. Login bem-sucedido zera o contador. Uma limpeza
     periódica (a cada 5 minutos, com `unref`) remove entradas vencidas, e o mapa tem teto de
     50 000 CPFs (descarta os mais antigos), para não crescer sem limite.
-  - **Por endereço de rede (FR-017a)**: `express-rate-limit` com 30 requisições por minuto por
-    IP, separado para login e para cadastro, resposta `429` com mensagem própria. `trust proxy`
-    continua desligado: o IP vem da conexão, não de `X-Forwarded-For`.
+  - **Por endereço de rede (FR-017a)**: `express-rate-limit` com 60 requisições
+    **malsucedidas** por minuto por IP (`skipSuccessfulRequests: true`: respostas com status
+    abaixo de 400 não contam), separado para login e para cadastro, resposta `429` com
+    mensagem própria. `trust proxy` continua desligado: o IP vem da conexão, não de
+    `X-Forwarded-For`.
   - Só CPFs com formato e dígitos verificadores válidos entram no contador; CPF inválido é
     recusado antes ("CPF inválido"), o que não revela nada, porque um CPF inválido nunca pode
     estar cadastrado.
@@ -133,8 +147,10 @@ conferidas nas fontes em 01/10/2026 e as armadilhas encontradas. As decisões da
   do mantenedor: some ao reiniciar o app, o que só alivia bloqueios em curso. **Armadilha
   conhecida**: no Docker Desktop (Mac e Windows) e em conexões de `localhost` via proxy do
   Docker, todas as conexões podem chegar ao container com o mesmo IP (o do gateway); nesse
-  caso o limite "por endereço" vira, na prática, um limite global de 30 por minuto. Por isso
-  ele é folgado, e a proteção real é a do CPF. A validação do quickstart mede isso (SC-009).
+  caso o limite "por endereço" vira, na prática, um limite global da sala. Por isso ele é
+  folgado e só conta falhas (60 por minuto, decisão do mantenedor após o achado P1 do
+  analyze): uma sala inteira entrando, mesmo com alguns erros de digitação, não chega perto
+  dele; a proteção real é a do CPF. A validação do quickstart mede isso (SC-009).
 - **Alternatives considered**: limite só por IP (o padrão do dossiê; bloquearia a sala
   inteira); contador por CPF no banco (exigiria tabela nova); bloqueio permanente até
   intervenção (sem recuperação de senha no MVP, travaria contas).
@@ -166,7 +182,10 @@ conferidas nas fontes em 01/10/2026 e as armadilhas encontradas. As decisões da
   servidor: com sessão válida, `/`, `/cadastro` e `/entrar` redirecionam (`302`) para
   `/candidato`; sem sessão, `/candidato` redireciona para `/entrar` (com
   `?motivo=expirada` quando havia cookie, mas inválido ou vencido). Essas respostas levam
-  `Cache-Control: no-store`. As rotas `/estudos`, `/validar` e `/certificacao` entregam
+  `Cache-Control: no-store`. Qualquer caminho terminado em `.html` é redirecionado (`301`)
+  para a URL limpa (`/index.html` → `/`, `/candidato.html` → `/candidato`), para que o acesso
+  direto ao arquivo não escape dessas regras (achado S1). As rotas `/estudos`, `/validar` e
+  `/certificacao` entregam
   `em-breve.html`, que mostra o nome do recurso e o caminho de volta; cada feature (003, 004,
   005) troca a sua rota. Os formulários enviam JSON por `fetch` (necessário por R3).
 - **Rationale**: decidir o redirecionamento no servidor evita o "pisca" de conteúdo errado e
@@ -257,7 +276,11 @@ conferidas nas fontes em 01/10/2026 e as armadilhas encontradas. As decisões da
 
 - **Decision**: o app nunca registra em log o corpo das requisições de cadastro e login, a
   senha, o hash, o CPF, o e-mail nem o segredo da sessão. Erros inesperados registram só a
-  mensagem técnica. As mensagens ao usuário não ecoam dados digitados.
+  mensagem técnica. As mensagens ao usuário não ecoam dados digitados. O endereço de rede
+  (IP) é usado só em memória, por cerca de um minuto, pelo limite por rede (R6), e os termos
+  dizem isso (achado C2). Pedidos sobre os dados pessoais são feitos pela página de issues do
+  repositório do projeto no GitHub, sem e-mail pessoal, com a orientação de não publicar dados
+  pessoais na mensagem (decisão do mantenedor, achado A1).
 - **Rationale**: Princípio VI (minimização, senha nunca em log) e SC-006, conferido no
   quickstart com uma busca nos logs do container depois do teste.
 - **Alternatives considered**: log de auditoria de logins com CPF (dado pessoal sem requisito

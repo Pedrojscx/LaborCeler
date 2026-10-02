@@ -96,19 +96,26 @@ contador fica em memória).
 
 ## Cenário 5: limite por rede (FR-017a, SC-009)
 
-Aguardar 1 minuto depois do cenário 4 (os envios dele também contam no limite por rede).
+Aguardar 1 minuto depois do cenário 4 (as falhas dele também contam no limite por rede).
 
 ```bash
-for i in $(seq 1 31); do
+# 40 logins bem-sucedidos: não contam para o limite
+for i in $(seq 1 40); do
   curl -s -o /dev/null -H "Origin: $P" -H 'Content-Type: application/json' \
     -d '{"cpf":"11144477735","senha":"uma senha boa"}' -w '%{http_code} ' $P/api/auth/login
 done; echo
+# 61 tentativas malsucedidas (CPF inválido: dá 400 e não aciona o bloqueio por CPF)
+for i in $(seq 1 61); do
+  curl -s -o /dev/null -H "Origin: $P" -H 'Content-Type: application/json' \
+    -d '{"cpf":"52998224724","senha":"x"}' -w '%{http_code} ' $P/api/auth/login
+done; echo
 ```
 
-Esperado: 30 respostas `200` e a 31ª `429` com "Muitas tentativas a partir desta rede. Aguarde
-um minuto e tente de novo."; 30 logins legítimos no mesmo minuto não são bloqueados. Observação
-(research R6): no Docker Desktop, todas as máquinas da sala podem aparecer com o mesmo IP;
-nesse caso o limite vale para a sala inteira, por isso ele é folgado.
+Esperado: os 40 logins dão `200` (sucessos não contam); nas falhas, 60 respostas `400` e a 61ª
+`429` com "Muitas tentativas a partir desta rede. Aguarde um minuto e tente de novo.". O
+cadastro tem o seu próprio limite, igual. Observação (research R6): no Docker Desktop, todas as
+máquinas da sala podem aparecer com o mesmo IP; nesse caso o limite vale para a sala inteira,
+por isso ele é folgado e só conta falhas.
 
 ## Cenário 6: área do candidato e redirecionamentos (US4, FR-021 a FR-024)
 
@@ -117,7 +124,13 @@ nesse caso o limite vale para a sala inteira, por isso ele é folgado.
   "em breve" com volta; "Iniciar a certificação" abre a confirmação com as regras (150
   segundos, resposta única, interrupção encerra a questão) e só depois leva a `/certificacao`
   ("em breve"); "Sair" encerra a sessão.
-- Sem login, abrir `/candidato` e `/certificacao`: levam a `/entrar`.
+- Sem login, abrir `/candidato` e `/certificacao`: levam a `/entrar`; abrir `/candidato.html`
+  leva primeiro a `/candidato` e daí a `/entrar`.
+- Em todas as páginas (inicial, cadastro, entrar, termos, candidato e "em breve"), o rodapé
+  mostra "Portal no ar · banco conectado" e o link dos termos.
+- Em `/termos`, o contato para dúvidas sobre os dados é a página de issues do repositório no
+  GitHub, com o aviso de não publicar dados pessoais; os termos dizem que o endereço de rede é
+  usado só momentaneamente para limitar tentativas.
 - Sair e entrar de novo: volta à mesma área do candidato, sem certificação iniciada.
 
 ## Cenário 7: proteções (R3, R7)
@@ -126,11 +139,15 @@ nesse caso o limite vale para a sala inteira, por isso ele é folgado.
 curl -s -H 'Origin: http://localhost:8080' -H 'Content-Type: application/json' \
   -d '{"cpf":"52998224725","senha":"uma senha boa"}' -w ' %{http_code}\n' $P/api/auth/login
 curl -s -H "Origin: $P" -H 'Content-Type: text/plain' -d 'x' -w ' %{http_code}\n' $P/api/auth/login
+curl -s -H "Origin: $P" -H 'Content-Type: application/json' -d '{"cpf":' -w ' %{http_code}\n' $P/api/auth/login
+curl -s -o /dev/null -w '%{http_code} %{redirect_url}\n' $P/candidato.html
 curl -sI $P/ | grep -i -E 'content-security-policy|x-content-type-options|access-control'
 ```
 
-Esperado: `403` (outra porta é *same-site*, mas outra origem); `415`; CSP com `'self'` e sem
-`upgrade-insecure-requests`; nenhum `Access-Control-Allow-Origin`.
+Esperado: `403` (outra porta é *same-site*, mas outro host); `415`; `400` "Envie os dados em
+JSON." para o JSON malformado; `301` de `/candidato.html` para `/candidato` (o arquivo não
+escapa da regra de sessão); CSP com `'self'` e sem `upgrade-insecure-requests`; nenhum
+`Access-Control-Allow-Origin`.
 
 ## Cenário 8: segredo da sessão (FR-029, SC-008, research R4)
 

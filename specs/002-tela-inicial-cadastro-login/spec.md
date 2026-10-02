@@ -235,7 +235,9 @@ de novo, o candidato volta à mesma escolha.
   login a partir do cadastro e da tela inicial, explicando quais dados são coletados (CPF,
   nome, e-mail e senha), para que servem (identificar o candidato, emitir e permitir a
   validação pública do certificado), que a validação pública mostra o CPF mascarado e nunca o
-  e-mail, e como pedir esclarecimentos sobre os dados.
+  e-mail, que o endereço de rede é usado só momentaneamente para limitar tentativas, sem ser
+  gravado, e como pedir esclarecimentos sobre os dados (pela página de issues do repositório do
+  projeto, sem publicar dados pessoais na mensagem).
 - **FR-013**: Concluído o cadastro, o candidato MUST ficar conectado e ser levado à área do
   candidato; o cadastro MUST NOT iniciar a certificação (RF02).
 - **FR-014**: Mensagens de recusa MUST indicar o campo a corrigir e preservar os campos já
@@ -252,9 +254,10 @@ de novo, o candidato volta à mesma escolha.
   inclusive com a senha correta. A contagem vale para qualquer CPF digitado, cadastrado ou não,
   e a mensagem de bloqueio MUST ser a mesma nos dois casos, sem revelar se o CPF existe; um
   login bem-sucedido zera a contagem daquele CPF.
-- **FR-017a**: Por endereço de rede, MUST existir apenas um limite folgado contra abuso em massa
-  (da ordem de 30 tentativas de login por minuto), que não bloqueie várias pessoas legítimas
-  entrando a partir da mesma rede, como na sala da apresentação.
+- **FR-017a**: Por endereço de rede, MUST existir apenas um limite folgado contra abuso em massa,
+  tanto no login quanto no cadastro: da ordem de 60 tentativas **malsucedidas** por minuto em
+  cada um, sem contar as bem-sucedidas, para não bloquear várias pessoas legítimas entrando ou se
+  cadastrando a partir da mesma rede, como na sala da apresentação.
 - **FR-018**: A sessão do candidato MUST durar até 8 horas; depois disso, ou após sair, o acesso
   à área do candidato MUST exigir novo login.
 - **FR-019**: O candidato conectado MUST poder sair a qualquer momento, encerrando a sessão.
@@ -283,8 +286,8 @@ de novo, o candidato volta à mesma escolha.
   e páginas provisórias) MUST ser projetadas primeiro para celular e funcionar de telas
   estreitas a telas largas sem rolagem horizontal (RNF01, Princípio II).
 - **FR-026**: As telas MUST seguir a identidade visual de `docs/identidade-visual.md`: céu escuro,
-  a Lua como elemento central da tela inicial, cores e tipografia definidas, termos ágeis
-  sempre com o nome oficial (nunca trocados por metáforas).
+  a Lua como elemento central da tela inicial, cores e tipografia definidas; as regras de
+  linguagem (termos ágeis e enunciado das regras sem metáfora) estão no FR-004b.
 - **FR-027**: As telas MUST atender ao contraste mínimo AA, ter foco visível em todos os
   elementos acionáveis, ser utilizáveis só com teclado, ter texto alternativo em toda imagem
   e desligar animações quando o usuário pedir menos movimento.
@@ -319,7 +322,8 @@ de novo, o candidato volta à mesma escolha.
 - **SC-001**: Um visitante encontra, na tela inicial e sem login, as seis regras da
   certificação e as instruções; em teste com 5 pessoas que não conhecem o portal, todas
   respondem corretamente, após até 2 minutos de leitura, quanto tempo há por questão e qual o
-  percentual mínimo para aprovação.
+  percentual mínimo para aprovação (teste com pessoas medido após a entrega; antes dela, a
+  presença das regras e instruções é conferida no cenário 1 do quickstart).
 - **SC-002**: Um visitante conclui o cadastro em até 2 minutos, do clique em "cadastrar" até a
   área do candidato.
 - **SC-003**: Um candidato cadastrado entra no portal em até 30 segundos.
@@ -348,7 +352,9 @@ de novo, o candidato volta à mesma escolha.
 - O texto da tela inicial (descrição, objetivos, regras e instruções) e o dos termos de uso e
   privacidade são escritos pela equipe do projeto com base no documento do desafio; não há
   revisão jurídica no escopo acadêmico. Pedidos sobre os dados pessoais (correção ou exclusão)
-  são atendidos fora do sistema, pelo contato informado nos termos.
+  são atendidos fora do sistema, pela página de issues do repositório do projeto no GitHub
+  (decisão do mantenedor; sem e-mail pessoal), com a orientação de não publicar dados pessoais
+  na mensagem.
 - Não há edição de perfil (decisão D5 do dossiê: o certificado lê do cadastro) nem recuperação
   de senha (fora do MVP, Princípio VII).
 - Cada candidato faz uma única certificação (decisão D1, padrão assumido a confirmar com o
@@ -359,8 +365,9 @@ de novo, o candidato volta à mesma escolha.
 - Os padrões do dossiê seção 4.2 são adotados: senha com no mínimo 8 caracteres, sessão de 8
   horas, mensagem de login genérica. O limite de tentativas do dossiê (5 por minuto por IP)
   foi substituído, por decisão do mantenedor, pela contagem por CPF (5 falhas em 15 minutos,
-  bloqueio de 15 minutos) mais um limite folgado por endereço de rede (cerca de 30 por
-  minuto), para não bloquear a sala inteira durante a apresentação. O limite de 64 caracteres
+  bloqueio de 15 minutos) mais um limite folgado por endereço de rede (cerca de 60
+  tentativas malsucedidas por minuto, no login e no cadastro), para não bloquear a sala
+  inteira durante a apresentação. O limite de 64 caracteres
   na senha é um padrão desta spec para evitar entradas abusivas.
 - O campo de confirmação da senha é um padrão de usabilidade; ele não é armazenado.
 - A indicação de progresso pela Lua (RF21, identidade visual) e o conteúdo real da área de
