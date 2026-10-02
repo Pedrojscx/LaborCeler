@@ -96,7 +96,8 @@ pedido em issue pública exporia o próprio titular.
 
 - O escopo é o site final: RF01 a RF21, RNF01 a RNF08 e RP01 a RP09 de
   `docs/requisitos-desafio.md`, mais os complementos descritos em `docs/telas.md`:
-  flashcards, perfil e conquistas, notificações e página 404.
+  flashcards, perfil e conquistas e página 404. As notificações não são complemento: são
+  componente de base do kit de interface, entregue com a feature 002.
 - A ordem de implementação é obrigatória: primeiro as features que atendem os requisitos do
   desafio (002 a 006); depois os complementos (007 e 008).
 - Nenhum complemento PODE ser implementado antes de as features 002 a 006 estarem concluídas
@@ -199,4 +200,4 @@ usado como revisor nessa conferência.
   desvios DEVEM ser registrados e justificados no plano, com alternativa mais simples
   considerada.
 
-**Version**: 3.0.0 | **Ratified**: 2026-09-30 | **Last Amended**: 2026-10-02
+**Version**: 3.0.1 | **Ratified**: 2026-09-30 | **Last Amended**: 2026-10-02
