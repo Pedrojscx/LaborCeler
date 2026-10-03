@@ -161,7 +161,7 @@ Um candidato autenticado inicia sua certificação, composta por 12 temas percor
 - R6. Resposta recebida dentro do prazo → RESPONDIDA com idalternativa e data_hora_resposta. Recebida após o prazo → EXPIRADA, alternativa descartada. Tolerância de latência de 2 s [SUGESTÃO, registrar no plano].
 - R7. Encerramento por tempo é preguiçoso: qualquer requisição que encontre uma EXIBIDA com prazo vencido a converte em EXPIRADA antes de prosseguir.
 - R8. Interrupção [DECIDIDO D6, 03/10/2026, interpretação literal do RF14]: a questão é entregue ao navegador uma única vez. Se o candidato pedir a questão de novo (recarregar, reabrir, outra aba) enquanto ela está EXIBIDA, ela passa a INTERROMPIDA e conta como erro. Encerrar a sessão entre questões (RF12) é pausa sem penalidade.
-- R9. EXPIRADA e INTERROMPIDA contam como erro [PADRÃO D4].
+- R9. EXPIRADA e INTERROMPIDA contam como erro [DECIDIDO D4, 03/10/2026, RF11 e RF14].
 - R10. O payload da questão nunca inclui qual alternativa é correta nem a justificativa; ambas só são enviadas após o encerramento.
 - R11. Ao encerrar o 12º tema, grava tbcertificacao.data_conclusao e dispara o cálculo de resultado (spec 005).
 - R12. Uma resposta por tema por certificação é garantida no banco pelo trigger tg_uma_resposta_por_tema, além da checagem no serviço.
@@ -310,19 +310,19 @@ Checklist por questão (RNF08): enunciado contextualizado em cenário; imagem ne
 | D1 (Q1) | Tentativa única por candidato? | Não. O candidato reprovado pode fazer uma nova tentativa 24 horas depois da conclusão da anterior, contadas pelo relógio do servidor; quem é aprovado não refaz. No máximo uma certificação em andamento por candidato. O sorteio prefere questões que o candidato ainda não viu em tentativas anteriores; se já viu as 4 do tema, sorteia entre as 4. Limite de tentativas: ver D9. Impacto: a restrição única de tbcertificacao.idcandidato dá lugar a um índice único parcial para certificações sem data de conclusão (proposta da spec 004); resultado, certificado e histórico passam a ser por tentativa (specs 005 e 006). | 03/10/2026 |
 | D2 (Q2) | Nota de 0 a 12 ou 0 a 10? | 0 a 10, igual ao percentual de acertos dividido por 10, com uma casa decimal. | 03/10/2026 |
 | D3 (Q3) | Quais 12 dos 16 temas? | Confirmados os temas 1 a 12 da tabela de sugestões do desafio (seção 6). | 03/10/2026 |
+| D4 (Q4) | Interrupção conta como erro? | Sim, pelo texto dos requisitos: o RF11 considera incorreta a questão que fica sem resposta ao fim dos 150 segundos, e o RF14 considera encerrada, sem poder ser respondida de novo, a questão interrompida por perda de conexão, fechamento do navegador ou qualquer outra interrupção. Questões EXPIRADA e INTERROMPIDA contam como erro no cálculo do resultado (regra R9; spec 005, FR-001). | 03/10/2026 |
 | D6 | Recarregar a página durante a questão conta como interrupção? E a perda de conexão? | Confirmada a leitura literal do RF14: recarregar, reabrir ou abrir em outra aba durante a questão a encerra como interrompida, contando como erro. Perda de conexão, com o texto adotado na spec 004: "Fechar ou recarregar a página durante uma questão a encerra como erro. Se a conexão cair, o tempo continua contando no servidor: se a resposta não chegar até o fim do prazo, a questão conta como erro." | 03/10/2026 |
 
 ### Abertas (padrão assumido, confirmar com o professor)
 
 | ID | Pergunta | Padrão assumido | Impacto se mudar |
 |---|---|---|---|
-| D4 (Q4) | Interrupção conta como erro? | Sim (RF11 e RF14). | Só o cálculo. |
 | D5 (Q5) | Edição de nome/e-mail? | Não há; certificado lê do cadastro. | Se houver edição, tbcertificado precisa guardar cópia dos dados. |
 | D7 | Imagens das questões no banco (bytea) ou em arquivo com caminho no banco? | Arquivo + caminho em tbimagem.arquivo. RP04 diz "armazenar imagens das questões"; confirmar se o caminho satisfaz. | Troca de coluna e do endpoint de imagem. |
 | D8 | Área de estudos exige login? | Não. | Middleware de rota. |
 | D9 | Há limite de tentativas da certificação? | Sem limite por enquanto (pendência aberta na decisão D1). | Regra de elegibilidade da nova tentativa (spec 004) e textos da área do candidato. |
 
-Sugestão de ação: levar D7 e D9 ao Prof. Sudo; D1, D2, D3 e D6 foram resolvidas em 03/10/2026.
+Sugestão de ação: levar D7 e D9 ao Prof. Sudo; D1, D2, D3, D4 e D6 foram resolvidas em 03/10/2026.
 
 ---
 

@@ -91,7 +91,7 @@ Estados: não iniciada ("Sua Lua ainda está nova", botão "Iniciar a certifica�
 
 ## 6. Disponível em breve
 
-Ilustração de eclipse, título e texto conforme a funcionalidade (estudos, certificação ou validação), botões para a área do candidato e para o início. Temporária: some quando as features 003 a 005 forem entregues.
+Ilustração de eclipse, título e texto conforme a funcionalidade (estudos, certificação, validação ou histórico), botões para a área do candidato e para o início. Histórico: título "O histórico está a caminho" e texto "O registro completo das suas tentativas, questão por questão, chega numa próxima versão do Lunar Celer."; recebe os botões "Ver o histórico completo" (tela 12) e "Ver meu histórico" (tela 4) até a feature 006 existir. Temporária: some quando as features 003 a 006 forem entregues.
 
 ## 7. Área de estudos
 
