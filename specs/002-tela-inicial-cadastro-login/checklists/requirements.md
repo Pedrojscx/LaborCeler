@@ -98,3 +98,9 @@
   2026-10-03): cenários 3, 4 e 5 da US2 e 2, 3 e 6 da US3; FR-014 (catálogo do contrato como
   referência dos textos), FR-015, FR-016, FR-017 e FR-017a (mensagem única para o bloqueio por CPF
   e o limite por rede), FR-043, FR-046 e SC-005. Revalidação: todos os itens continuam aprovados.
+- Textos decididos pelo mantenedor (2026-10-03): bloqueio "Muitas tentativas sem sucesso. Aguarde
+  15 minutos e tente de novo.", com o número vindo da configuração dos limites (FR-017, FR-046,
+  cenário 6 da US3); banco indisponível "O portal está com instabilidade. Tente de novo em
+  instantes." (FR-030); rodapé público com "Conteúdo em atualização." e o detalhe no log (FR-004a);
+  notificação "Conta criada" com o primeiro nome (FR-044). Protótipos `Entrar` e `Notificacoes`
+  atualizados. Revalidação: todos os itens continuam aprovados.

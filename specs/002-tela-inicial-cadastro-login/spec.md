@@ -146,8 +146,8 @@ candidato deixa de estar acessível.
    candidato, **Then** é levado ao login com a explicação de que a sessão expirou.
 6. **Given** 5 tentativas de login malsucedidas para o mesmo CPF em 15 minutos, **When** alguém
    tenta entrar de novo com esse CPF, **Then** a tentativa é recusada por 15 minutos, mesmo com a
-   senha certa, com a mensagem "Muitas tentativas sem sucesso. Aguarde alguns minutos para
-   tentar de novo.", igual para CPF cadastrado ou não e igual à do limite por rede.
+   senha certa, com a mensagem "Muitas tentativas sem sucesso. Aguarde 15 minutos e tente de
+   novo.", igual para CPF cadastrado ou não e igual à do limite por rede.
 7. **Given** várias pessoas entrando ao mesmo tempo a partir da mesma rede (por exemplo, a sala
    da apresentação), **When** cada uma usa o seu próprio CPF, **Then** nenhuma é bloqueada pelas
    falhas das outras.
@@ -289,7 +289,8 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
 - Navegador sem acesso à internet (só à rede local do portal): todas as telas carregam com as
   fontes, imagens e estilos completos.
 - Carga de conteúdo do banco diferente de 12 temas, 48 questões e 192 alternativas: o rodapé
-  sinaliza a carga incompleta no mesmo padrão discreto de falha (FR-013 da 001).
+  sinaliza a carga incompleta no mesmo padrão discreto de falha, com o texto público "Conteúdo em
+  atualização." e o detalhe no log do app (FR-013 da 001, FR-004a).
 
 ## Requirements *(mandatory)*
 
@@ -326,7 +327,9 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
   falhar, o estado MUST dar lugar à mensagem de instabilidade no estilo de falha do kit (classe
   `lc-status--falha`, "Instabilidade no portal. Tente de novo em alguns minutos."). A sinalização
   de carga incompleta do FR-013 da feature 001 MUST continuar existindo, no mesmo estilo
-  discreto de falha.
+  discreto de falha, com o texto público "Conteúdo em atualização.": o rodapé aparece para
+  qualquer visitante, e a instrução de conferir o banco é para quem administra, por isso o
+  detalhe (o que falta na carga) MUST ir para o log do app (decisão do mantenedor, 03/10/2026).
 - **FR-004b**: As regras e instruções da certificação (12 temas, uma questão por tema, 150
   segundos por questão, resposta única, aprovação com 65% ou mais, interrupção encerra a
   questão) MUST ser exibidas em linguagem direta, sem metáfora astronômica, em todos os lugares
@@ -460,7 +463,8 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
   para ser protegida com segurança. Use uma senha mais curta ou com menos letras acentuadas.").
 - **FR-044**: Ao concluir o cadastro, além de levar o candidato à área do candidato, o portal
   MUST confirmar a criação da conta com uma notificação de sucesso do kit
-  (`LunarCeler.notificar`, título "Conta criada"); as notificações são infraestrutura do kit,
+  (`LunarCeler.notificar`, título "Conta criada" e texto "Boas-vindas ao Lunar Celer, [primeiro
+  nome]. Sua conta está pronta."); as notificações são infraestrutura do kit,
   entregue nesta feature (`docs/telas.md`, item 21). A notificação MUST NOT ser o único sinal: a
   própria área do candidato, com a saudação pelo nome, confirma que a conta existe.
 - **FR-045**: Os textos que falam da senha (bloco "Como seus dados são usados" e termos) MUST
@@ -478,8 +482,11 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
   inclusive com a senha correta. A contagem vale para qualquer CPF digitado, cadastrado ou não,
   e a mensagem de bloqueio MUST ser a mesma nos dois casos, sem revelar se o CPF existe, e a
   mesma do limite por rede (FR-017a), sem revelar qual dos dois limites foi atingido: "Muitas
-  tentativas sem sucesso. Aguarde alguns minutos para tentar de novo." Um login bem-sucedido zera
-  a contagem daquele CPF.
+  tentativas sem sucesso. Aguarde 15 minutos e tente de novo." O número de minutos MUST vir da
+  mesma configuração que define os dois limites (o maior tempo de espera entre eles), nunca fixo
+  no texto, para acompanhar qualquer mudança nos limites; a indicação de espera que acompanha a
+  resposta segue o mesmo valor nos dois casos (decisão do mantenedor, 03/10/2026). Um login
+  bem-sucedido zera a contagem daquele CPF.
 - **FR-017a**: Por endereço de rede, MUST existir apenas um limite folgado contra abuso em massa,
   tanto no login quanto no cadastro: da ordem de 60 tentativas **malsucedidas** por minuto em
   cada um, sem contar as bem-sucedidas, para não bloquear várias pessoas legítimas entrando ou se
@@ -496,7 +503,7 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
   blocos menores "Ainda não tem conta?" e "Quer estudar antes?". A tela MUST ter os estados:
   normal; erro genérico ("CPF ou senha inválidos. Confira os dados e tente de novo."); bloqueio
   por excesso de tentativas, sem revelar se o CPF existe nem qual limite foi atingido ("Muitas
-  tentativas sem sucesso. Aguarde alguns minutos para tentar de novo."); tentativa com e-mail ("O
+  tentativas sem sucesso. Aguarde 15 minutos e tente de novo."); tentativa com e-mail ("O
   login é feito com o CPF cadastrado, não com o e-mail."); sessão expirada.
 
 **Área do candidato (RF02, tela 4)**
@@ -594,9 +601,10 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
   sem criar arquivos de configuração à mão; nenhum segredo usado para proteger as sessões pode
   estar versionado no repositório nem ter um valor padrão conhecido (pendência P1 da feature
   001).
-- **FR-030**: Falha de comunicação com o banco durante cadastro ou login MUST resultar em
-  mensagem amigável de indisponibilidade temporária, sem cadastro parcial e sem expor detalhes
-  técnicos.
+- **FR-030**: Falha de comunicação com o banco durante cadastro ou login MUST resultar na
+  mensagem "O portal está com instabilidade. Tente de novo em instantes.", sem cadastro parcial,
+  sem expor detalhes técnicos e sem dizer que o problema é o banco (coerente com a página de
+  instabilidade da feature 008).
 
 ### Key Entities *(include if feature involves data)*
 
