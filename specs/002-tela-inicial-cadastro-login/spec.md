@@ -429,6 +429,16 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
   exclusivo do projeto (pendência P-01) não existir, a página de termos fica bloqueada para
   publicação e nenhum endereço pode ser inventado para preenchê-la; como o cadastro exige o
   aceite dos termos (FR-011), a feature não pode ser entregue antes disso.
+- **FR-012b**: Enquanto a página de termos tiver o marcador no lugar do e-mail do projeto
+  (pendência P-01), a verificação automática MUST tratar o marcador em dois níveis (decisão do
+  mantenedor, 03/10/2026):
+  - nos testes comuns, que rodam a cada fase, MUST emitir um aviso em destaque, sem falhar, no
+    fim da saída e separado das demais linhas: "Termos com marcador de e-mail: a publicação será
+    bloqueada até P-01 da 002 ser resolvida";
+  - na verificação de clone limpo, MUST falhar, com a mesma mensagem e código diferente de zero.
+
+  A verificação de clone limpo MUST ser etapa obrigatória da publicação da 002: sem ela aprovada,
+  a feature não é publicada nem integrada à `main`, e não há forma prevista de pulá-la.
 - **FR-013**: Concluído o cadastro, o candidato MUST ficar conectado e ser levado à área do
   candidato; o cadastro MUST NOT iniciar a certificação (RF02).
 - **FR-014**: Mensagens de recusa MUST indicar o campo a corrigir e preservar os campos já
@@ -638,6 +648,9 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
 - **SC-016**: Em revisão das 6 telas, 0 textos afirmam a disponibilidade de um recurso que ainda
   não existe e 0 links levam direto a ele; todo link para recurso ainda não entregue leva à
   página "Disponível em breve".
+- **SC-017**: Com o marcador do e-mail nos termos, 100% das rodadas dos testes comuns terminam sem
+  falha e com o aviso do FR-012b em destaque no fim, e 100% das verificações de clone limpo
+  falham; com o e-mail do projeto no lugar do marcador, as duas passam.
 
 ## Assumptions
 
@@ -691,6 +704,10 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
 - **P-09 (para a feature 007)**: a spec da 007 deve atualizar os termos (FR-012) com as revisões
   de flashcards e a evolução entre os dados coletados (Princípio VI); registrada também nas
   pendências de `docs/telas.md`.
+- **P-10**: o texto da resposta sobre refazer a certificação (FR-040, "Sim, se você não for
+  aprovado. Uma nova tentativa fica disponível 24 horas depois do fim da anterior...") depende da
+  decisão D9 (limite de tentativas), ainda aberta com o professor. Sem limite, o texto fica como
+  está; se a D9 trouxer um limite, a resposta muda para dizê-lo.
 
 ## Conformidade com a constituição (versão 3.0.1)
 

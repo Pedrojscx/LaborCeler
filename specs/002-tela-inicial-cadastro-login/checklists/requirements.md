@@ -89,3 +89,8 @@
   internet (texto da D6, pendência P-03 da spec 004) e sobre refazer (D1); FR-003 e cenário 4 da
   US1 sem a promessa de que perder a conexão encerra a questão; FR-047 com cinco estados;
   pendências P-04, P-05 e P-06 removidas. Revalidação: todos os itens continuam aprovados.
+- Decisões do mantenedor (2026-10-03), depois do merge da `main` na branch: FR-012b novo (aviso em
+  destaque nos testes comuns e falha na verificação de clone limpo enquanto os termos tiverem o
+  marcador do e-mail; verificação de clone limpo obrigatória para publicar) e SC-017; pendência
+  P-10 (texto de refazer do FR-040 depende da D9). Revalidação: todos os itens continuam
+  aprovados.
