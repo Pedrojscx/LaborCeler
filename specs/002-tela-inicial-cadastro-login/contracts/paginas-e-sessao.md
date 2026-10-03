@@ -119,12 +119,19 @@ classes `lc-corpo-1` a `lc-corpo-12` do kit 1.2; valores calculados, de
 E-mail no lugar do CPF e CPF inválido dão `400` e não contam para o bloqueio por CPF. Login
 bem-sucedido zera a contagem do CPF.
 
+Os números dos dois limites ficam numa configuração única do app (`config.limites`: falhas e
+janela por CPF, duração do bloqueio, falhas por minuto por rede). A resposta `429` é a mesma nos
+dois casos, para não revelar qual limite foi atingido (FR-017): a mensagem diz "Aguarde [n]
+minutos", e o `Retry-After` vale [n] minutos em segundos, em que [n] é o maior tempo de espera
+entre os dois limites, calculado dessa configuração (15 com os valores atuais), nunca fixo no
+texto.
+
 ## Catálogo de mensagens
 
-Textos dos protótipos `Cadastro` e `Entrar` (fonte da verdade). Os marcados com * não aparecem
-no protótipo, foram propostos nesta feature e **aguardam a aprovação do mantenedor** antes das
-tarefas; os marcados com ** têm texto do protótipo com uma mudança proposta, também aguardando
-aprovação.
+Textos dos protótipos `Cadastro`, `Entrar` e `Notificacoes` (fonte da verdade). Os marcados com
+* não aparecem nos protótipos e foram aprovados pelo mantenedor em 03/10/2026; os protótipos
+`Entrar` (bloqueio) e `Notificacoes` (primeiro nome) foram atualizados com as decisões da mesma
+data.
 
 | Situação | Mensagem | Onde |
 |---|---|---|
@@ -140,17 +147,17 @@ aprovação.
 | Resumo de campos inválidos * | Confira os campos destacados. | cadastro |
 | E-mail no lugar do CPF | O login é feito com o CPF cadastrado, não com o e-mail. | login |
 | CPF não cadastrado ou senha errada | CPF ou senha inválidos. Confira os dados e tente de novo. | login |
-| Bloqueio por CPF ou limite por rede ** | Muitas tentativas sem sucesso. Aguarde alguns minutos para tentar de novo. (proposta: "Muitas tentativas sem sucesso. Aguarde 15 minutos e tente de novo.", que diz o tempo sem revelar qual limite foi atingido, porque 15 minutos cobrem os dois) | login, cadastro |
+| Bloqueio por CPF ou limite por rede | Muitas tentativas sem sucesso. Aguarde [n] minutos e tente de novo. ([n] vem de `config.limites`: 15 com os valores atuais) | login, cadastro |
 | Sessão expirada (página) * | Sua sessão expirou. Entre de novo. | `/entrar?motivo=expirada` |
 | Sessão ausente ou inválida (API) * | Sua sessão expirou. Entre de novo. | `GET /api/auth/me` |
-| Banco indisponível * | O portal está temporariamente sem acesso ao banco. Tente de novo em instantes. | cadastro, login |
+| Banco indisponível * | O portal está com instabilidade. Tente de novo em instantes. | cadastro, login |
 | Origem negada * | Origem da requisição não permitida. | rotas `POST` |
 | Corpo fora de JSON ou JSON malformado * | Envie os dados em JSON. | rotas `POST` |
 | Corpo acima de 10 kB * | Dados grandes demais. | rotas `POST` |
 | Estado do portal, banco ok | Portal no ar e banco conectado | rodapé |
 | Estado do portal, banco falhando | Instabilidade no portal. Tente de novo em alguns minutos. | rodapé |
-| Estado do portal, carga incompleta * | Carga incompleta: confira o conteúdo do banco. | rodapé |
-| Conta criada (notificação) ** | Conta criada. Boas-vindas ao Lunar Celer, [primeiro nome]. Sua conta está pronta. (o protótipo `Notificacoes` diz "[Nome]"; proposta: o primeiro nome) | área do candidato |
+| Estado do portal, carga incompleta * | Conteúdo em atualização. (o rodapé é público; o detalhe vai para o log do app) | rodapé |
+| Conta criada (notificação) | Conta criada. Boas-vindas ao Lunar Celer, [primeiro nome]. Sua conta está pronta. | área do candidato |
 | Marcador do e-mail nos termos | Termos com marcador de e-mail: a publicação será bloqueada até P-01 da 002 ser resolvida | `npm test` (aviso), `validar-002.sh` (falha) |
 
 Nenhuma mensagem ecoa o CPF, o e-mail ou a senha digitados.
@@ -189,5 +196,6 @@ conta.
 | `.env.example` | `JWT_SECRET` continua vazia, com comentário sobre a geração automática |
 | `npm test` | roda os testes e, depois, o aviso do marcador do e-mail (FR-012b) |
 | `scripts/validar-002.sh` | verificação de clone limpo da feature, obrigatória para publicar |
-| `scripts/validar-001.sh` | a checagem da página inicial passa a procurar "portal de certificação" sem diferenciar maiúsculas |
-| README | tela inicial, variáveis, efeito do `down -v` nas sessões, `npm test` com o aviso e `validar-002.sh` |
+| `scripts/validar-001.sh` | a checagem da página inicial passa a procurar "portal de certificação" sem diferenciar maiúsculas; a dica do `MANTER=1` troca "Carga incompleta" por "Conteúdo em atualização" no rodapé |
+| Log do app | com a carga incompleta, uma linha de aviso com o que falta (contagens esperadas e encontradas), na subida e a cada mudança de estado, sem repetir a cada pedido |
+| README | tela inicial, variáveis, efeito do `down -v` nas sessões, `npm test` com o aviso, `validar-002.sh` e, em "Se a primeira carga falhar", o rodapé com "Conteúdo em atualização" e o detalhe em `docker compose logs app` |

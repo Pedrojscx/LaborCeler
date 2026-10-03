@@ -61,7 +61,8 @@ da 002 ser resolvida", e o código de saída continua `0` (FR-012b).
 2. Senha errada e CPF não cadastrado: a mesma mensagem genérica (SC-005).
 3. Um e-mail no lugar do CPF: "O login é feito com o CPF cadastrado, não com o e-mail."
 4. Erre a senha 5 vezes com o mesmo CPF: a 6ª tentativa, mesmo com a senha certa, mostra "Muitas
-   tentativas sem sucesso...", igual para um CPF que não existe (FR-017, SC-009).
+   tentativas sem sucesso. Aguarde 15 minutos e tente de novo.", igual para um CPF que não existe
+   e para o limite por rede (FR-017, SC-009).
 5. Saia: volta à tela inicial; `/candidato` leva ao login.
 6. Conectado, abra `/cadastro` e `/entrar`: ambos levam à área do candidato; `/` mostra a tela
    inicial normalmente (FR-023).
@@ -82,8 +83,11 @@ da 002 ser resolvida", e o código de saída continua `0` (FR-012b).
 
 1. Com o banco no ar: rodapé com "Portal no ar e banco conectado".
 2. Pare o banco (`docker compose stop db`) e recarregue qualquer página: rodapé com "Instabilidade
-   no portal..."; tentar cadastrar ou entrar mostra a mensagem de banco indisponível, sem cadastro
-   parcial e sem perder o que foi digitado (exceto as senhas). Volte com `docker compose start db`.
+   no portal..."; tentar cadastrar ou entrar mostra "O portal está com instabilidade. Tente de
+   novo em instantes.", sem cadastro parcial e sem perder o que foi digitado (exceto as senhas).
+   Volte com `docker compose start db`.
+3. Com a carga incompleta (cenário 5 do quickstart da 001), o rodapé mostra "Conteúdo em
+   atualização.", e `docker compose logs app` mostra o que falta na carga.
 
 ## Cenário 6: acessibilidade e celular (FR-025 a FR-028, FR-049; SC-007, SC-013, SC-014)
 

@@ -103,6 +103,12 @@ aberto ("NEEDS CLARIFICATION").
     própria; `trust proxy` desligado.
   - CPF inválido é recusado antes ("CPF inválido") e não entra no contador: um CPF inválido nunca
     pode estar cadastrado, então isso não revela nada.
+  - **Resposta única** (decisão do mantenedor, 03/10/2026): os números dos dois limites ficam numa
+    configuração única (`config.limites`). O `429` é igual nos dois casos: a mensagem "Muitas
+    tentativas sem sucesso. Aguarde [n] minutos e tente de novo." e o `Retry-After` usam [n], o
+    maior tempo de espera entre os dois limites, calculado dessa configuração (15 minutos hoje).
+    O `express-rate-limit` recebe um tratador próprio para não mandar o `Retry-After` do minuto
+    dele, que denunciaria o limite por rede.
 - **Rationale**: protege cada conta sem punir a sala da apresentação (SC-009). No Docker Desktop
   (Mac e Windows) todas as conexões podem chegar com o IP do gateway; por isso o limite por rede é
   folgado e só conta falhas, e a proteção real é a do CPF. O contador em memória some ao reiniciar
@@ -232,8 +238,10 @@ aberto ("NEEDS CLARIFICATION").
 - **Decision**: script do kit `estado-portal.js` consulta `GET /api/saude` ao carregar cada página
   e atualiza o `lc-status` do rodapé: `200` com carga completa, "Portal no ar e banco conectado";
   `503` ou falha de rede, `lc-status--falha` com "Instabilidade no portal. Tente de novo em alguns
-  minutos."; `200` com `cargaCompleta: false`, `lc-status--falha` com "Carga incompleta: confira o
-  conteúdo do banco." (FR-013 da 001). Sem JavaScript, o rodapé mostra o texto neutro "Projeto
+  minutos."; `200` com `cargaCompleta: false`, `lc-status--falha` com "Conteúdo em atualização."
+  (FR-013 da 001). O rodapé é público, então não traz instrução de administração: o detalhe (o que
+  falta na carga) vai para o log do app, numa linha de aviso na subida e a cada mudança de estado,
+  sem repetir a cada pedido (decisão do mantenedor, 03/10/2026). Sem JavaScript, o rodapé mostra o texto neutro "Projeto
   acadêmico da Fatec Jacareí" e os links, sem estado.
 - **Rationale**: um só lugar para o estado, igual em todas as telas, discreto e sem competir com o
   conteúdo; preserva o FR-013 da 001 com a página de status substituída pela tela inicial.

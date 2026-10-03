@@ -211,8 +211,10 @@ components:
       description: >
         Bloqueio por CPF no login (5 falhas em 15 minutos, por 15 minutos, FR-017) ou limite por
         endereço de rede no login e no cadastro (60 tentativas malsucedidas por minuto, FR-017a).
-        A mensagem é a mesma nos dois casos e para CPF cadastrado ou não. Retry-After informa os
-        segundos de espera.
+        A resposta é a mesma nos dois casos e para CPF cadastrado ou não, para não revelar qual
+        limite foi atingido: a mensagem diz o maior tempo de espera entre os dois limites, em
+        minutos, e Retry-After traz o mesmo tempo em segundos, ambos calculados da configuração
+        dos limites (15 minutos e 900 segundos com os valores atuais).
       headers:
         Retry-After:
           schema:
@@ -222,7 +224,7 @@ components:
           schema:
             $ref: '#/components/schemas/Erro'
           example:
-            erro: Muitas tentativas sem sucesso. Aguarde alguns minutos para tentar de novo.
+            erro: Muitas tentativas sem sucesso. Aguarde 15 minutos e tente de novo.
     BancoIndisponivel:
       description: Falha ao falar com o banco; nada é gravado pela metade (FR-030).
       content:
@@ -230,7 +232,7 @@ components:
           schema:
             $ref: '#/components/schemas/Erro'
           example:
-            erro: O portal está temporariamente sem acesso ao banco. Tente de novo em instantes.
+            erro: O portal está com instabilidade. Tente de novo em instantes.
   schemas:
     CadastroEntrada:
       type: object
