@@ -171,7 +171,8 @@ specs/002-tela-inicial-cadastro-login/
         ├── cadastro.test.js  login.test.js  sessao.test.js
         ├── tentativas.test.js        # bloqueio por CPF e limite por rede
         ├── segredo-sessao.test.js    # prioridade, geração, permissão, mínimo de 32
-        ├── paginas.test.js           # redirecionamentos, no-store, destinos provisórios, CSP, origem
+        ├── paginas.test.js           # redirecionamentos, no-store, CSP, origem
+        ├── destinos-provisorios.test.js  # variações da página "Disponível em breve"
         └── estatico.test.js          # sem JS inline, style, eventos nem recurso externo; marcador dos termos
 ```
 
