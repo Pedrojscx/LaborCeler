@@ -1,6 +1,6 @@
 # Telas do Lunar Celer
 
-Versão 1.3 (03/10/2026). Descreve as telas do protótipo (canvas do projeto, acesso do mantenedor: https://claude.ai/artifact/5MK3DegETGbv3t81EsqtZF) para orientar specs e implementação. Tokens, componentes e regras visuais estão em `docs/identidade-visual.md`. Requisitos citados pelo ID de `docs/requisitos-desafio.md`.
+Versão 1.4 (03/10/2026). Descreve as telas do protótipo (canvas do projeto, acesso do mantenedor: https://claude.ai/artifact/5MK3DegETGbv3t81EsqtZF) para orientar specs e implementação. Tokens, componentes e regras visuais estão em `docs/identidade-visual.md`. Requisitos citados pelo ID de `docs/requisitos-desafio.md`.
 
 Convenções: as rotas são sugestões para o plano de cada feature; "Logado" significa que a tela exige sessão e redireciona para Entrar sem ela; textos entre colchetes são dados dinâmicos ou pendências.
 
@@ -64,7 +64,7 @@ Seções, na ordem:
 4. **Por que estudar aqui funciona.** Grade em bento: bloco largo com o princípio "Estudar e depois se testar" (efeito de testagem), ilustração do ciclo Estudar e Responder em volta da Lua e o botão "Começar pelos estudos"; três blocos menores (correção na hora, situações reais, progresso visível). Sem números de eficácia não medidos.
 5. **Entre e use 100% do Lunar Celer.** Convite para criar conta, explicando que a área de estudos é aberta e listando o que a conta libera: flashcards, evolução por tema, conquistas e a certificação. Botões "Criar minha conta" e "Já tenho conta".
 6. **De onde vem este portal.** Origem acadêmica na ABP do 1º semestre de DSM da Fatec Jacareí (Centro Paula Souza), o problema que motivou o projeto e o aviso de que o certificado não substitui certificações oficiais de Scrum. Ficha: instituição, curso, programa, orientação (Prof. Antonio Egydio, Prof. Marcelo Sudo e Prof. Arley Souza), colaboradores (Pedro Lucas) e tecnologias.
-7. **Perguntas frequentes.** Itens recolhíveis: estudar antes, pausar, internet caindo, refazer a certificação [resposta conforme a decisão D1] e como conferir um certificado.
+7. **Perguntas frequentes.** Itens recolhíveis: estudar antes, pausar, internet caindo ("Fechar ou recarregar a página durante uma questão a encerra como erro. Se a conexão cair, o tempo continua contando no servidor: se a resposta não chegar até o fim do prazo, a questão conta como erro. Os temas já respondidos continuam salvos."), refazer a certificação ("Sim, se você não for aprovado. Uma nova tentativa fica disponível 24 horas depois do fim da anterior, com as questões sorteadas de novo, dando preferência às que você ainda não viu.") e como conferir um certificado.
 8. **Chamada final.** "Sua jornada começa em Mercúrio", com os dois botões.
 
 ## 2. Criar conta
@@ -83,7 +83,7 @@ Estados: normal; erro genérico ("CPF ou senha inválidos"); bloqueio por excess
 
 Bloco largo com saudação, título e texto que mudam com a situação, e à direita a Lua grande com a trilha de 12 marcos. Blocos menores: "Estudar antes" e "Antes de cada questão".
 
-Estados: não iniciada ("Sua Lua ainda está nova", botão "Iniciar a certificação", aviso de que a primeira questão começa só após confirmar); em andamento ("Você parou em [tema]", botão "Continuar a certificação"); aprovada (Lua cheia, botões "Ver meu certificado" e "Ver meu histórico"); reprovada (resultado, revisão pelos temas errados e [próximo passo conforme a decisão D1]).
+Estados: não iniciada ("Sua Lua ainda está nova", botão "Iniciar a certificação", aviso de que a primeira questão começa só após confirmar); em andamento ("Você parou em [tema]", botão "Continuar a certificação"); aprovada (Lua cheia, botões "Ver meu certificado" e "Ver meu histórico"); reprovada (resultado, revisão pelos temas errados e "Você pode tentar de novo a partir de [data e hora], 24 horas depois do fim desta tentativa."); nova tentativa disponível, 24 horas depois da conclusão de uma tentativa reprovada ("Você pode tentar de novo", "Sua tentativa anterior ficou em [percentual]. A nova tentativa começa do primeiro tema, com a Lua nova outra vez.", botão "Iniciar nova tentativa", aviso de que as questões são sorteadas de novo, dando preferência às que a pessoa ainda não viu, Lua nova e "0 de 12 temas concluídos"). Quem é aprovado não refaz; há no máximo uma certificação em andamento por candidato.
 
 ## 5. Termos de uso e privacidade
 
@@ -133,9 +133,9 @@ Estados: resposta certa; resposta errada; tempo esgotado; questão encerrada por
 
 ## 12. Resultado final
 
-Lua cheia, título e texto conforme o resultado; três números (acertos de 12, percentual, nota de 0 a 10 [conforme a decisão D2]); lista tema a tema com "Acertou", "Errou" ou "Tempo esgotado".
+Lua cheia, título e texto conforme o resultado; três números (acertos de 12, percentual e nota de 0 a 10, igual ao percentual dividido por 10, com uma casa decimal); lista tema a tema com "Acertou", "Errou" ou "Tempo esgotado".
 
-Estados: aprovado (botões "Ver meu certificado" e "Ver o histórico completo"); reprovado ("faltaram [n] acertos", "Revisar os temas que errei" e [próximo passo conforme a decisão D1]).
+Estados: aprovado (botões "Ver meu certificado" e "Ver o histórico completo"); reprovado ("faltaram [n] acertos", "Revisar os temas que errei" e "Uma nova tentativa fica disponível 24 horas depois do fim desta, e até lá a área de estudos e os flashcards ajudam a revisar os temas que você errou."; a menção aos flashcards só aparece com a feature 007, pela regra de disponibilidade).
 
 ## 13. Certificado
 
@@ -185,10 +185,6 @@ Componente descrito em `docs/identidade-visual.md`, seção 8.1, e implementado 
 
 ## Pendências que afetam telas
 
-- **D1** (refazer a certificação): telas 1, 4 e 12.
-- **D2** (escala da nota): telas 12, 13 e 14.
-- **D3** (os 12 temas): todas as que mostram temas.
-- **D6** (recarregar durante a questão e perda de conexão): telas 9, 10 e 11.
-- Pergunta frequente "E se a internet cair durante uma questão?" da tela 1: corrigir na 002 para o mesmo texto da regra da tela 9 sobre fechar, recarregar e perda de conexão.
+- **D9** (limite de tentativas): sem limite por enquanto; afeta as telas 4 e 12 se mudar. As decisões D1, D2, D3 e D6 foram resolvidas em 03/10/2026 (dossiê, seção 7).
 - Contato privado (e-mail exclusivo do projeto, ainda a criar): tela 5. Sem ele, a feature 002 não pode ser entregue.
 - Termos (tela 5): incluir as revisões de flashcards e a evolução entre os dados coletados, na spec da feature 007 (Princípio VI).

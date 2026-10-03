@@ -47,8 +47,10 @@ linguagem direta e que os caminhos levam aos destinos corretos.
    eletrônico com QR Code para validação.
 4. **Given** a tela inicial, **When** o visitante lê as instruções, **Then** fica sabendo que
    pode estudar antes de começar, que pode pausar entre um tema e outro e retomar a partir do
-   próximo tema pendente, e que fechar ou recarregar a página, perder a conexão ou deixar o tempo
-   acabar durante uma questão encerra aquela questão, que conta como erro e não tem nova chance.
+   próximo tema pendente, que fechar ou recarregar a página durante uma questão a encerra como
+   erro, que, se a conexão cair, o tempo continua contando no servidor e a questão conta como erro
+   se a resposta não chegar até o fim do prazo, e que o tempo esgotado também encerra a questão
+   como erro, sem nova chance.
 5. **Given** a tela inicial, **When** o visitante escolhe "Criar minha conta", "Entrar" ou "Já
    tenho conta" ou "Validar certificado", **Then** é levado ao destino correspondente, e
    destinos ainda não entregues levam à página "Disponível em breve"; **When** ele escolhe
@@ -305,8 +307,10 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
   do protótipo não traz todas.
 - **FR-003**: As instruções MUST explicar, no hero e nas perguntas frequentes, que o candidato
   pode estudar antes de começar, pode pausar entre um tema e outro e retomar a partir do próximo
-  tema pendente, e que fechar ou recarregar a página, perder a conexão ou esgotar o tempo durante
-  uma questão encerra a questão, que conta como erro, sem nova chance (RF11, RF13, RF14).
+  tema pendente, que fechar ou recarregar a página durante uma questão a encerra como erro, que,
+  se a conexão cair, o tempo continua contando no servidor e a questão conta como erro se a
+  resposta não chegar até o fim do prazo, e que o tempo esgotado também encerra a questão como
+  erro, sem nova chance (RF11, RF13, RF14; decisão D6).
 - **FR-004**: A tela inicial MUST oferecer os caminhos: criar conta ("Criar minha conta"),
   entrar ("Entrar" e "Já tenho conta"), ir para a área de estudos (cada corpo da trilha e
   "Aprofundar em Terra · Introdução ao Scrum") e validar um certificado (link do rodapé). Todo
@@ -373,8 +377,13 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
   Arley Souza), colaboradores (Pedro Lucas) e tecnologias (HTML, CSS e JavaScript, Node.js,
   PostgreSQL, Docker e Scrum; Figma só entra quando o protótipo existir no Figma).
 - **FR-040**: As perguntas frequentes MUST ser itens recolhíveis sobre: estudar antes, pausar,
-  internet caindo durante uma questão, refazer a certificação (resposta conforme a decisão D1) e
-  como conferir um certificado.
+  internet caindo durante uma questão, refazer a certificação e como conferir um certificado. A
+  resposta sobre a internet MUST ser "Fechar ou recarregar a página durante uma questão a encerra
+  como erro. Se a conexão cair, o tempo continua contando no servidor: se a resposta não chegar
+  até o fim do prazo, a questão conta como erro. Os temas já respondidos continuam salvos."
+  (decisão D6). A resposta sobre refazer MUST ser "Sim, se você não for aprovado. Uma nova
+  tentativa fica disponível 24 horas depois do fim da anterior, com as questões sorteadas de novo,
+  dando preferência às que você ainda não viu." (decisão D1).
 - **FR-041**: A chamada final MUST trazer "Sua jornada começa em Mercúrio", o texto de apoio e os
   botões "Criar minha conta" e "Começar pelos estudos".
 - **FR-042**: O cabeçalho da tela inicial MUST ter, à direita, as abas deslizantes Scrum, Trilha,
@@ -491,13 +500,14 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
   destino provisório; a página some quando o último deles for substituído. Esses links são a
   exceção da regra de disponibilidade (FR-050): continuam visíveis porque levam a esta página,
   que diz que o recurso está a caminho.
-- **FR-047**: A área do candidato tem quatro estados: não iniciada, em andamento, aprovada e
-  reprovada. Nesta feature, MUST aparecer só o estado "não iniciada": título "Sua Lua ainda está
-  nova", botão "Iniciar a certificação", aviso de que a primeira questão começa só depois de
-  confirmar, Lua sem nenhuma parte acesa e "0 de 12 temas concluídos". Os estados "em andamento"
-  (feature 004), "aprovada" e "reprovada" (feature 005) só passam a aparecer quando essas
-  features existirem, e esta feature MUST NOT simulá-los. A Lua acende 1/12 por tema concluído,
-  nunca por acerto, e esse progresso é calculado, não armazenado (Princípio IV).
+- **FR-047**: A área do candidato tem cinco estados: não iniciada, em andamento, aprovada,
+  reprovada e nova tentativa disponível (decisão D1). Nesta feature, MUST aparecer só o estado
+  "não iniciada": título "Sua Lua ainda está nova", botão "Iniciar a certificação", aviso de que a
+  primeira questão começa só depois de confirmar, Lua sem nenhuma parte acesa e "0 de 12 temas
+  concluídos". Os estados "em andamento" e "nova tentativa disponível" (feature 004) e "aprovada"
+  e "reprovada" (feature 005) só passam a aparecer quando essas features existirem, e esta
+  feature MUST NOT simulá-los. A Lua acende 1/12 por tema concluído, nunca por acerto, e esse
+  progresso é calculado, não armazenado (Princípio IV).
 
 **Experiência, identidade visual e acessibilidade (RNF01, Princípios II e XI)**
 
@@ -634,14 +644,15 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
 - Não há edição de perfil (decisão D5 do dossiê: o certificado lê do cadastro) nem recuperação
   de senha (fora do escopo, Princípio VII). O link do nome do candidato para o perfil leva à
   página "Disponível em breve" até a feature 007.
-- Cada candidato faz uma única certificação (decisão D1, padrão assumido a confirmar com o
-  professor); a resposta da pergunta frequente sobre refazer segue esse padrão e nada na tela
-  inicial promete novas tentativas.
-- Interromper ou recarregar a página durante uma questão encerra a questão (RF14 e decisão D6,
-  padrão assumido); por isso as instruções avisam isso explicitamente.
+- Decisão D1 (03/10/2026): o candidato reprovado pode fazer uma nova tentativa 24 horas depois da
+  conclusão da anterior; quem é aprovado não refaz. A resposta da pergunta frequente sobre refazer
+  segue essa decisão (FR-040).
+- Decisão D6 (03/10/2026): leitura literal do RF14; fechar ou recarregar a página durante uma
+  questão a encerra como erro, e a perda de conexão segue o texto adotado na spec 004. Por isso as
+  instruções e a pergunta frequente avisam isso explicitamente (FR-003, FR-040).
 - A área de estudos não exige login (decisão D8).
-- Os 12 temas e seus corpos celestes seguem `docs/identidade-visual.md`, seção 7, que depende da
-  decisão D3; se a lista mudar, a trilha acompanha.
+- Os 12 temas e seus corpos celestes seguem `docs/identidade-visual.md`, seção 7, com a lista
+  confirmada pela decisão D3 (03/10/2026).
 - Os padrões do dossiê seção 4.2 são adotados: senha com no mínimo 8 caracteres, sessão de 8
   horas, mensagem de login genérica. O limite de tentativas do dossiê (5 por minuto por IP)
   foi substituído, por decisão do mantenedor, pela contagem por CPF (5 falhas em 15 minutos,
@@ -671,15 +682,11 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
   pessoais (Princípio VI), ainda a ser criado pelo mantenedor. Não usar as issues do repositório
   nem inventar endereço. Sem ele, os termos não são publicados e, como o cadastro exige o aceite
   (FR-011), a feature não pode ser entregue (FR-012a).
-- **P-04**: decisão D1 (refazer a certificação), que define a resposta da pergunta frequente
-  (FR-040); padrão assumido: tentativa única.
-- **P-05**: decisão D3 (os 12 temas), que afeta a trilha (FR-036) e a chamada final (FR-041).
-- **P-06**: decisão D6 (recarregar durante a questão), que afeta as instruções (FR-003).
 - **P-09 (para a feature 007)**: a spec da 007 deve atualizar os termos (FR-012) com as revisões
   de flashcards e a evolução entre os dados coletados (Princípio VI); registrada também nas
   pendências de `docs/telas.md`.
 
-## Conformidade com a constituição (versão 3.0.0)
+## Conformidade com a constituição (versão 3.0.1)
 
 | Princípio | Como esta spec atende | Situação |
 |---|---|---|

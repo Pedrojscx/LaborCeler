@@ -19,6 +19,10 @@ por certificação e nenhuma resposta aceita depois de 152 segundos (150 do praz
 tolerância para a rede). O bloqueio da certificação durante cada operação (FR-017) já garante as
 duas; a proposta acrescenta uma segunda barreira no próprio banco (Princípio I).
 
+Com a decisão D1 (03/10/2026), o candidato reprovado pode fazer novas tentativas, e a restrição
+`unique` de `tbcertificacao.idcandidato`, que hoje permite uma única certificação por candidato,
+passa a impedir o que a decisão permite.
+
 ## Recomendação
 
 ### Uma única questão aberta por certificação
@@ -53,10 +57,62 @@ A regra só vale se a exibição e a resposta forem gravadas pelo mesmo relógio
 spec recomenda (Assumptions, "Relógio de referência"). No DDL definitivo, ela entra direto no
 `create table` de `tbresposta`, no lugar do `alter table`.
 
+### No máximo uma certificação em andamento por candidato (D1)
+
+A restrição única de `tbcertificacao.idcandidato` dá lugar a um índice único parcial que só
+permite uma certificação sem data de conclusão por candidato. As tentativas concluídas ficam
+como histórico.
+
+```sql
+-- D1 (03/10/2026): várias tentativas por candidato, no máximo uma em andamento (spec 004, FR-002)
+alter table tbcertificacao drop constraint tbcertificacao_idcandidato_key;
+
+create unique index if not exists ux_certificacao_em_andamento
+   on tbcertificacao(idcandidato)
+   where data_conclusao is null;
+```
+
+No DDL definitivo, `idcandidato integer not null unique` passa a `idcandidato integer not null`,
+o comentário "cada candidato faz uma única certificação (1:1)" sai e o índice entra logo depois
+do `create table`. O nome `tbcertificacao_idcandidato_key` é o que o PostgreSQL dá à restrição
+criada pelo `unique` da coluna.
+
+As outras regras da D1 dependem de outras linhas e ficam no código, dentro da operação que cria
+a certificação, com bloqueio da linha do candidato (spec 004, FR-017): a nova tentativa só é
+criada se a última estiver concluída há pelo menos 24 horas, pelo relógio do servidor, e não
+tiver sido aprovada.
+
+### Consulta de referência para o sorteio (D1)
+
+O sorteio prefere as questões do tema que o candidato ainda não viu em tentativas anteriores;
+se já viu as quatro, sorteia entre as quatro. Uma única consulta faz as duas coisas: ordena
+primeiro as não vistas e, dentro de cada grupo, ao acaso.
+
+```sql
+-- questão sorteada para o tema $1 e o candidato $2 (spec 004, FR-005)
+select q.id
+  from tbquestao q
+ where q.idtema = $1
+ order by q.id in (
+          select r.idquestao
+            from tbresposta r
+            join tbcertificacao c on c.id = r.idcertificacao
+           where c.idcandidato = $2
+       ),
+       random()
+ limit 1;
+```
+
+Na tentativa atual, o tema ainda não tem resposta (uma por tema), então as questões já vistas
+são sempre de tentativas anteriores.
+
 ### Modelo Lógico
 
-Nenhuma entidade, atributo ou cardinalidade muda; as duas regras são restrições sobre
-`tbresposta` e podem ser anotadas no modelo como regras de integridade.
+- O relacionamento entre `tbcandidato` e `tbcertificacao` passa de (1,1)–(0,1) para (1,1)–(0,n):
+  um candidato pode ter várias certificações, no máximo uma sem data de conclusão.
+- As regras sobre `tbresposta` (uma exibida por certificação e resposta até 152 segundos) e
+  sobre `tbcertificacao` (uma em andamento por candidato) podem ser anotadas no modelo como
+  regras de integridade; nenhum atributo muda.
 
 ## Regra fora do banco: justificativa das questões
 
@@ -78,5 +134,12 @@ duas certificações de teste:
 - aceitos: uma questão aberta em cada certificação ao mesmo tempo; responder aos 152 segundos
   exatos e aos 151; abrir o tema seguinte depois de a questão anterior ser respondida, expirada
   ou interrompida.
+- D1 (mesma data, com a troca da restrição de `tbcertificacao`): recusada uma segunda
+  certificação em andamento para o mesmo candidato (`ux_certificacao_em_andamento`); aceitas uma
+  certificação em andamento por candidato ao mesmo tempo e novas tentativas depois de concluir a
+  anterior;
+- consulta do sorteio, em 2.000 a 4.000 execuções por cenário: com as questões 1 e 2 já vistas,
+  só saem a 3 e a 4; com 1, 2 e 3 vistas, só sai a 4; com as quatro vistas, as quatro saem entre
+  23% e 27% das vezes; para quem não viu nenhuma, também entre 23% e 27%.
 
 Falta rodar no PostgreSQL 16 do `docker compose`.

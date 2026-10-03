@@ -115,11 +115,11 @@ button:focus-visible,a:focus-visible{outline:2px solid #F2A43A;outline-offset:3p
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"estado":{"editor":"enum","options":["naoIniciada","emAndamento","aprovada","reprovada"],"default":"naoIniciada"},"$preview":{"width":1440,"height":1100}}'>
+<script type="text/x-dc" data-dc-script data-props='{"estado":{"editor":"enum","options":["naoIniciada","emAndamento","aprovada","reprovada","novaTentativa"],"default":"naoIniciada"},"$preview":{"width":1440,"height":1100}}'>
 class Component extends DCLogic {
   renderVals() {
     const estado = this.props.estado ?? 'naoIniciada';
-    const concluidos = { naoIniciada: 0, emAndamento: 5, aprovada: 12, reprovada: 12 }[estado] ?? 0;
+    const concluidos = { naoIniciada: 0, emAndamento: 5, aprovada: 12, reprovada: 12, novaTentativa: 0 }[estado] ?? 0;
     const r = 70, cx = 100, cy = 100, f = concluidos / 12;
     let luaD = '';
     if (f >= 1) {
@@ -158,15 +158,23 @@ class Component extends DCLogic {
       },
       reprovada: {
         titulo: 'Você concluiu os 12 temas',
-        texto: 'Foram 6 acertos (50%), abaixo dos 65% necessários para o certificado. [Próximo passo conforme a decisão D1, a confirmar com o professor]',
+        texto: 'Foram 6 acertos (50%), abaixo dos 65% necessários para o certificado. Você pode tentar de novo a partir de [data e hora], 24 horas depois do fim desta tentativa.',
         legenda: '12 de 12 temas concluídos',
         textoEstudos: 'O histórico mostra em quais temas você errou. Comece a revisão por eles.'
+      },
+      novaTentativa: {
+        titulo: 'Você pode tentar de novo',
+        texto: 'Sua tentativa anterior ficou em 50%. A nova tentativa começa do primeiro tema, com a Lua nova outra vez.',
+        rotuloBotao: 'Iniciar nova tentativa',
+        avisoBotao: 'As questões são sorteadas de novo, dando preferência às que você ainda não viu.',
+        legenda: '0 de 12 temas concluídos',
+        textoEstudos: 'Antes de recomeçar, revise os temas em que errou na tentativa anterior.'
       }
     }[estado];
     return {
       titulo: t.titulo, texto: t.texto, legenda: t.legenda, textoEstudos: t.textoEstudos,
       rotuloBotao: t.rotuloBotao || '', avisoBotao: t.avisoBotao || '',
-      podeIniciar: estado === 'naoIniciada' || estado === 'emAndamento',
+      podeIniciar: estado === 'naoIniciada' || estado === 'emAndamento' || estado === 'novaTentativa',
       concluida: estado === 'aprovada' || estado === 'reprovada',
       aprovada: estado === 'aprovada',
       luaD, marcos,

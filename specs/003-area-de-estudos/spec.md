@@ -393,8 +393,8 @@ internet e com o vídeo indisponível.
   atualizado para registrar essa variação nas telas 7 e 8.
 - **Tema inexistente**: até a página não encontrada da feature 008 existir, o endereço de um tema
   que não existe responde com uma mensagem simples e o caminho para a área de estudos.
-- Os 12 temas e seus corpos celestes seguem `docs/identidade-visual.md`, seção 7, que depende da
-  decisão D3; se a lista mudar, a área acompanha.
+- Os 12 temas e seus corpos celestes seguem `docs/identidade-visual.md`, seção 7, com a lista
+  confirmada pela decisão D3 (03/10/2026).
 - A área de estudos não registra o que cada pessoa leu ou assistiu; nenhum dado pessoal é
   coletado aqui. O acompanhamento de estudo por pessoa (domínio de cartões) é da feature 007.
 
@@ -404,7 +404,6 @@ internet e com o vídeo indisponível.
   (`proposta-modelo-de-dados.md`), que já traz as recomendações para vídeo, leitura externa,
   legenda das imagens e imagens no Markdown, e atualização do Modelo Lógico em PDF
   (`docs/modelagem/`). Falta também rodar a proposta no PostgreSQL 16 do `docker compose`.
-- **P-02**: decisão D3 (os 12 temas), que afeta a trilha, os cartões e as páginas de tema.
 - **P-03 (fora desta feature)**: carga definitiva dos 12 temas pela trilha de conteúdo, com a
   matriz de coerência preenchida e conferida (FR-027, SC-014).
 

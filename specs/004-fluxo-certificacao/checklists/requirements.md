@@ -55,3 +55,10 @@
   verificação da carga, AVISO enquanto provisória e ERRO depois (FR-031, SC-013). Proposta de
   modelo de dados da 004 validada em PGlite e não aplicada (P-04). Revalidação: todos os itens
   continuam aprovados.
+- Decisões D1, D2, D3 e D6 resolvidas com o professor (2026-10-03): FR-002 com várias tentativas
+  (reprovado depois de 24 horas, aprovado não refaz, uma em andamento), FR-005 com sorteio que
+  prefere questões não vistas, FR-017 com bloqueio do candidato ao criar a certificação, FR-019
+  com o estado "nova tentativa disponível", nova US6 (P3), SC-001 revisto e SC-014 novo; P-01,
+  P-02 e P-03 resolvidas (a P-03 aplicada na spec da 002) e P-06 (D9, limite de tentativas)
+  aberta. Proposta de modelo de dados com a troca da restrição de `tbcertificacao` e a consulta
+  do sorteio, validadas em PGlite. Revalidação: todos os itens continuam aprovados.

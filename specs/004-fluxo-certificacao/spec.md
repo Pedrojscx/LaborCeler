@@ -9,9 +9,10 @@
 **Input**: User description: "Fluxo da certificação (feature 004): telas 9 (Antes de começar), 10 (Questão com cronômetro) e 11 (Correção da questão) e os estados 'não iniciada' e 'em andamento' da área do candidato, com as regras do mantenedor sobre servidor como autoridade, prazo de 150 segundos com tolerância de 2 segundos, encerramento preguiçoso, interrupção (D6), sigilo da alternativa correta, ordem fixa e certificação única (D1), concorrência, conclusão no 12º tema, interface portada do protótipo, área do candidato e testes obrigatórios (Princípio IX)."
 
 **Requisitos atendidos**: RF02, RF05, RF06, RF08, RF09, RF10, RF11, RF12, RF13, RF14, RF15, RF21,
-RNF02 e RNF04, conforme `docs/requisitos-desafio.md`; telas 4 (estados "não iniciada" e "em
-andamento"), 9, 10 e 11 de `docs/telas.md`; regras R1 a R11 do dossiê (seção 4). A conformidade
-com a constituição 3.0.1 está no fim deste documento.
+RNF02 e RNF04, conforme `docs/requisitos-desafio.md`; decisões D1 e D6 (03/10/2026); telas 4
+(estados "não iniciada", "em andamento" e "nova tentativa disponível"), 9, 10 e 11 de
+`docs/telas.md`; regras R1 a R11 do dossiê (seção 4). A conformidade com a constituição 3.0.1
+está no fim deste documento.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -39,8 +40,8 @@ segundos.
 3. **Given** a tela "Antes de começar", **When** o candidato confirma "Começar agora", **Then** a
    certificação é criada com a data de início e a questão sorteada do primeiro tema aparece, com
    o cronômetro começando em 150 segundos.
-4. **Given** um candidato que já tem certificação, **When** ele tenta começar outra, **Then** não
-   consegue: a certificação é única (decisão D1).
+4. **Given** um candidato com certificação em andamento, aprovada ou reprovada há menos de 24
+   horas, **When** ele tenta começar outra, **Then** não consegue (decisão D1).
 5. **Given** esta feature entregue, **When** um visitante abre a tela inicial, **Then** vê a seção
    "Entre e use 100% do Lunar Celer" com a certificação como vantagem da conta, e nenhum caminho
    da certificação leva mais à página "Disponível em breve".
@@ -151,7 +152,7 @@ Se a questão aberta for pedida de novo (recarregar, reabrir, outra aba) ou o ca
 "Interromper" e confirmar, a questão é encerrada como interrompida e conta como erro. Pausar só é
 possível entre questões.
 
-**Why this priority**: é a leitura literal do RF14 (decisão D6, padrão) e protege a integridade
+**Why this priority**: é a leitura literal do RF14 (decisão D6) e protege a integridade
 da prova; P2 porque depende do fluxo principal.
 
 **Independent Test**: com uma questão aberta, recarregar a página, abrir o endereço em outra aba
@@ -178,6 +179,39 @@ e usar "Interromper", conferindo em cada caso o encerramento como interrompida.
    **Then** encontra o texto "Fechar ou recarregar a página durante uma questão a encerra como erro.
    Se a conexão cair, o tempo continua contando no servidor: se a resposta não chegar até o fim do
    prazo, a questão conta como erro."
+
+---
+
+### User Story 6 - Fazer uma nova tentativa depois de reprovar (Priority: P3)
+
+O candidato reprovado espera 24 horas depois da conclusão da tentativa, volta à área do
+candidato e começa uma nova tentativa, do primeiro tema, com questões sorteadas de novo, dando
+preferência às que ele ainda não viu (decisão D1).
+
+**Why this priority**: amplia o RF02 e o RF13 para várias tentativas; depende de todo o fluxo
+das US1 a US5, por isso P3.
+
+**Independent Test**: concluir uma tentativa com menos de 8 acertos, conferir que a nova
+tentativa é recusada antes de 24 horas e aceita depois, e que as questões sorteadas na nova
+tentativa evitam as já vistas.
+
+**Acceptance Scenarios**:
+
+1. **Given** um candidato cuja última tentativa foi concluída com menos de 65% de acertos há 24
+   horas ou mais, **When** ele abre a área do candidato, **Then** vê o estado "nova tentativa
+   disponível": "Você pode tentar de novo", o texto de que a nova tentativa começa do primeiro
+   tema, com a Lua nova outra vez, o botão "Iniciar nova tentativa", o aviso de que as questões
+   são sorteadas de novo dando preferência às que ainda não viu, a Lua nova e "0 de 12 temas
+   concluídos".
+2. **Given** o mesmo candidato antes de completar 24 horas, **When** ele tenta começar outra
+   tentativa, **Then** não consegue.
+3. **Given** um candidato aprovado, **When** ele tenta começar outra tentativa, **Then** não
+   consegue: quem é aprovado não refaz.
+4. **Given** a nova tentativa, **When** o candidato confirma "Começar agora" na tela "Antes de
+   começar", **Then** uma nova certificação é criada e a questão sorteada do primeiro tema é uma
+   que ele ainda não viu em tentativas anteriores, se houver alguma.
+5. **Given** um candidato que já viu as quatro questões de um tema em tentativas anteriores,
+   **When** chega a esse tema, **Then** a questão é sorteada entre as quatro.
 
 ---
 
@@ -208,6 +242,10 @@ e usar "Interromper", conferindo em cada caso o encerramento como interrompida.
 - Pedido com identificador de resposta ou de certificação de outro candidato: recusado com a
   mesma resposta dada a um identificador inexistente, sem revelar se o recurso existe.
 - Pedido sem sessão: recusado, e a página leva ao login.
+- Nova tentativa pedida com 23 horas e 59 minutos depois da conclusão: recusada; com 24 horas
+  exatas, pelo relógio do servidor: aceita.
+- Dois pedidos simultâneos de "Começar agora" para uma nova tentativa: só uma certificação é
+  criada; o candidato nunca fica com duas em andamento.
 - Questão sem justificativa cadastrada: o bloco "Por que a alternativa [X]" não aparece, e a
   correção continua mostrando a alternativa correta.
 - Questão sem legenda na imagem: a imagem aparece só com o texto alternativo.
@@ -224,12 +262,16 @@ e usar "Interromper", conferindo em cada caso o encerramento como interrompida.
 
 - **FR-001**: Iniciar a certificação MUST passar pela tela "Antes de começar" (tela 9); a
   certificação MUST ser criada só quando o candidato confirma "Começar agora", nunca ao abrir a
-  tela, ao cadastrar ou ao entrar.
-- **FR-002**: Cada candidato MUST ter no máximo uma certificação (decisão D1, padrão); depois de
-  criada, não é possível começar outra.
-- **FR-003**: Os temas MUST ser apresentados na ordem dos temas (1 a 12); o próximo tema é sempre
-  o de menor ordem ainda sem questão encerrada, e o candidato MUST NOT conseguir pular, escolher
-  ou repetir tema (RF15).
+  tela, ao cadastrar ou ao entrar. O mesmo vale para cada nova tentativa.
+- **FR-002**: Cada candidato MUST ter no máximo uma certificação em andamento (decisão D1,
+  03/10/2026). Uma nova tentativa MUST ser criada só quando a última tentativa do candidato
+  estiver concluída há pelo menos 24 horas, pelo relógio do servidor, e não tiver sido aprovada
+  (menos de 65% de acertos, a mesma regra de aprovação da feature 005, RF17). Quem foi aprovado
+  não refaz. Não há limite de tentativas por enquanto (decisão D9, aberta). A aprovação usada
+  nessa regra é calculada a partir das respostas, nunca armazenada (Princípio IV).
+- **FR-003**: Em cada tentativa, os temas MUST ser apresentados na ordem dos temas (1 a 12); o
+  próximo tema é sempre o de menor ordem ainda sem questão encerrada nessa tentativa, e o
+  candidato MUST NOT conseguir pular, escolher ou repetir tema (RF15).
 - **FR-004**: Ao confirmar "Começar agora" e ao escolher "Seguir para o próximo tema", a questão
   do tema seguinte MUST ser sorteada e exibida em seguida, sem outra confirmação. Na retomada
   depois de uma pausa, o caminho passa de novo pela tela "Antes de começar" (FR-020).
@@ -237,8 +279,11 @@ e usar "Interromper", conferindo em cada caso o encerramento como interrompida.
 **Sorteio, exibição e prazo (RF06, RF10, RNF04, Princípio I)**
 
 - **FR-005**: A questão de cada tema MUST ser sorteada no servidor, no momento da exibição, com
-  chance igual entre as quatro questões do tema (RF06), e o registro da resposta MUST ser criado
-  nesse momento, na situação "exibida", com o horário de exibição do servidor.
+  chance igual entre as questões do tema que o candidato ainda não viu em tentativas anteriores
+  (qualquer questão já exibida a ele, em qualquer situação); se ele já viu as quatro, com chance
+  igual entre as quatro (RF06, decisão D1). Na primeira tentativa, o sorteio é entre as quatro.
+  O registro da resposta MUST ser criado nesse momento, na situação "exibida", com o horário de
+  exibição do servidor.
 - **FR-006**: Cada certificação MUST ter no máximo uma questão aberta (exibida) por vez.
 - **FR-007**: O prazo de cada questão MUST ser o horário de exibição mais 150 segundos, sempre
   pelo relógio do servidor. A página MUST receber só os segundos restantes e apenas exibir a
@@ -296,10 +341,11 @@ e usar "Interromper", conferindo em cada caso o encerramento como interrompida.
 
 **Concorrência (Princípio I)**
 
-- **FR-017**: Abrir questão, responder, encerrar por tempo e interromper MUST rodar como operações
-  indivisíveis, com bloqueio da certificação do candidato durante cada uma, de modo que pedidos
-  simultâneos nunca gerem duas questões abertas, duas respostas para o mesmo tema nem uma
-  resposta aceita para questão já encerrada.
+- **FR-017**: Criar a certificação, abrir questão, responder, encerrar por tempo e interromper
+  MUST rodar como operações indivisíveis, com bloqueio do candidato (ao criar a certificação) ou
+  da certificação dele (nas demais) durante cada uma, de modo que pedidos simultâneos nunca gerem
+  duas certificações em andamento, duas questões abertas, duas respostas para o mesmo tema nem
+  uma resposta aceita para questão já encerrada.
 
 **Acesso aos dados do candidato (Princípios I e VI)**
 
@@ -322,14 +368,20 @@ e usar "Interromper", conferindo em cada caso o encerramento como interrompida.
   "em andamento" ("Você parou em [Corpo]", quantos temas faltam, "Continuar a certificação" e o
   aviso de que a questão aparece e o cronômetro começa assim que o candidato confirmar); e,
   enquanto a 005 não existir, "concluída" (Lua cheia, "12 de 12 temas concluídos", sem nota nem
-  resultado). Os estados "aprovada" e "reprovada" são da 005.
+  resultado); e "nova tentativa disponível" (24 horas ou mais depois da conclusão de uma
+  tentativa não aprovada: "Você pode tentar de novo", "A nova tentativa começa do primeiro tema,
+  com a Lua nova outra vez.", botão "Iniciar nova tentativa" levando à tela "Antes de começar",
+  aviso "As questões são sorteadas de novo, dando preferência às que você ainda não viu.", Lua
+  nova e "0 de 12 temas concluídos"). A frase "Sua tentativa anterior ficou em [percentual]." só
+  aparece quando a 005 existir (regra de disponibilidade). Os estados "aprovada" e "reprovada"
+  são da 005.
 - **FR-020**: Na retomada, "Continuar a certificação" MUST levar à tela "Antes de começar", com o
   cartão do próximo tema pendente no lugar do primeiro tema, e a questão só aparece depois de o
   candidato confirmar.
 - **FR-021**: A Lua da área do candidato MUST acender 1/12 por tema concluído (respondido,
-  expirado ou interrompido), nunca por acerto, e a trilha de marcos MUST mostrar os concluídos, o
-  atual e os pendentes; o progresso é calculado a partir das respostas, nunca armazenado
-  (Princípio IV, RF21).
+  expirado ou interrompido) na tentativa atual, nunca por acerto, e a trilha de marcos MUST
+  mostrar os concluídos, o atual e os pendentes; o progresso é calculado a partir das respostas,
+  nunca armazenado (Princípio IV, RF21).
 - **FR-022**: Ao ser entregue, esta feature MUST substituir os destinos provisórios da
   certificação deixados pela 002: o destino "certificação" da página "Disponível em breve" (FR-024
   da 002) some; "Iniciar a certificação" passa a levar à tela "Antes de começar"; e os trechos que
@@ -380,8 +432,11 @@ e usar "Interromper", conferindo em cada caso o encerramento como interrompida.
   simultâneos de abrir e de responder); tentativas de manipulação (alternativa de outra questão,
   resposta repetida, resposta depois do prazo, resposta para tema que não é o atual, valores de
   nota ou tempo enviados pelo navegador); acesso a dados de outro candidato (responder, encerrar e
-  consultar a resposta de outro candidato, esperando recusa igual à de recurso inexistente); e
-  pedidos sem sessão.
+  consultar a resposta de outro candidato, esperando recusa igual à de recurso inexistente);
+  pedidos sem sessão; nova tentativa (recusada com tentativa em andamento, depois de aprovação e
+  antes de 24 horas, aceita a partir de 24 horas exatas, uma só com pedidos simultâneos); e
+  preferência do sorteio por questões não vistas (nunca repete enquanto houver não vista; com as
+  quatro vistas, sorteia entre as quatro).
 
 **Carga das questões (RNF08)**
 
@@ -391,8 +446,10 @@ e usar "Interromper", conferindo em cada caso o encerramento como interrompida.
 
 ### Key Entities *(include if feature involves data)*
 
-- **Certificação**: a prova de um candidato, única (D1), com data de início (quando ele confirma
-  "Começar agora") e data de conclusão (quando o 12º tema é encerrado). Já existe no esquema.
+- **Certificação**: uma tentativa da prova de um candidato, com data de início (quando ele
+  confirma "Começar agora") e data de conclusão (quando o 12º tema é encerrado). Um candidato pode
+  ter várias, no máximo uma em andamento (D1). Já existe no esquema; a troca da restrição que hoje
+  permite uma só está na proposta de modelo de dados.
 - **Resposta**: o registro de um tema dentro da certificação: questão sorteada, horário de
   exibição, situação (exibida, respondida, expirada ou interrompida), alternativa escolhida e
   horário de resposta, só quando respondida. É criada no sorteio. Já existe no esquema, com uma
@@ -405,8 +462,9 @@ e usar "Interromper", conferindo em cada caso o encerramento como interrompida.
 
 ### Measurable Outcomes
 
-- **SC-001**: Em 4.000 sorteios simulados de um mesmo tema, cada uma das quatro questões aparece
-  entre 20% e 30% das vezes.
+- **SC-001**: Em 4.000 sorteios simulados de um mesmo tema para quem não viu nenhuma questão, ou
+  já viu as quatro, cada uma das quatro aparece entre 20% e 30% das vezes; com questões ainda não
+  vistas, 0 sorteios repetem uma questão já vista.
 - **SC-002**: Em 100% dos testes, respostas recebidas até 152 segundos depois da exibição são
   aceitas e respostas recebidas depois disso são recusadas, com a questão encerrada como tempo
   esgotado.
@@ -440,12 +498,19 @@ e usar "Interromper", conferindo em cada caso o encerramento como interrompida.
 - **SC-013**: Com a carga provisória atual, a verificação de conteúdo emite AVISO, e não ERRO, para
   questão sem justificativa; numa carga de teste com questão não provisória sem justificativa, ela
   emite ERRO.
+- **SC-014**: Em 100% dos testes de nova tentativa, ela é recusada com tentativa em andamento,
+  depois de aprovação ou antes de 24 horas da conclusão, e aceita a partir de 24 horas exatas;
+  nunca há duas certificações em andamento para o mesmo candidato.
 
 ## Assumptions
 
 - As regras de negócio seguem o dossiê (seção 4, R1 a R11) e as decisões do mantenedor para esta
-  feature. D1 (certificação única) e D6 (interrupção literal) são padrões ainda abertos com o
-  professor; se mudarem, FR-002 e FR-010 mudam, com os testes.
+  feature. D1 (novas tentativas para o reprovado depois de 24 horas, sorteio que prefere questões
+  não vistas) e D6 (leitura literal do RF14, com o texto sobre perda de conexão) foram resolvidas
+  com o professor em 03/10/2026 (dossiê, seção 7).
+- **Nova tentativa antes da 005**: a aprovação depende só das respostas, então a regra do FR-002
+  já funciona com a 004; o percentual da tentativa anterior só aparece na área do candidato
+  quando a 005 existir.
 - **Relógio de referência**: "relógio do servidor" é um relógio único para a exibição, a resposta
   e os encerramentos; o plano escolhe qual (o banco já grava a exibição pelo próprio relógio),
   para não haver diferença entre dois relógios.
@@ -477,19 +542,15 @@ e usar "Interromper", conferindo em cada caso o encerramento como interrompida.
 
 ## Pendências
 
-- **P-01**: decisão D6 com o professor, incluindo a interpretação do RF14 sobre perda de conexão
-  (registrada na linha D6 do dossiê); o padrão é a leitura literal do RF14 para recarregar,
-  reabrir ou abrir em outra aba.
-- **P-02**: decisão D1 (certificação única) com o professor.
-- **P-03 (para a 002)**: corrigir para o mesmo texto da regra da tela 9 a pergunta frequente "E se
-  a internet cair durante uma questão?" e as instruções que dizem que perder a conexão encerra a
-  questão (FR-003 e cenário 4 da US1 da spec da 002); registrada também nas pendências de
-  `docs/telas.md`.
 - **P-04 (bloqueia o plano)**: revisão, pelo mantenedor, da proposta de modelo de dados
   (`proposta-modelo-de-dados.md`): índice único parcial para uma única resposta exibida por
-  certificação e regra que impede horário de resposta além de 152 segundos, validados em PGlite;
-  e atualização do Modelo Lógico em PDF. Falta rodar no PostgreSQL 16 do `docker compose`.
+  certificação, regra que impede horário de resposta além de 152 segundos e troca da restrição
+  única de `tbcertificacao.idcandidato` por um índice único parcial para uma certificação em
+  andamento por candidato (D1), todos validados em PGlite, além da consulta de referência do
+  sorteio; e atualização do Modelo Lógico em PDF. Falta rodar no PostgreSQL 16 do
+  `docker compose`.
 - **P-05**: legenda da imagem depende da proposta de modelo de dados da 003.
+- **P-06**: decisão D9 (limite de tentativas), aberta; sem limite por enquanto.
 
 ## Conformidade com a constituição (versão 3.0.1)
 
@@ -497,8 +558,8 @@ e usar "Interromper", conferindo em cada caso o encerramento como interrompida.
 |---|---|---|
 | I. Servidor é a autoridade | Sorteio, prazo, encerramentos e correção só no servidor (FR-005 a FR-010); a página só exibe a contagem (FR-007); correta e justificativa só depois do encerramento (FR-013); valores do navegador ignorados (FR-014); concorrência protegida (FR-017). | ✅ |
 | II. Front-end sem bibliotecas de terceiros | Kit próprio, sem bibliotecas nem JavaScript inline (FR-023); diálogo da própria página, não a janela do navegador (FR-028). | ✅ |
-| III. PostgreSQL com SQL explícito | Usa o esquema existente; o índice parcial e a regra dos 152 segundos estão propostos e validados em PGlite, e entram no DDL e no Modelo Lógico depois da revisão do mantenedor (P-04). | ⚠ P-04: proposta aguardando revisão |
-| IV. Dados derivados não são armazenados | Progresso e Lua calculados das respostas (FR-021); nota fica para a 005, também calculada. | ✅ |
+| III. PostgreSQL com SQL explícito | Usa o esquema existente; os índices parciais (uma resposta exibida, uma certificação em andamento), a regra dos 152 segundos e a consulta do sorteio estão propostos e validados em PGlite, e entram no DDL e no Modelo Lógico depois da revisão do mantenedor (P-04). | ⚠ P-04: proposta aguardando revisão |
+| IV. Dados derivados não são armazenados | Progresso e Lua calculados das respostas (FR-021); aprovação usada na regra da nova tentativa calculada das respostas (FR-002); nota fica para a 005, também calculada. | ✅ |
 | V. Comando único | Nada novo de execução. | ✅ |
 | VI. LGPD e minimização | Só as respostas da prova são registradas, como os termos da 002 descrevem; ninguém acessa resposta ou certificação de outro candidato, nem sabe se elas existem (FR-030). | ✅ |
 | VII. Escopo do site final e ordem de entrega | Feature obrigatória; nota e certificado ficam para a 005 (FR-018). | ✅ |

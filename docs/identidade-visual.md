@@ -111,7 +111,7 @@ Ordem de distância do Sol. As cores aparecem só em pontos pequenos ao lado do 
 | 11 | Makemake | Métricas Ágeis | `#C46F5E` |
 | 12 | Éris | Qualidade em Projetos Ágeis | `#D8D8E0` |
 
-Depende da decisão aberta D3. Se o professor mudar a lista, o mapeamento acompanha a ordem.
+Lista confirmada pela decisão D3 (03/10/2026): temas 1 a 12 da tabela de sugestões do desafio.
 
 ## 8. Componentes
 

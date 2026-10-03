@@ -153,14 +153,14 @@ Um candidato autenticado inicia sua certificação, composta por 12 temas percor
 ```
 
 **Regras de negócio (servidor)**
-- R1. Uma certificação por candidato [PADRÃO D1, reflete o unique em tbcertificacao.idcandidato].
+- R1. No máximo uma certificação em andamento por candidato [DECIDIDO D1, 03/10/2026]. O reprovado pode fazer uma nova tentativa 24 horas depois da conclusão da anterior, pelo relógio do servidor; quem é aprovado não refaz. Sem limite de tentativas por enquanto (D9, aberta).
 - R2. Temas em ordem crescente de tbtema.ordem [PADRÃO]; o próximo tema é o de menor ordem sem resposta.
-- R3. Sorteio no servidor no momento da exibição, uniforme entre as 4 questões do tema; o registro em tbresposta (situacao EXIBIDA, data_hora_exibicao = now()) é criado nesse momento [DECIDIDO P4].
+- R3. Sorteio no servidor no momento da exibição, uniforme entre as questões do tema que o candidato ainda não viu em tentativas anteriores; se já viu todas as 4, uniforme entre as 4 [DECIDIDO D1, 03/10/2026]. O registro em tbresposta (situacao EXIBIDA, data_hora_exibicao = now()) é criado nesse momento [DECIDIDO P4].
 - R4. No máximo uma resposta EXIBIDA por certificação a qualquer momento.
 - R5. Prazo: `data_hora_exibicao + 150 s`, sempre pelo relógio do servidor. O front recebe o tempo restante em segundos e só faz a contagem visual.
 - R6. Resposta recebida dentro do prazo → RESPONDIDA com idalternativa e data_hora_resposta. Recebida após o prazo → EXPIRADA, alternativa descartada. Tolerância de latência de 2 s [SUGESTÃO, registrar no plano].
 - R7. Encerramento por tempo é preguiçoso: qualquer requisição que encontre uma EXIBIDA com prazo vencido a converte em EXPIRADA antes de prosseguir.
-- R8. Interrupção [PADRÃO D6, interpretação literal do RF14]: a questão é entregue ao navegador uma única vez. Se o candidato pedir a questão de novo (recarregar, reabrir, outra aba) enquanto ela está EXIBIDA, ela passa a INTERROMPIDA e conta como erro. Encerrar a sessão entre questões (RF12) é pausa sem penalidade.
+- R8. Interrupção [DECIDIDO D6, 03/10/2026, interpretação literal do RF14]: a questão é entregue ao navegador uma única vez. Se o candidato pedir a questão de novo (recarregar, reabrir, outra aba) enquanto ela está EXIBIDA, ela passa a INTERROMPIDA e conta como erro. Encerrar a sessão entre questões (RF12) é pausa sem penalidade.
 - R9. EXPIRADA e INTERROMPIDA contam como erro [PADRÃO D4].
 - R10. O payload da questão nunca inclui qual alternativa é correta nem a justificativa; ambas só são enviadas após o encerramento.
 - R11. Ao encerrar o 12º tema, grava tbcertificacao.data_conclusao e dispara o cálculo de resultado (spec 005).
@@ -193,7 +193,7 @@ Ao concluir os 12 temas, o sistema calcula automaticamente o resultado do candid
 
 **Regras e critérios de aceite**
 - 65% de 12 = 7,8 → aprovação exige **8 acertos** (8/12 = 66,7%); 7 acertos = 58,3% reprova. Teste de fronteira obrigatório.
-- Nota [PADRÃO D2]: escala 0 a 10 com uma casa decimal (acertos ÷ 12 × 10); percentual com uma casa decimal.
+- Nota [DECIDIDO D2, 03/10/2026]: escala 0 a 10, igual ao percentual de acertos dividido por 10, com uma casa decimal (acertos ÷ 12 × 10); percentual com uma casa decimal. Com 12 questões não há empate no arredondamento.
 - Certificado emitido uma única vez (unique em tbcertificado.idcertificacao); codigo_validacao é UUID gerado pelo banco.
 - Página pública de validação exibe: nome completo, CPF mascarado (`***.456.789-**`), data de emissão, nota e percentual. Nunca e-mail nem CPF completo (LGPD).
 - O certificado do próprio candidato (área logada) exibe todos os campos do RF18.
@@ -278,7 +278,7 @@ O candidato consulta o histórico da sua certificação: para cada tema respondi
 
 ---
 
-## 6. Temas da certificação [PADRÃO D3]
+## 6. Temas da certificação [DECIDIDO D3, 03/10/2026]
 
 Temas 1 a 12 da lista sugerida no desafio, nesta ordem:
 
@@ -301,20 +301,28 @@ Checklist por questão (RNF08): enunciado contextualizado em cenário; imagem ne
 
 ---
 
-## 7. Decisões abertas (padrão assumido, confirmar com o professor)
+## 7. Decisões com o professor
+
+### Resolvidas
+
+| ID | Pergunta | Decisão | Data |
+|---|---|---|---|
+| D1 (Q1) | Tentativa única por candidato? | Não. O candidato reprovado pode fazer uma nova tentativa 24 horas depois da conclusão da anterior, contadas pelo relógio do servidor; quem é aprovado não refaz. No máximo uma certificação em andamento por candidato. O sorteio prefere questões que o candidato ainda não viu em tentativas anteriores; se já viu as 4 do tema, sorteia entre as 4. Limite de tentativas: ver D9. Impacto: a restrição única de tbcertificacao.idcandidato dá lugar a um índice único parcial para certificações sem data de conclusão (proposta da spec 004); resultado, certificado e histórico passam a ser por tentativa (specs 005 e 006). | 03/10/2026 |
+| D2 (Q2) | Nota de 0 a 12 ou 0 a 10? | 0 a 10, igual ao percentual de acertos dividido por 10, com uma casa decimal. | 03/10/2026 |
+| D3 (Q3) | Quais 12 dos 16 temas? | Confirmados os temas 1 a 12 da tabela de sugestões do desafio (seção 6). | 03/10/2026 |
+| D6 | Recarregar a página durante a questão conta como interrupção? E a perda de conexão? | Confirmada a leitura literal do RF14: recarregar, reabrir ou abrir em outra aba durante a questão a encerra como interrompida, contando como erro. Perda de conexão, com o texto adotado na spec 004: "Fechar ou recarregar a página durante uma questão a encerra como erro. Se a conexão cair, o tempo continua contando no servidor: se a resposta não chegar até o fim do prazo, a questão conta como erro." | 03/10/2026 |
+
+### Abertas (padrão assumido, confirmar com o professor)
 
 | ID | Pergunta | Padrão assumido | Impacto se mudar |
 |---|---|---|---|
-| D1 (Q1) | Tentativa única por candidato? | Sim, uma certificação por candidato. O texto do desafio fala em "retomar" e em "todas as avaliações" no histórico, o que pode indicar múltiplas tentativas. | Remover unique de tbcertificacao.idcandidato; histórico e certificado passam a ser por tentativa. Custo baixo agora, alto após a Sprint 2. |
-| D2 (Q2) | Nota de 0 a 12 ou 0 a 10? | 0 a 10 com uma casa, já que RF18 lista nota e percentual como campos distintos. | Só a função de cálculo e a exibição. |
-| D3 (Q3) | Quais 12 dos 16 temas? | Temas 1 a 12 da tabela. | Seed e conteúdo; decidir antes de produzir questões. |
 | D4 (Q4) | Interrupção conta como erro? | Sim (RF11 e RF14). | Só o cálculo. |
 | D5 (Q5) | Edição de nome/e-mail? | Não há; certificado lê do cadastro. | Se houver edição, tbcertificado precisa guardar cópia dos dados. |
-| D6 | Recarregar a página durante a questão conta como interrupção? E a perda de conexão? | Sim, leitura literal do RF14. Alternativa: permitir retomar dentro do mesmo prazo de 150 s, que é mais amigável mas contraria o texto. Perda de conexão (interpretação do RF14, spec 004): o servidor só percebe a interrupção quando a questão é pedida de novo ou o prazo vence; por isso a regra exibida é "Fechar ou recarregar a página durante uma questão a encerra como erro. Se a conexão cair, o tempo continua contando no servidor: se a resposta não chegar até o fim do prazo, a questão conta como erro." | Regra R8, textos da tela 9 e da pergunta frequente e testes. |
 | D7 | Imagens das questões no banco (bytea) ou em arquivo com caminho no banco? | Arquivo + caminho em tbimagem.arquivo. RP04 diz "armazenar imagens das questões"; confirmar se o caminho satisfaz. | Troca de coluna e do endpoint de imagem. |
 | D8 | Área de estudos exige login? | Não. | Middleware de rota. |
+| D9 | Há limite de tentativas da certificação? | Sem limite por enquanto (pendência aberta na decisão D1). | Regra de elegibilidade da nova tentativa (spec 004) e textos da área do candidato. |
 
-Sugestão de ação: levar D1, D3, D6 e D7 ao Prof. Sudo até o fim da primeira semana da Sprint 1; são as que custam caro se mudarem tarde.
+Sugestão de ação: levar D7 e D9 ao Prof. Sudo; D1, D2, D3 e D6 foram resolvidas em 03/10/2026.
 
 ---
 
@@ -346,4 +354,4 @@ Sugestão de ação: levar D1, D3, D6 e D7 ao Prof. Sudo até o fim da primeira 
 - **Regra de tempo implementada no front**: se o cronômetro decidir algo no cliente, RNF04 falha na banca. A spec 004 é o ponto a revisar com mais cuidado.
 - **QR Code na apresentação**: `localhost` no QR não abre no celular do avaliador. Configurar `PUBLIC_BASE_URL` e ensaiar.
 - **Volume do Postgres "velho"**: alterar os seeds sem recriar o volume não tem efeito; documentar no README.
-- **Decisão D1 tardia**: mudar para múltiplas tentativas depois da Sprint 2 afeta resultado, certificado e histórico.
+- **Múltiplas tentativas (D1, resolvida em 03/10/2026)**: resultado, certificado e histórico passam a ser por tentativa; as specs 005 e 006 precisam tratar isso desde o início.

@@ -68,3 +68,5 @@
   ligadas ao material (FR-026); duração lida do MP4 no servidor (FR-005); licença e matriz como
   entregáveis da implementação. Proposta de modelo de dados revisada e validada em PGlite.
   Revalidação: todos os itens continuam aprovados.
+- Decisão D3 resolvida com o professor (2026-10-03): pendência P-02 removida e a lista de temas
+  registrada como confirmada nas Assumptions. Revalidação: todos os itens continuam aprovados.

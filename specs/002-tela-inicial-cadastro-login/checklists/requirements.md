@@ -85,3 +85,7 @@
   disponibilidade (FR-050, SC-016), com a página "Disponível em breve" como exceção para links;
   "Entre e use 100%" oculta até a primeira vantagem (FR-038). Novos cenários: US1 9, US4 8 e US5
   6 reescrito. Revalidação: todos os itens continuam aprovados.
+- Decisões D1, D3 e D6 resolvidas com o professor (2026-10-03): FR-040 com as respostas sobre
+  internet (texto da D6, pendência P-03 da spec 004) e sobre refazer (D1); FR-003 e cenário 4 da
+  US1 sem a promessa de que perder a conexão encerra a questão; FR-047 com cinco estados;
+  pendências P-04, P-05 e P-06 removidas. Revalidação: todos os itens continuam aprovados.
