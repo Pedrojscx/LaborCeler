@@ -1,0 +1,285 @@
+# DESATUALIZADO (2026-10-02): gerado a partir da versão anterior da spec, antes da
+# constituição 3.0.0, da identidade visual 2.0 e do kit de interface; não vale como
+# referência. Será regenerado depois que todas as specs estiverem prontas.
+openapi: 3.1.0
+info:
+  title: Portal de Certificação em Metodologias Ágeis - Autenticação
+  version: 0.2.0
+  description: >
+    Endpoints da feature 002 (RF02, RF03, RF04, RNF03). Este trecho é incorporado a
+    docs/openapi.yaml. Todas as rotas POST exigem corpo application/json (senão 415) e passam
+    pela checagem de origem (403), ver contracts/paginas-e-sessao.md. As mensagens exatas estão
+    no catálogo do mesmo contrato.
+paths:
+  /api/auth/cadastro:
+    post:
+      summary: Cadastra o candidato e já abre a sessão
+      operationId: cadastrar
+      tags: [autenticacao]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CadastroEntrada'
+            example:
+              cpf: 529.982.247-25
+              nome: Maria D'Ávila Souza
+              email: maria@exemplo.com
+              senha: uma senha boa
+              confirmacaoSenha: uma senha boa
+              aceiteTermos: true
+      responses:
+        '201':
+          description: Cadastro criado; cookie de sessão emitido. A certificação NÃO é iniciada.
+          headers:
+            Set-Cookie:
+              $ref: '#/components/headers/CookieSessao'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CandidatoConectado'
+        '400':
+          $ref: '#/components/responses/ErroValidacao'
+        '403':
+          $ref: '#/components/responses/OrigemNegada'
+        '409':
+          description: CPF já cadastrado; nenhum outro dado do titular é revelado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+              example:
+                erro: Este CPF já tem cadastro. Entre com o seu CPF e senha.
+                campos:
+                  cpf: Este CPF já tem cadastro. Entre com o seu CPF e senha.
+        '413':
+          $ref: '#/components/responses/GrandeDemais'
+        '415':
+          $ref: '#/components/responses/SomenteJson'
+        '429':
+          $ref: '#/components/responses/LimiteRede'
+        '503':
+          $ref: '#/components/responses/BancoIndisponivel'
+  /api/auth/login:
+    post:
+      summary: Entra com CPF e senha (exclusivamente)
+      operationId: entrar
+      tags: [autenticacao]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginEntrada'
+      responses:
+        '200':
+          description: Sessão aberta.
+          headers:
+            Set-Cookie:
+              $ref: '#/components/headers/CookieSessao'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CandidatoConectado'
+        '400':
+          description: >
+            E-mail no lugar do CPF, CPF inválido, campo vazio ou JSON malformado. Não conta como tentativa
+            para o bloqueio por CPF.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+              example:
+                erro: Use o seu CPF para entrar (não o e-mail).
+                campos:
+                  cpf: Use o seu CPF para entrar (não o e-mail).
+        '401':
+          description: >
+            CPF não cadastrado ou senha errada; mensagem idêntica nos dois casos (FR-016).
+            Conta como falha para o CPF.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+              example:
+                erro: CPF ou senha inválidos.
+        '403':
+          $ref: '#/components/responses/OrigemNegada'
+        '413':
+          $ref: '#/components/responses/GrandeDemais'
+        '415':
+          $ref: '#/components/responses/SomenteJson'
+        '429':
+          description: >
+            Bloqueio por CPF (5 falhas em 15 minutos, por 15 minutos; mesma mensagem para CPF
+            cadastrado ou não) ou limite por endereço de rede (60 tentativas malsucedidas por
+            minuto). O cabeçalho
+            Retry-After informa os segundos de espera.
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+              examples:
+                porCpf:
+                  value:
+                    erro: Muitas tentativas para este CPF. Aguarde 15 minutos e tente de novo.
+                porRede:
+                  value:
+                    erro: Muitas tentativas a partir desta rede. Aguarde um minuto e tente de novo.
+        '503':
+          $ref: '#/components/responses/BancoIndisponivel'
+  /api/auth/logout:
+    post:
+      summary: Encerra a sessão (idempotente)
+      operationId: sair
+      tags: [autenticacao]
+      responses:
+        '204':
+          description: Cookie de sessão apagado, havendo sessão ou não.
+        '403':
+          $ref: '#/components/responses/OrigemNegada'
+  /api/auth/me:
+    get:
+      summary: Candidato da sessão atual
+      operationId: obterCandidatoConectado
+      tags: [autenticacao]
+      responses:
+        '200':
+          description: Sessão válida. Só o nome é devolvido (minimização, Princípio VI).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CandidatoConectado'
+        '401':
+          description: Sem sessão, sessão expirada ou inválida; o cookie é apagado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+              example:
+                erro: Sessão expirada ou inexistente. Entre de novo.
+components:
+  headers:
+    CookieSessao:
+      description: >
+        sessao=<JWT HS256>; HttpOnly; SameSite=Lax; Path=/; Max-Age=28800; Secure quando
+        PUBLIC_BASE_URL é HTTPS.
+      schema:
+        type: string
+  responses:
+    ErroValidacao:
+      description: >
+        Um ou mais campos inválidos (campos lista a mensagem de cada um), ou JSON malformado
+        ("Envie os dados em JSON.", sem campos).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Erro'
+          example:
+            erro: Confira os campos destacados.
+            campos:
+              cpf: CPF inválido. Confira os 11 dígitos.
+              aceiteTermos: Para se cadastrar, é preciso aceitar os termos de uso e privacidade.
+    GrandeDemais:
+      description: Corpo acima de 10 kB.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Erro'
+          example:
+            erro: Dados grandes demais.
+    OrigemNegada:
+      description: >
+        O host do cabeçalho Origin difere do cabeçalho Host da requisição, ou Origin não é URL
+        válida (proteção contra CSRF).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Erro'
+          example:
+            erro: Origem da requisição não permitida.
+    SomenteJson:
+      description: Corpo que não é application/json.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Erro'
+          example:
+            erro: Envie os dados em JSON.
+    LimiteRede:
+      description: >
+        Mais de 60 tentativas malsucedidas por minuto vindas do mesmo endereço de rede (as
+        bem-sucedidas não contam).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Erro'
+          example:
+            erro: Muitas tentativas a partir desta rede. Aguarde um minuto e tente de novo.
+    BancoIndisponivel:
+      description: Falha ao falar com o banco; nada é gravado pela metade.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Erro'
+          example:
+            erro: O portal está temporariamente sem acesso ao banco. Tente de novo em instantes.
+  schemas:
+    CadastroEntrada:
+      type: object
+      required: [cpf, nome, email, senha, confirmacaoSenha, aceiteTermos]
+      properties:
+        cpf:
+          type: string
+          description: 11 dígitos, com ou sem máscara; dígitos verificadores válidos.
+        nome:
+          type: string
+          maxLength: 150
+          description: Nome e sobrenome; letras, espaços, apóstrofo e hífen.
+        email:
+          type: string
+          maxLength: 254
+        senha:
+          type: string
+          description: 8 a 64 caracteres e no máximo 72 bytes em UTF-8.
+        confirmacaoSenha:
+          type: string
+        aceiteTermos:
+          type: boolean
+          const: true
+    LoginEntrada:
+      type: object
+      required: [cpf, senha]
+      properties:
+        cpf:
+          type: string
+          description: Só CPF (com ou sem máscara); e-mail é recusado.
+        senha:
+          type: string
+    CandidatoConectado:
+      type: object
+      required: [candidato]
+      properties:
+        candidato:
+          type: object
+          required: [nome, primeiroNome]
+          properties:
+            nome:
+              type: string
+            primeiroNome:
+              type: string
+    Erro:
+      type: object
+      required: [erro]
+      properties:
+        erro:
+          type: string
+        campos:
+          type: object
+          additionalProperties:
+            type: string

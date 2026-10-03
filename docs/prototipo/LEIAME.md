@@ -1,6 +1,6 @@
 # Protótipo do Lunar Celer
 
-Código-fonte do protótipo visual feito no canvas do projeto (02/10/2026). É a referência visual de todas as telas descritas em `docs/telas.md`. Não é código de produção: serve para portar layout, textos e estilos para as páginas reais em HTML, CSS e JavaScript puros.
+Código-fonte do protótipo visual, criado no canvas do projeto (02/10/2026, telas 7 e 8 acrescentadas em 03/10/2026). Desde 03/10/2026, os arquivos desta pasta são a fonte da verdade do protótipo: o canvas deixou de ser referência, e toda mudança de protótipo é feita aqui. É a referência visual de todas as telas descritas em `docs/telas.md`; telas 12, 15 a 19 e 21 alinhadas à spec da feature 007 em 03/10/2026. Não é código de produção: serve para portar layout, textos e estilos para as páginas reais em HTML, CSS e JavaScript puros.
 
 ## Como ler os arquivos
 
@@ -23,6 +23,8 @@ Cada tela é um arquivo `NomeDaTela.dc.html`. O formato é um HTML com algumas c
 | Entrar.dc.html | Entrar |
 | AreaCandidato.dc.html | Área do candidato |
 | Termos.dc.html | Termos de uso e privacidade |
+| AreaEstudos.dc.html | Área de estudos (tela 7) |
+| AreaTema.dc.html | Página do tema (tela 8), com vídeo hospedado |
 | EmBreve.dc.html | Disponível em breve |
 | Confirmacao.dc.html | Antes de começar |
 | Questao.dc.html | Questão com cronômetro |
@@ -36,6 +38,7 @@ Cada tela é um arquivo `NomeDaTela.dc.html`. O formato é um HTML com algumas c
 | FlashcardsFim.dc.html | Flashcards: fim da sessão |
 | Perfil.dc.html | Perfil e evolução |
 | NaoEncontrada.dc.html | Página 404 |
+| Instabilidade.dc.html | Página de instabilidade (503), estado da tela 20 |
 | Notificacoes.dc.html | Padrão de notificações |
 
 As versões de celular do protótipo apenas exibem estas mesmas telas em 390 px de largura, por isso não foram incluídas: o layout responsivo já está nos arquivos acima.

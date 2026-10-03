@@ -2,7 +2,7 @@
 
 Versão 2.0 (02/10/2026), decidida pelo mantenedor. Substitui integralmente a versão 1 (paleta azul-marinho, fontes Sora e Source Sans 3). Vale para todas as features a partir da 002.
 
-Referência visual: protótipo navegável no canvas do projeto (https://claude.ai/artifact/5MK3DegETGbv3t81EsqtZF, acesso do mantenedor). A descrição de cada tela está em `docs/telas.md`. Em caso de divergência entre o protótipo e este documento, vale este documento.
+Referência visual: o protótipo em `docs/prototipo/`, fonte da verdade do protótipo desde 03/10/2026 (o canvas do projeto deixou de ser referência). A descrição de cada tela está em `docs/telas.md`. Em caso de divergência entre o protótipo e este documento, vale este documento.
 
 ---
 
@@ -111,7 +111,7 @@ Ordem de distância do Sol. As cores aparecem só em pontos pequenos ao lado do 
 | 11 | Makemake | Métricas Ágeis | `#C46F5E` |
 | 12 | Éris | Qualidade em Projetos Ágeis | `#D8D8E0` |
 
-Depende da decisão aberta D3. Se o professor mudar a lista, o mapeamento acompanha a ordem.
+Lista confirmada pela decisão D3 (03/10/2026): temas 1 a 12 da tabela de sugestões do desafio.
 
 ## 8. Componentes
 
@@ -134,15 +134,15 @@ Depende da decisão aberta D3. Se o professor mudar a lista, o mapeamento acompa
 
 ## 9. Conteúdo factual da identidade
 
-As cinco empresas da tela inicial só podem afirmar o que suas fontes sustentam. As URLs devem ser registradas em `docs/referencias.md` na implementação.
+As cinco empresas da tela inicial só podem afirmar o que suas fontes sustentam. As fontes completas, com URL, data e a conferência de cada frase, estão em `docs/referencias.md`.
 
 | Empresa | Fato exibido | Fonte |
 |---|---|---|
-| Google | Em 2006, o time do AdWords introduziu o Scrum aos poucos, uma prática de cada vez. | Artigo de Mark Striebeck na conferência Agile 2006 e relato de Jeff Sutherland |
-| Salesforce | Trocou o modelo em cascata pelo Scrum em 2006; hoje a maioria dos times de nuvem usa alguma variação dele. | Materiais públicos da Salesforce sobre sua transformação ágil |
-| Spotify | Nos primeiros anos, era praticamente uma empresa Scrum; "squad" era o nome interno do time Scrum. | Henrik Kniberg, "Scaling Agile @ Spotify" (2012) |
-| Saab | Desenvolve o caça Gripen E, o mesmo da Força Aérea Brasileira, com centenas de times em sprints de três semanas. | Relatos de Scrum em escala na Saab Aeronautics |
-| Adobe | O time do Premiere Pro adotou o Scrum em 2008 e relatou ganhos de qualidade no produto. | Estudo de caso publicado pela Scrum Alliance |
+| Google | O time do AdWords adotou o Scrum aos poucos, uma prática de cada vez. | Palestra de Jeff Sutherland no Google Tech Talks (2006) e artigo de Mark Striebeck na conferência Agile 2006 |
+| Salesforce | Trocou o modelo em cascata pelo Scrum em 2006. Segundo a própria empresa, hoje ele é o framework principal de 70% dos seus times. | Salesforce, Trailhead ("Learn About Scrum"), e estudo de caso da Scrum Alliance |
+| Spotify | Nos primeiros anos, era praticamente uma empresa Scrum; "squad" era o nome interno do time Scrum. | Henrik Kniberg, "Spotify Engineering Culture" (2014), e Kniberg e Ivarsson, "Scaling Agile @ Spotify" (2012) |
+| Saab | Desenvolve o caça Gripen E, o mesmo da Força Aérea Brasileira, com mais de 100 times em sprints de três semanas. | Furuhjelm e outros, "Owning the Sky with Agile" (Saab Aeronautics e Scrum Inc., 2017), e comunicado da Saab sobre o Gripen E na FAB (2022) |
+| Adobe | O time do Premiere Pro adotou o Scrum em 2008 e relatou ganhos de qualidade no produto. | Peter Green, relato de experiência na conferência Agile 2012 |
 
 Nomes aparecem só como texto, nunca com logotipo.
 

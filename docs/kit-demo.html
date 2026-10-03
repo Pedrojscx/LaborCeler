@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kit de interface do Lunar Celer</title>
+<link rel="stylesheet" href="../app/public/kit/css/tokens.css">
+<link rel="stylesheet" href="../app/public/kit/css/base.css">
+<link rel="stylesheet" href="../app/public/kit/css/componentes.css">
+</head>
+<body>
+<div class="lc-pagina">
+  <div class="lc-ceu" aria-hidden="true">
+    <div class="lc-ceu__estrelas"></div>
+    <div class="lc-ceu__brilho"></div>
+    <div class="lc-ceu__brilho lc-ceu__brilho--2"></div>
+  </div>
+
+  <header class="lc-cabecalho lc-cabecalho--largo">
+    <a class="lc-marca" href="#topo">
+      <svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="12" fill="#2E2E33"/><path d="M14 2 A12 12 0 0 1 14 26 A6 12 0 0 0 14 2" fill="#E7E5E4"/></svg>
+      <span>Lunar Celer</span>
+    </a>
+    <div class="lc-cabecalho__acoes">
+      <nav class="lc-abas" aria-label="Seções do kit" data-abas>
+        <span class="lc-abas__cursor" aria-hidden="true"></span>
+        <a class="lc-abas__aba" href="#componentes">Componentes</a>
+        <a class="lc-abas__aba" href="#formularios">Formulários</a>
+        <a class="lc-abas__aba" href="#cronometro">Tempo</a>
+        <a class="lc-abas__aba" href="#flashcard">Cartões</a>
+      </nav>
+      <a class="lc-botao lc-botao--compacto" href="#topo">Entrar</a>
+    </div>
+  </header>
+
+  <main id="topo">
+    <section class="lc-container lc-secao" style="display: flex; flex-wrap: wrap; align-items: center; gap: 40px">
+      <div style="flex: 1 1 420px; display: flex; flex-direction: column; gap: 24px">
+        <h1 class="lc-destaque">Kit de interface</h1>
+        <p class="lc-lead">Tokens, componentes e elementos de assinatura do Lunar Celer, prontos para portar as telas do protótipo.</p>
+        <div class="lc-botoes">
+          <a class="lc-botao lc-botao--primario" href="#componentes">Botão principal</a>
+          <a class="lc-botao" href="#formularios">Botão secundário</a>
+        </div>
+      </div>
+      <div style="flex: 1 1 420px; position: relative">
+        <div class="lc-lua-rede" data-lua-rede>
+          <img src="../app/public/kit/img/lua-rede.svg" alt="">
+          <canvas role="img" aria-label="A Lua desenhada como uma rede de pontos e linhas"></canvas>
+        </div>
+        <button type="button" class="lc-vidro lc-flutua" style="position: absolute; top: 8%; left: 2%"><span class="lc-ponto" style="--cor: #71717A"></span>Google</button>
+        <button type="button" class="lc-vidro lc-flutua lc-flutua--defasado is-ativo" style="position: absolute; bottom: 12%; right: 4%"><span class="lc-ponto" style="--cor: #F2A43A"></span>Saab</button>
+      </div>
+    </section>
+
+    <section id="componentes" class="lc-faixa lc-secao">
+      <div class="lc-container" style="display: flex; flex-direction: column; gap: 24px">
+        <h2 class="lc-titulo-secao">Componentes</h2>
+        <div class="lc-botoes">
+          <span class="lc-chip"><span class="lc-ponto" style="--cor: #8C8A86"></span>Ceres · Eventos do Scrum</span>
+          <button class="lc-botao" disabled>Botão desativado</button>
+        </div>
+        <div class="lc-bento">
+          <div class="lc-cartao lc-cartao--destaque lc-bento__largo">
+            <h3 class="lc-subtitulo">Cartão largo do bento</h3>
+            <p class="lc-texto-suave">Ocupa a linha inteira; os demais se reorganizam em colunas.</p>
+          </div>
+          <div class="lc-cartao"><span class="lc-icone-caixa">★</span><p>Bloco menor</p></div>
+          <div class="lc-cartao"><span class="lc-icone-caixa">☾</span><p>Bloco menor</p></div>
+        </div>
+        <div class="lc-alerta lc-alerta--erro" role="alert">
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="9" r="7.5"/><path d="M9 5.5v4M9 12.5v.01"/></svg>
+          <span>CPF ou senha inválidos. Confira os dados e tente de novo.</span>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 32px; align-items: center">
+          <ol class="lc-marcos" aria-label="5 de 12 temas concluídos">
+            <li class="lc-marco lc-marco--feito"></li><li class="lc-marco lc-marco--feito"></li><li class="lc-marco lc-marco--feito"></li><li class="lc-marco lc-marco--feito"></li><li class="lc-marco lc-marco--feito"></li>
+            <li class="lc-marco lc-marco--atual"></li><li class="lc-marco"></li><li class="lc-marco"></li><li class="lc-marco"></li><li class="lc-marco"></li><li class="lc-marco"></li><li class="lc-marco"></li>
+          </ol>
+          <div style="width: 240px"><div class="lc-barra" role="img" aria-label="6 de 10 cartões dominados"><span class="lc-barra__valor" style="--valor: 60%"></span></div></div>
+          <div class="lc-progresso-anel" role="img" aria-label="60% concluído">
+            <svg viewBox="0 0 52 52" aria-hidden="true"><circle class="lc-progresso-anel__trilha" cx="26" cy="26" r="22"/><circle class="lc-progresso-anel__valor" cx="26" cy="26" r="22" stroke-dasharray="82.9 138.2"/></svg>
+            60%
+          </div>
+        </div>
+        <div class="lc-botoes">
+          <button type="button" class="lc-botao" data-notificar="sucesso">Notificar sucesso</button>
+          <button type="button" class="lc-botao" data-notificar="conquista">Notificar conquista</button>
+          <button type="button" class="lc-botao" data-notificar="erro">Notificar erro</button>
+        </div>
+        <details class="lc-recolhivel"><summary>Item recolhível</summary><p>Conteúdo que abre com um toque, como nas perguntas frequentes.</p></details>
+      </div>
+    </section>
+
+    <section id="formularios" class="lc-secao">
+      <div class="lc-container lc-container--estreito">
+        <form class="lc-formulario lc-cartao" style="max-width: 480px" novalidate>
+          <h2 class="lc-subtitulo">Formulário</h2>
+          <div class="lc-campo">
+            <label class="lc-rotulo" for="cpf">CPF</label>
+            <input class="lc-entrada lc-numeros" id="cpf" inputmode="numeric" autocomplete="username" placeholder="000.000.000-00" aria-invalid="true" aria-describedby="cpf-erro">
+            <span class="lc-erro" id="cpf-erro">CPF inválido. Confira os 11 números.</span>
+          </div>
+          <div class="lc-campo">
+            <label class="lc-rotulo" for="senha">Senha</label>
+            <span class="lc-senha">
+              <input class="lc-entrada" id="senha" type="password" autocomplete="current-password">
+              <button type="button" class="lc-senha__alternar" data-alternar-senha="senha">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M1.5 10S4.5 4 10 4s8.5 6 8.5 6-3 6-8.5 6S1.5 10 1.5 10z"/><circle cx="10" cy="10" r="2.5"/></svg>
+              </button>
+            </span>
+            <span class="lc-ajuda">De 8 a 64 caracteres.</span>
+          </div>
+          <fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px">
+            <legend class="lc-rotulo" style="margin-bottom: 10px">Escolha uma alternativa</legend>
+            <label class="lc-opcao"><input type="radio" name="alt" value="A"><span class="lc-opcao__letra">A</span><span>O Product Owner, sozinho</span></label>
+            <label class="lc-opcao"><input type="radio" name="alt" value="B"><span class="lc-opcao__letra">B</span><span>Os Developers, a partir do que conseguem entregar</span></label>
+          </fieldset>
+          <label class="lc-checagem"><input type="checkbox"><span>Li e aceito os termos de uso e privacidade.</span></label>
+          <button type="button" class="lc-botao lc-botao--primario">Criar minha conta</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="cronometro" class="lc-faixa lc-secao">
+      <div class="lc-container" style="display: flex; flex-wrap: wrap; gap: 32px; align-items: center">
+        <div class="lc-cronometro" data-cronometro>
+          <svg class="lc-anel" viewBox="0 0 200 200" aria-hidden="true">
+            <circle class="lc-anel__trilha" cx="100" cy="100" r="90"/>
+            <circle class="lc-anel__progresso" cx="100" cy="100" r="90" transform="rotate(-90 100 100)"/>
+            <circle class="lc-anel__lua" cx="100" cy="100" r="62"/>
+            <circle class="lc-anel__cratera" cx="82" cy="84" r="9"/>
+            <circle class="lc-anel__cratera" cx="122" cy="112" r="7"/>
+          </svg>
+          <span class="lc-cronometro__tempo" role="timer" data-tempo>00:40</span>
+          <span class="lc-legenda">restantes de 02:30</span>
+          <span class="lc-cronometro__alerta">Menos de 30 segundos</span>
+          <span class="lc-apenas-leitor" aria-live="polite" data-anuncio></span>
+        </div>
+        <figure class="lc-painel-claro" style="flex: 1 1 320px">
+          <svg viewBox="0 0 440 96" width="100%" height="96" role="img" aria-label="Linha do tempo de uma Sprint"><line x1="20" y1="40" x2="420" y2="40" stroke="#1A2140" stroke-width="2"/><circle cx="30" cy="40" r="7" fill="#1A2140"/><circle cx="190" cy="40" r="5" fill="#4F8FD9"/><circle cx="340" cy="40" r="7" fill="#1A2140"/></svg>
+          <figcaption>Painel claro para imagens de questões.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="flashcard" class="lc-secao">
+      <div class="lc-container" style="display: flex; flex-direction: column; align-items: center; gap: 20px">
+        <div class="lc-flashcard" data-flashcard>
+          <div class="lc-flashcard__miolo">
+            <section class="lc-flashcard__face">
+              <span class="lc-chip"><span class="lc-ponto" style="--cor: #D9A066"></span>Júpiter · Artefatos do Scrum</span>
+              <p class="lc-titulo" style="flex: 1; display: flex; align-items: center; justify-content: center; text-align: center">O que é o Sprint Goal?</p>
+            </section>
+            <section class="lc-flashcard__face lc-flashcard__face--verso">
+              <span style="color: var(--acento)">Resposta</span>
+              <p style="margin: 0; font-weight: 300; font-size: 21px">O objetivo único da Sprint, criado na Sprint Planning e compromisso do Sprint Backlog.</p>
+            </section>
+          </div>
+        </div>
+        <button type="button" class="lc-botao lc-botao--primario" data-virar>Mostrar resposta</button>
+        <div class="lc-tabela-rolagem" style="width: 100%">
+          <table class="lc-tabela">
+            <caption class="lc-apenas-leitor">Exemplo de tabela do histórico</caption>
+            <thead><tr><th scope="col">Tema</th><th scope="col">Sua resposta</th><th scope="col">Resposta correta</th></tr></thead>
+            <tbody><tr><td>Ceres · Eventos do Scrum</td><td style="color: var(--sucesso)">B) Os Developers</td><td>B) Os Developers</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="lc-rodape">
+    <span class="lc-status">Portal no ar e banco conectado</span>
+    <span>Projeto acadêmico da Fatec Jacareí</span>
+    <span class="lc-rodape__links"><a href="#topo">Termos de uso e privacidade</a><a href="#topo">Validar certificado</a></span>
+  </footer>
+</div>
+
+<script src="../app/public/kit/js/lua-rede.js"></script>
+<script src="../app/public/kit/js/abas.js"></script>
+<script src="../app/public/kit/js/notificacoes.js"></script>
+<script src="../app/public/kit/js/cronometro.js"></script>
+<script src="../app/public/kit/js/formularios.js"></script>
+<script src="kit-demo.js"></script>
+</body>
+</html>

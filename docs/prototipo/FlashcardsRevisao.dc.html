@@ -26,6 +26,14 @@ th{text-align:left;font-weight:600}
 .ceu-brilho{animation:cintila 7s ease-in-out infinite}
 .ceu-brilho2{animation-duration:9s;animation-delay:-4s}
 @media (prefers-reduced-motion: reduce){.ceu-estrelas,.ceu-brilho{animation:none}}
+.acoes-revisao{width:min(100%,680px);display:flex;flex-direction:column;align-items:center;gap:14px}
+@media (max-width: 600px){
+.acoes-revisao{position:fixed;left:0;right:0;bottom:0;z-index:2;width:auto;margin:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));box-sizing:border-box;background:rgba(5,5,5,0.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid #1F1F23}
+.acoes-revisao button{width:100%;min-height:60px !important}
+.area-revisao{padding-bottom:calc(120px + env(safe-area-inset-bottom)) !important}
+.dica-teclado,.tecla{display:none}
+.cartao-revisao{height:300px !important}
+}
 </style>
 </helmet>
 <div style="min-height: 100vh; position: relative; isolation: isolate; overflow: hidden; background-color: #050505; background-image: linear-gradient(118deg, rgba(5,5,5,0) 30%, rgba(150,140,215,0.05) 45%, rgba(242,164,58,0.035) 53%, rgba(5,5,5,0) 66%), radial-gradient(ellipse 70% 45% at 12% 0%, rgba(88,78,170,0.12), rgba(5,5,5,0) 70%), radial-gradient(ellipse 55% 40% at 95% 100%, rgba(242,164,58,0.06), rgba(5,5,5,0) 70%); color: #F5F5F4; font-family: Inter, system-ui, sans-serif; font-size: 17px; line-height: 1.55; display: flex; flex-direction: column">
@@ -36,38 +44,40 @@ th{text-align:left;font-weight:600}
 <span style="display: flex; align-items: center; gap: 10px; font-family: Inter, system-ui, sans-serif; font-weight: 300; font-size: 17px"><svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="12" fill="#2E2E33"></circle><path d="M14 2 A12 12 0 0 1 14 26 A6 12 0 0 0 14 2" fill="#E8E6DF"></path></svg><span>Lunar Celer</span></span>
 <a href="FlashcardsFim.dc.html" style="color: #A1A1AA; font-size: 16px">Encerrar revisão</a>
 </header>
-<main style="flex: 1 0 auto; width: 100%; max-width: 1040px; margin: 0 auto; padding: 32px 24px 72px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 22px">
+<main class="area-revisao" style="flex: 1 0 auto; width: 100%; max-width: 1040px; margin: 0 auto; padding: 32px 24px 72px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 22px">
 <div style="width: min(100%, 680px); display: flex; flex-direction: column; gap: 8px">
-<span style="display: flex; justify-content: space-between; font-size: 14px; color: #A1A1AA"><span>Cartão {{ numero }} de 20</span><span>{{ temaAtual }}</span></span>
+<span style="display: flex; justify-content: space-between; font-size: 14px; color: #A1A1AA"><span>Cartão {{ numero }} de {{ total }}</span><span>{{ temaAtual }}</span></span>
 <span style="height: 4px; border-radius: 999px; background: #1F1F23; overflow: hidden"><span style="display: block; height: 100%; width: {{ progresso }}; background: #F2A43A; border-radius: 999px; transition: width 0.3s"></span></span>
 </div>
 
-<div style="width: min(100%, 680px); height: 340px; perspective: 1400px">
+<div class="cartao-revisao" onClick="{{ virar }}" style="width: min(100%, 680px); height: 340px; perspective: 1400px; cursor: {{ cursorCartao }}">
 <div style="position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transform: rotateY({{ giro }}); transition: transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1)">
 <section aria-hidden="{{ frenteOculta }}" style="position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 24px; border: 1px solid #26262B; background: #0E0E10; padding: 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
 <span style="align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: #1F1F23; font-size: 14px"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="{{ corTema }}"></circle></svg>{{ temaAtual }}</span>
 <span style="flex: 1 1 auto; display: flex; align-items: center; justify-content: center; text-align: center; font-family: Inter, system-ui, sans-serif; font-weight: 300; font-size: clamp(24px, 3vw, 32px); line-height: 1.25; letter-spacing: -0.02em">{{ frente }}</span>
-<span style="text-align: center; font-size: 14px; color: #71717A">Pense na resposta antes de virar o cartão.</span>
+<span style="text-align: center; font-size: 14px; color: #8A8A93">Pense na resposta e toque no cartão para virar.</span>
 </section>
 <section aria-hidden="{{ versoOculto }}" style="position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; transform: rotateY(180deg); border-radius: 24px; border: 1px solid #3A2E1C; background: #121010; padding: 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
 <span style="font-size: 14px; color: #F2A43A">Resposta</span>
 <span style="font-family: Inter, system-ui, sans-serif; font-weight: 300; font-size: clamp(19px, 2.2vw, 23px); line-height: 1.45">{{ verso }}</span>
-<span style="margin-top: auto; font-size: 14px; color: #71717A">{{ frente }}</span>
+<span style="margin-top: auto; font-size: 14px; color: #8A8A93">{{ frente }}</span>
 </section>
 </div>
 </div>
 
+<div class="acoes-revisao">
 <sc-if value="{{ naFrente }}" hint-placeholder-val="{{ true }}">
 <button type="button" onClick="{{ virar }}" style="background: #FAFAF9; color: #050505; border: 0; font-weight: 500; padding: 12px 28px; border-radius: 999px; min-height: 50px; cursor: pointer">Mostrar resposta</button>
 </sc-if>
 <sc-if value="{{ noVerso }}" hint-placeholder-val="{{ false }}">
 <div role="group" aria-label="Como você se saiu?" style="width: min(100%, 680px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
-<button type="button" onClick="{{ avaliar }}" style="min-height: 56px; border-radius: 16px; border: 1px solid #5A2A35; background: rgba(240,113,120,0.08); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center"><span>Não sabia</span><span style="font-size: 12px; color: #A1A1AA">tecla 1</span></button>
-<button type="button" onClick="{{ avaliar }}" style="min-height: 56px; border-radius: 16px; border: 1px solid #4A3A1C; background: rgba(242,164,58,0.08); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center"><span>Quase</span><span style="font-size: 12px; color: #A1A1AA">tecla 2</span></button>
-<button type="button" onClick="{{ avaliar }}" style="min-height: 56px; border-radius: 16px; border: 1px solid #2C6A4C; background: rgba(76,195,138,0.08); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center"><span>Sabia</span><span style="font-size: 12px; color: #A1A1AA">tecla 3</span></button>
+<button type="button" onClick="{{ avaliarNao }}" style="min-height: 60px; border-radius: 16px; border: 1px solid #5A2A35; background: rgba(240,113,120,0.08); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center"><span>Não sabia</span><span class="tecla" style="font-size: 12px; color: #A1A1AA">tecla 1</span></button>
+<button type="button" onClick="{{ avaliarQuase }}" style="min-height: 60px; border-radius: 16px; border: 1px solid #4A3A1C; background: rgba(242,164,58,0.08); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center"><span>Quase</span><span class="tecla" style="font-size: 12px; color: #A1A1AA">tecla 2</span></button>
+<button type="button" onClick="{{ avaliarSabia }}" style="min-height: 60px; border-radius: 16px; border: 1px solid #2C6A4C; background: rgba(76,195,138,0.08); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center"><span>Sabia</span><span class="tecla" style="font-size: 12px; color: #A1A1AA">tecla 3</span></button>
 </div>
 </sc-if>
-<p style="margin: 0; font-size: 14px; color: #71717A; text-align: center">A barra de espaço vira o cartão, e as teclas 1, 2 e 3 registram como você se saiu.</p>
+<p class="dica-teclado" style="margin: 0; font-size: 14px; color: #8A8A93; text-align: center">No computador, a barra de espaço vira o cartão e as teclas 1, 2 e 3 registram como você se saiu.</p>
+</div>
 </main>
 
 </div>
@@ -78,6 +88,9 @@ class Component extends DCLogic {
     const st = this.state || {};
     const verso = st.verso || false;
     const i = st.i || 0;
+    // "Não sabia" volta uma vez no fim da sessão: o total cresce 1 a cada volta (spec 007, FR-014)
+    const voltas = st.voltas || 0;
+    const total = 20 + voltas;
     const cartoes = [
       { tema: 'Júpiter · Artefatos do Scrum', cor: '#D9A066', frente: 'O que é o Sprint Goal?', verso: 'O objetivo único da Sprint. Ele é criado na Sprint Planning, funciona como o compromisso do Sprint Backlog e dá foco aos Developers durante a Sprint.' },
       { tema: 'Ceres · Eventos do Scrum', cor: '#8C8A86', frente: 'Quanto tempo dura, no máximo, a Daily Scrum?', verso: '15 minutos, em todos os dias da Sprint, no mesmo horário e local, para inspecionar o progresso rumo ao Sprint Goal e ajustar o plano do dia.' },
@@ -85,13 +98,16 @@ class Component extends DCLogic {
     ];
     const c = cartoes[i % cartoes.length];
     return {
-      numero: String(5 + i), progresso: ((4 + i) / 20 * 100).toFixed(0) + '%',
+      numero: String(5 + i), total: String(total), progresso: ((4 + i) / total * 100).toFixed(0) + '%',
       temaAtual: c.tema, corTema: c.cor, frente: c.frente, verso: c.verso,
       giro: verso ? '180deg' : '0deg',
       frenteOculta: verso ? 'true' : 'false', versoOculto: verso ? 'false' : 'true',
       naFrente: !verso, noVerso: verso,
       virar: () => this.setState({ verso: true }),
-      avaliar: () => this.setState({ verso: false, i: i + 1 })
+      cursorCartao: verso ? 'default' : 'pointer',
+      avaliarNao: () => this.setState({ verso: false, i: i + 1, voltas: voltas + 1 }),
+      avaliarQuase: () => this.setState({ verso: false, i: i + 1 }),
+      avaliarSabia: () => this.setState({ verso: false, i: i + 1 })
     };
   }
 }

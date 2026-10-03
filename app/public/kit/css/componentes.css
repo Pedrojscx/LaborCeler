@@ -1,0 +1,209 @@
+/* Lunar Celer: componentes de interface (docs/identidade-visual.md, seção 8) */
+
+/* ---------- botões ---------- */
+.lc-botao {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px; padding: 12px 24px; border-radius: var(--raio-pilula);
+  border: 1px solid var(--borda-forte); background: transparent; color: var(--texto);
+  font-weight: 400; text-decoration: none; cursor: pointer; text-align: center;
+  transition: background var(--rapido), border-color var(--rapido), color var(--rapido);
+}
+.lc-botao:hover { border-color: var(--texto-apagado); color: var(--texto); }
+.lc-botao--primario { background: var(--primario); border-color: var(--primario); color: var(--primario-texto); font-weight: 500; }
+.lc-botao--primario:hover { background: #FFFFFF; color: var(--primario-texto); }
+.lc-botao--compacto { min-height: var(--alvo-minimo); padding: 10px 18px; }
+.lc-botao--bloco { width: 100%; }
+.lc-botao[disabled], .lc-botao[aria-disabled="true"] { background: var(--borda-forte); border-color: var(--borda-forte); color: var(--texto-suave); cursor: not-allowed; }
+.lc-botoes { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+
+/* ---------- chips e vidro ---------- */
+.lc-chip {
+  display: inline-flex; align-items: center; gap: 8px; align-self: flex-start;
+  padding: 6px 14px; border-radius: var(--raio-pilula); background: var(--borda); font-size: 15px;
+}
+.lc-ponto { width: 10px; height: 10px; border-radius: 50%; flex: 0 0 auto; background: var(--cor, var(--texto-suave)); }
+.lc-vidro {
+  display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+  padding: 8px 15px; border-radius: var(--raio-pilula); font-size: 14px; color: #E4E4E7;
+  background: var(--vidro-fundo); border: 1px solid var(--vidro-borda);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+button.lc-vidro { cursor: pointer; }
+.lc-vidro[aria-pressed="true"], .lc-vidro.is-ativo { border-color: var(--acento); box-shadow: 0 0 24px rgba(242, 164, 58, 0.35); }
+.lc-flutua { animation: lc-flutua 7s ease-in-out infinite; }
+.lc-flutua--defasado { animation-delay: -3.5s; }
+@keyframes lc-flutua { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+/* ---------- cartões e grade em bento ---------- */
+.lc-cartao { background: var(--superficie-2); border: 1px solid var(--borda); border-radius: var(--raio-cartao); padding: 24px; }
+.lc-cartao--discreto { background: var(--superficie-1); }
+.lc-cartao--destaque { background: var(--superficie-2); border-radius: 22px; padding: 32px; }
+.lc-cartao--vidro { background: rgba(14, 14, 16, 0.75); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border-color: var(--borda-media); border-radius: 28px; }
+.lc-bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.lc-bento__largo { grid-column: 1 / -1; }
+.lc-icone-caixa {
+  width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--borda-forte); background: var(--superficie-2);
+  display: flex; align-items: center; justify-content: center; color: var(--acento); flex: 0 0 auto;
+}
+
+/* ---------- formulários ---------- */
+.lc-formulario { display: flex; flex-direction: column; gap: 18px; }
+.lc-campo { display: flex; flex-direction: column; gap: 6px; }
+.lc-rotulo { font-weight: 500; font-size: 15px; }
+.lc-entrada {
+  width: 100%; min-height: 48px; padding: 0 14px; border-radius: var(--raio-campo);
+  border: 1px solid var(--borda-forte); background: var(--superficie-2); font-size: var(--tamanho-corpo);
+}
+.lc-entrada::placeholder { color: var(--texto-apagado); }
+.lc-entrada[aria-invalid="true"] { border-color: var(--erro); }
+.lc-ajuda { font-size: var(--tamanho-legenda); color: var(--texto-suave); }
+.lc-erro { font-size: var(--tamanho-legenda); color: var(--erro-texto); }
+.lc-senha { display: flex; align-items: stretch; border-radius: var(--raio-campo); border: 1px solid var(--borda-forte); background: var(--superficie-2); overflow: hidden; }
+.lc-senha:focus-within { outline: 2px solid var(--acento); outline-offset: 3px; }
+.lc-senha .lc-entrada { border: 0; background: transparent; min-height: 46px; }
+.lc-senha .lc-entrada:focus-visible { outline: none; }
+.lc-senha__alternar { flex: 0 0 auto; width: 48px; border: 0; border-left: 1px solid var(--borda-forte); background: transparent; color: var(--texto-suave); cursor: pointer; }
+.lc-checagem { display: flex; gap: 12px; align-items: flex-start; font-size: 15px; }
+.lc-checagem input { width: 22px; height: 22px; margin: 2px 0 0; accent-color: var(--acento); flex: 0 0 auto; }
+
+/* alternativa de questão: botão de opção real dentro de um rótulo */
+.lc-opcao {
+  display: flex; align-items: center; gap: 14px; min-height: 52px; padding: 14px 16px;
+  border: 1px solid var(--borda-forte); border-radius: 14px; background: var(--fundo); cursor: pointer;
+  transition: border-color var(--rapido), background var(--rapido);
+}
+.lc-opcao input { width: 20px; height: 20px; margin: 0; accent-color: var(--acento); flex: 0 0 auto; }
+.lc-opcao:has(input:checked) { border-color: var(--acento); background: var(--superficie-2); }
+.lc-opcao__letra {
+  width: 28px; height: 28px; border-radius: 8px; background: var(--borda); flex: 0 0 auto;
+  display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 14px;
+}
+.lc-opcao--correta { border-color: var(--sucesso); }
+.lc-opcao--errada { border-color: var(--erro); }
+
+/* ---------- alertas na página ---------- */
+.lc-alerta { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 14px; border: 1px solid var(--borda-forte); background: var(--superficie-2); font-size: 15px; }
+.lc-alerta svg { flex: 0 0 auto; width: 20px; height: 20px; margin-top: 1px; }
+.lc-alerta--erro { background: var(--erro-fundo); border-color: var(--erro-borda); color: var(--erro-texto); }
+.lc-alerta--erro a { color: var(--erro-texto); }
+.lc-alerta--sucesso { background: var(--sucesso-fundo); border-color: var(--sucesso-borda); }
+
+/* ---------- abas deslizantes ---------- */
+.lc-abas {
+  --abas: 4;
+  position: relative; isolation: isolate; flex: 0 1 420px; min-width: 0;
+  display: grid; grid-template-columns: repeat(var(--abas), minmax(0, 1fr));
+  padding: 4px; border: 1px solid var(--borda-forte); border-radius: var(--raio-pilula); background: var(--fundo);
+}
+.lc-abas__cursor {
+  position: absolute; z-index: 0; top: 4px; bottom: 4px; left: 4px;
+  width: calc((100% - 8px) / var(--abas)); border-radius: var(--raio-pilula); background: var(--primario);
+  opacity: 0; transform: translateX(0);
+  transition: transform var(--medio) var(--curva), opacity 0.2s;
+}
+.lc-abas__aba {
+  position: relative; z-index: 1; display: flex; align-items: center; justify-content: center;
+  min-height: var(--alvo-minimo); padding: 0 4px; border-radius: var(--raio-pilula);
+  color: #FFFFFF; mix-blend-mode: difference; text-decoration: none; font-size: 15px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.lc-abas__aba:hover { color: #FFFFFF; }
+
+/* ---------- notificações ---------- */
+.lc-toasts {
+  position: fixed; z-index: 1000; right: 24px; bottom: max(24px, env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; align-items: flex-end; gap: 12px; pointer-events: none;
+  width: min(420px, calc(100vw - 32px));
+}
+@media (max-width: 600px) { .lc-toasts { right: 50%; transform: translateX(50%); align-items: stretch; } }
+.lc-toast {
+  pointer-events: auto; width: 100%; display: flex; gap: 14px; align-items: flex-start;
+  padding: 18px 18px 18px 20px; border-radius: 20px; background: var(--superficie-3); border: 1px solid var(--borda-media);
+  box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.9);
+  animation: lc-toast-entra var(--medio) var(--curva);
+}
+.lc-toast.is-saindo { animation: lc-toast-sai 0.2s ease-in forwards; }
+.lc-toast__icone { flex: 0 0 auto; width: 26px; height: 26px; margin-top: 1px; color: var(--tipo, var(--sucesso)); }
+.lc-toast__corpo { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.lc-toast__titulo { font-weight: 500; font-size: 17px; }
+.lc-toast__texto { color: var(--texto-suave); font-size: 15px; }
+.lc-toast__fechar {
+  /* alvo de 44 px; as margens negativas mantêm o ícone no lugar */
+  flex: 0 0 auto; width: var(--alvo-minimo); height: var(--alvo-minimo); margin: -12px -12px -6px -6px; border: 0; border-radius: var(--raio-pilula);
+  background: transparent; color: var(--texto-apagado); cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.lc-toast__fechar:hover { color: var(--texto); background: var(--borda); }
+.lc-toast--sucesso { --tipo: var(--sucesso); }
+.lc-toast--conquista { --tipo: var(--acento); }
+.lc-toast--info { --tipo: var(--info); }
+.lc-toast--aviso { --tipo: var(--aviso); }
+.lc-toast--erro { --tipo: var(--erro); }
+@keyframes lc-toast-entra { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: none; } }
+@keyframes lc-toast-sai { to { opacity: 0; transform: translateY(8px); } }
+
+/* ---------- cronômetro em anel ---------- */
+.lc-cronometro { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.lc-anel { width: 200px; height: 200px; }
+.lc-anel__trilha { fill: none; stroke: var(--borda); stroke-width: 8; }
+.lc-anel__progresso { fill: none; stroke: var(--acento); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 0.25s linear, stroke 0.2s; }
+.lc-anel__lua { fill: var(--lua); }
+.lc-anel__cratera { fill: #D6D3CA; }
+.lc-cronometro__tempo { font-weight: 300; font-size: 34px; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.lc-cronometro__alerta { display: none; font-weight: 500; font-size: 15px; color: var(--erro-texto); }
+.lc-cronometro.is-alerta .lc-anel__progresso { stroke: var(--erro); }
+.lc-cronometro.is-alerta .lc-cronometro__tempo { color: var(--erro-texto); }
+.lc-cronometro.is-alerta .lc-cronometro__alerta { display: block; }
+
+/* ---------- trilha de 12 marcos ---------- */
+.lc-marcos { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.lc-marco { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--borda-forte); }
+.lc-marco--feito { background: var(--lua); border-color: var(--lua); }
+.lc-marco--atual { border-color: var(--acento); }
+
+/* ---------- barras e anéis de progresso ---------- */
+.lc-barra { height: 6px; border-radius: var(--raio-pilula); background: var(--borda); overflow: hidden; }
+.lc-barra__valor { display: block; height: 100%; width: var(--valor, 0%); border-radius: inherit; background: var(--texto-claro); }
+.lc-barra--completa .lc-barra__valor { background: var(--acento); }
+.lc-progresso-anel { position: relative; width: 52px; height: 52px; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; }
+.lc-progresso-anel svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+.lc-progresso-anel__trilha { fill: none; stroke: var(--borda); stroke-width: 3; }
+.lc-progresso-anel__valor { fill: none; stroke: var(--texto); stroke-width: 3; stroke-linecap: round; }
+
+/* ---------- flashcard ---------- */
+.lc-flashcard { width: min(100%, 680px); height: 340px; perspective: 1400px; }
+.lc-flashcard__miolo { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.55s var(--curva); }
+.lc-flashcard.is-virado .lc-flashcard__miolo { transform: rotateY(180deg); }
+.lc-flashcard__face {
+  position: absolute; inset: 0; -webkit-backface-visibility: hidden; backface-visibility: hidden;
+  border-radius: 24px; border: 1px solid var(--borda-media); background: var(--superficie-cartao);
+  padding: 28px; display: flex; flex-direction: column; gap: 16px;
+}
+.lc-flashcard__face--verso { transform: rotateY(180deg); border-color: var(--acento-borda); background: #121010; }
+.lc-autoavaliacao { width: min(100%, 680px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.lc-autoavaliacao button { min-height: 56px; border-radius: 16px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.lc-autoavaliacao__nao { border: 1px solid var(--erro-borda); background: rgba(240, 113, 120, 0.08); }
+.lc-autoavaliacao__quase { border: 1px solid #4A3A1C; background: rgba(242, 164, 58, 0.08); }
+.lc-autoavaliacao__sabia { border: 1px solid var(--sucesso-borda); background: rgba(76, 195, 138, 0.08); }
+
+/* ---------- recolhíveis, tabelas e painel claro ---------- */
+.lc-recolhivel { border-top: 1px solid var(--borda); padding: 18px 0; }
+.lc-recolhivel summary { cursor: pointer; font-weight: 500; font-size: 18px; }
+.lc-recolhivel summary:hover { color: var(--acento); }
+.lc-recolhivel p { margin: 10px 0 0; color: var(--texto-suave); }
+.lc-tabela-rolagem { overflow-x: auto; border: 1px solid var(--borda); border-radius: var(--raio-cartao); }
+.lc-tabela { width: 100%; min-width: 860px; border-collapse: collapse; font-size: 15px; }
+.lc-tabela th { text-align: left; font-weight: 500; padding: 12px; background: var(--superficie-2); }
+.lc-tabela td { padding: 14px 12px; border-top: 1px solid var(--borda); vertical-align: top; }
+.lc-painel-claro { margin: 0; background: var(--painel-claro); color: var(--texto-sobre-claro); border-radius: 14px; padding: 18px 20px; }
+.lc-painel-claro figcaption { margin-top: 8px; font-size: 14px; color: var(--texto-sobre-claro-suave); }
+
+/* ---------- Lua em rede ---------- */
+.lc-lua-rede { position: relative; width: 100%; max-width: 520px; aspect-ratio: 1; margin-inline: auto; }
+.lc-lua-rede canvas, .lc-lua-rede img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.lc-lua-rede.is-pronta img { visibility: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lc-flutua { animation: none; }
+  .lc-flashcard__miolo { transition: none; }
+}
