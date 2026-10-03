@@ -496,8 +496,12 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
   página "Disponível em breve" (tela 6): ilustração de eclipse, título e texto conforme a
   funcionalidade, e os botões "Voltar para a área do candidato" e "Ir para o início". Os textos
   existem para área de estudos (003), certificação (004) e validação (005), e, para os links do
-  cabeçalho logado, flashcards e perfil (007). Cada feature, ao ser entregue, substitui o seu
-  destino provisório; a página some quando o último deles for substituído. Esses links são a
+  cabeçalho logado, flashcards e perfil (007): título "Os flashcards estão a caminho" e texto "A
+  revisão dos 12 temas com cartões de pergunta e resposta chega numa próxima versão do Lunar
+  Celer."; título "O perfil está a caminho" e texto "Sua evolução nos estudos e as suas
+  conquistas chegam numa próxima versão do Lunar Celer." (textos de flashcards e perfil definidos
+  pelo mantenedor em 03/10/2026). Cada feature, ao ser entregue, substitui o seu destino
+  provisório; a página some quando o último deles for substituído. Esses links são a
   exceção da regra de disponibilidade (FR-050): continuam visíveis porque levam a esta página,
   que diz que o recurso está a caminho.
 - **FR-047**: A área do candidato tem cinco estados: não iniciada, em andamento, aprovada,

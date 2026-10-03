@@ -165,9 +165,9 @@ bloco "Estudar antes" no estado "reprovada".
 1. **Given** a área do candidato nos estados "aprovada" ou "reprovada", **When** o candidato
    escolhe "Ver meu histórico", **Then** chega ao histórico com a última tentativa aberta.
 2. **Given** a área do candidato nos estados "em andamento" ou "nova tentativa disponível",
-   **When** o candidato lê o bloco principal, **Then** vê "Ver meu histórico" ao lado do botão
-   principal, que abre a tentativa em andamento ou a última concluída; o cabeçalho logado não
-   ganha link para o histórico.
+   **When** o candidato lê o bloco principal, **Then** vê o link "Ver meu histórico" abaixo do
+   aviso do botão principal, que abre a tentativa em andamento ou a última concluída; o cabeçalho
+   logado não ganha link para o histórico.
 3. **Given** a área do candidato no estado "reprovada", **When** o candidato lê o bloco "Estudar
    antes", **Then** vê "O histórico mostra em quais temas você errou. Comece a revisão por eles."
 4. **Given** esta feature entregue, **When** qualquer link para o histórico é seguido, **Then**
@@ -321,8 +321,8 @@ bloco "Estudar antes" no estado "reprovada".
   em breve" (FR-024 da 005) e ligar ao histórico real: "Ver meu histórico", nos estados
   "aprovada" e "reprovada" da área do candidato, abrindo a última tentativa; e "Ver o histórico
   completo", no resultado, abrindo a tentativa daquele resultado. Nos estados "em andamento" e
-  "nova tentativa disponível", a área do candidato MUST ganhar "Ver meu histórico", ao lado do
-  botão principal, abrindo a tentativa em andamento ou a última concluída. O cabeçalho logado
+  "nova tentativa disponível", a área do candidato MUST ganhar o link "Ver meu histórico", abaixo
+  do aviso do botão principal, abrindo a tentativa em andamento ou a última concluída. O cabeçalho logado
   MUST NOT ganhar link para o histórico.
 - **FR-019**: No estado "reprovada" da área do candidato, o bloco "Estudar antes" MUST passar a usar
   o texto do protótipo, "O histórico mostra em quais temas você errou. Comece a revisão por
@@ -441,9 +441,6 @@ Resolvidos pelo mantenedor em 03/10/2026:
 
 - **P-01**: aprovação, pelo mantenedor, da proposta de modelo de dados da 004, da qual dependem
   as várias tentativas por candidato (FR-001, FR-002, SC-001).
-- **P-06**: alinhar a tela 4 de `docs/telas.md` e `docs/prototipo/AreaCandidato.dc.html` com a
-  decisão da P-04 ("Ver meu histórico" nos estados "em andamento" e "nova tentativa
-  disponível"), que só está nesta spec.
 
 Resolvidas pelo mantenedor em 03/10/2026:
 
@@ -456,6 +453,9 @@ Resolvidas pelo mantenedor em 03/10/2026:
   do candidato; nada no cabeçalho (FR-018).
 - **P-05**: telas 6 e 15 de `docs/telas.md` alinhadas, com a regra de escrita de datas e horas e a
   rota `/historico/:numero`; `Historico.dc.html` atualizado pelo mantenedor.
+- **P-06**: tela 4 de `docs/telas.md` e `AreaCandidato.dc.html` alinhados com a P-04: o link "Ver
+  meu histórico" fica abaixo do aviso do botão, só nos estados "em andamento" e "nova tentativa
+  disponível" (FR-018).
 
 ## Conformidade com a constituição (versão 3.0.1)
 

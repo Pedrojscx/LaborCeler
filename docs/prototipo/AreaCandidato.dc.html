@@ -55,6 +55,9 @@ button:focus-visible,a:focus-visible{outline:2px solid #F2A43A;outline-offset:3p
 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg>
 </a>
 <span style="font-size: 14px; color: #A1A1AA">{{ avisoBotao }}</span>
+<sc-if value="{{ historicoAntes }}" hint-placeholder-val="{{ false }}">
+<a href="Historico.dc.html" style="align-self: flex-start; font-weight: 600; min-height: 44px; display: inline-flex; align-items: center">Ver meu histórico</a>
+</sc-if>
 </div>
 </sc-if>
 
@@ -176,6 +179,7 @@ class Component extends DCLogic {
       rotuloBotao: t.rotuloBotao || '', avisoBotao: t.avisoBotao || '',
       podeIniciar: estado === 'naoIniciada' || estado === 'emAndamento' || estado === 'novaTentativa',
       concluida: estado === 'aprovada' || estado === 'reprovada',
+      historicoAntes: estado === 'emAndamento' || estado === 'novaTentativa',
       aprovada: estado === 'aprovada',
       luaD, marcos,
       rotuloLua: 'Lua com ' + concluidos + ' de 12 partes iluminadas'

@@ -59,7 +59,7 @@ th{text-align:left;font-weight:600}
 </footer>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"funcionalidade":{"editor":"enum","options":["estudos","certificacao","validacao","historico"],"default":"estudos"},"$preview":{"width":1440,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"funcionalidade":{"editor":"enum","options":["estudos","certificacao","validacao","historico","flashcards","perfil"],"default":"estudos"},"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
   renderVals() {
     const qual = this.props.funcionalidade ?? 'estudos';
@@ -67,7 +67,9 @@ class Component extends DCLogic {
       estudos: ['A área de estudos está a caminho', 'Os materiais e os flashcards dos 12 temas chegam numa próxima versão do Lunar Celer.'],
       certificacao: ['A certificação está a caminho', 'As questões dos 12 temas chegam numa próxima versão. Enquanto isso, sua conta já está pronta.'],
       validacao: ['A validação está a caminho', 'A conferência pública de certificados chega numa próxima versão do Lunar Celer.'],
-      historico: ['O histórico está a caminho', 'O registro completo das suas tentativas, questão por questão, chega numa próxima versão do Lunar Celer.']
+      historico: ['O histórico está a caminho', 'O registro completo das suas tentativas, questão por questão, chega numa próxima versão do Lunar Celer.'],
+      flashcards: ['Os flashcards estão a caminho', 'A revisão dos 12 temas com cartões de pergunta e resposta chega numa próxima versão do Lunar Celer.'],
+      perfil: ['O perfil está a caminho', 'Sua evolução nos estudos e as suas conquistas chegam numa próxima versão do Lunar Celer.']
     }[qual];
     return { titulo: t[0], texto: t[1] };
   }
