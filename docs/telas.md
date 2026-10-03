@@ -1,6 +1,6 @@
 # Telas do Lunar Celer
 
-Versão 1.2 (03/10/2026). Descreve as telas do protótipo (canvas do projeto, acesso do mantenedor: https://claude.ai/artifact/5MK3DegETGbv3t81EsqtZF) para orientar specs e implementação. Tokens, componentes e regras visuais estão em `docs/identidade-visual.md`. Requisitos citados pelo ID de `docs/requisitos-desafio.md`.
+Versão 1.3 (03/10/2026). Descreve as telas do protótipo (canvas do projeto, acesso do mantenedor: https://claude.ai/artifact/5MK3DegETGbv3t81EsqtZF) para orientar specs e implementação. Tokens, componentes e regras visuais estão em `docs/identidade-visual.md`. Requisitos citados pelo ID de `docs/requisitos-desafio.md`.
 
 Convenções: as rotas são sugestões para o plano de cada feature; "Logado" significa que a tela exige sessão e redireciona para Entrar sem ela; textos entre colchetes são dados dinâmicos ou pendências.
 
@@ -117,11 +117,11 @@ Estados: visitante; candidato conectado; tema sem vídeo; vídeo indisponível (
 
 ## 9. Antes de começar
 
-Lista das seis regras em linguagem direta (12 temas em ordem, 150 segundos, resposta única, sair da página encerra a questão aberta, pausa permitida entre temas, aprovação com 8 acertos) e cartão lateral com o primeiro tema (Mercúrio · Fundamentos da Agilidade), botão "Começar agora" e "Voltar e estudar mais".
+Lista das seis regras em linguagem direta (12 temas em ordem, 150 segundos, resposta única, sair da página encerra a questão aberta, pausa permitida entre temas, aprovação com 8 acertos) e cartão lateral com o tema que vai começar (o primeiro, Mercúrio · Fundamentos da Agilidade, ou, na retomada, o próximo tema pendente), botão "Começar agora" e "Voltar e estudar mais". A regra sobre sair da página diz: "Fechar ou recarregar a página durante uma questão a encerra como erro. Se a conexão cair, o tempo continua contando no servidor: se a resposta não chegar até o fim do prazo, a questão conta como erro." A certificação só é criada ao confirmar "Começar agora".
 
 ## 10. Questão com cronômetro
 
-Cabeçalho de foco com "Tema [n] de 12" e "Interromper". Coluna do tempo: Lua dentro do anel do cronômetro, tempo em número, "restantes de 02:30", trilha de 12 marcos e o aviso de que o tempo é contado pelo servidor. Coluna da questão: chip do tema, enunciado, imagem em painel claro com legenda, quatro alternativas como botões de opção reais (A a D) e o botão "Confirmar resposta", desativado até escolher, com o aviso de que não é possível trocar depois.
+Cabeçalho de foco com "Tema [n] de 12" e "Interromper", que pede confirmação numa caixa de diálogo da própria página, avisando que a questão aberta contará como erro; ao confirmar, a pessoa vai para a correção no estado "interrompida". Coluna do tempo: Lua dentro do anel do cronômetro, tempo em número, "restantes de 02:30", trilha de 12 marcos e o aviso de que o tempo é contado pelo servidor. Coluna da questão: chip do tema, enunciado, imagem em painel claro com legenda, quatro alternativas como botões de opção reais (A a D) e o botão "Confirmar resposta", desativado até escolher, com o aviso de que não é possível trocar depois.
 
 Estados: tempo normal; menos de 30 segundos (anel e número em vermelho e aviso escrito). O céu fica parado nesta tela.
 
@@ -129,7 +129,7 @@ Estados: tempo normal; menos de 30 segundos (anel e número em vermelho e aviso 
 
 Faixa de resultado com ícone e texto; chip, enunciado e alternativas marcadas ("Alternativa correta", "Sua resposta", "Correta, sua resposta"); bloco "Por que a alternativa [X]" com a justificativa; e o painel "O que você quer fazer agora?" (RF12) com trilha, próximo tema, "Seguir para o próximo tema" e "Encerrar a sessão e continuar depois".
 
-Estados: resposta certa; resposta errada; tempo esgotado; questão encerrada por interrupção. Todos terminam na mesma escolha de seguir ou encerrar.
+Estados: resposta certa; resposta errada; tempo esgotado; questão encerrada por interrupção (depois de "Interromper" ou de recarregar a questão). Todos terminam na mesma escolha de seguir ou encerrar; na correção do 12º tema, o painel mostra os 12 temas concluídos e leva à área do candidato.
 
 ## 12. Resultado final
 
@@ -188,6 +188,7 @@ Componente descrito em `docs/identidade-visual.md`, seção 8.1, e implementado 
 - **D1** (refazer a certificação): telas 1, 4 e 12.
 - **D2** (escala da nota): telas 12, 13 e 14.
 - **D3** (os 12 temas): todas as que mostram temas.
-- **D6** (recarregar durante a questão): telas 10 e 11.
+- **D6** (recarregar durante a questão e perda de conexão): telas 9, 10 e 11.
+- Pergunta frequente "E se a internet cair durante uma questão?" da tela 1: corrigir na 002 para o mesmo texto da regra da tela 9 sobre fechar, recarregar e perda de conexão.
 - Contato privado (e-mail exclusivo do projeto, ainda a criar): tela 5. Sem ele, a feature 002 não pode ser entregue.
 - Termos (tela 5): incluir as revisões de flashcards e a evolução entre os dados coletados, na spec da feature 007 (Princípio VI).

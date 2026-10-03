@@ -310,7 +310,7 @@ Checklist por questão (RNF08): enunciado contextualizado em cenário; imagem ne
 | D3 (Q3) | Quais 12 dos 16 temas? | Temas 1 a 12 da tabela. | Seed e conteúdo; decidir antes de produzir questões. |
 | D4 (Q4) | Interrupção conta como erro? | Sim (RF11 e RF14). | Só o cálculo. |
 | D5 (Q5) | Edição de nome/e-mail? | Não há; certificado lê do cadastro. | Se houver edição, tbcertificado precisa guardar cópia dos dados. |
-| D6 | Recarregar a página durante a questão conta como interrupção? | Sim, leitura literal do RF14. Alternativa: permitir retomar dentro do mesmo prazo de 150 s, que é mais amigável mas contraria o texto. | Regra R8 e um teste. |
+| D6 | Recarregar a página durante a questão conta como interrupção? E a perda de conexão? | Sim, leitura literal do RF14. Alternativa: permitir retomar dentro do mesmo prazo de 150 s, que é mais amigável mas contraria o texto. Perda de conexão (interpretação do RF14, spec 004): o servidor só percebe a interrupção quando a questão é pedida de novo ou o prazo vence; por isso a regra exibida é "Fechar ou recarregar a página durante uma questão a encerra como erro. Se a conexão cair, o tempo continua contando no servidor: se a resposta não chegar até o fim do prazo, a questão conta como erro." | Regra R8, textos da tela 9 e da pergunta frequente e testes. |
 | D7 | Imagens das questões no banco (bytea) ou em arquivo com caminho no banco? | Arquivo + caminho em tbimagem.arquivo. RP04 diz "armazenar imagens das questões"; confirmar se o caminho satisfaz. | Troca de coluna e do endpoint de imagem. |
 | D8 | Área de estudos exige login? | Não. | Middleware de rota. |
 
