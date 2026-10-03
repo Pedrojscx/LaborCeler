@@ -1,19 +1,20 @@
-# DESATUALIZADO (2026-10-02): gerado a partir da versão anterior da spec, antes da
-# constituição 3.0.0, da identidade visual 2.0 e do kit de interface; não vale como
-# referência. Será regenerado depois que todas as specs estiverem prontas.
 openapi: 3.1.0
 info:
-  title: Portal de Certificação em Metodologias Ágeis - Autenticação
-  version: 0.2.0
+  title: Lunar Celer, portal de certificação em metodologias ágeis - Autenticação
+  version: 0.3.0
   description: >
-    Endpoints da feature 002 (RF02, RF03, RF04, RNF03). Este trecho é incorporado a
-    docs/openapi.yaml. Todas as rotas POST exigem corpo application/json (senão 415) e passam
-    pela checagem de origem (403), ver contracts/paginas-e-sessao.md. As mensagens exatas estão
-    no catálogo do mesmo contrato.
+    Endpoints da feature 002 (RF02, RF03, RF04, RNF03), gerados em 2026-10-03 a partir da spec
+    atual. Este trecho é incorporado a docs/openapi.yaml na implementação (DoD, item 4). Todas as
+    rotas POST exigem corpo application/json (senão 415) e passam pela checagem de origem (403),
+    ver contracts/paginas-e-sessao.md, que também traz o catálogo de mensagens. Nenhuma resposta
+    devolve CPF, e-mail, senha ou hash (Princípio VI).
 paths:
   /api/auth/cadastro:
     post:
       summary: Cadastra o candidato e já abre a sessão
+      description: >
+        FR-005 a FR-011, FR-013, FR-014, FR-030. O aceite dos termos é gravado com a data e a hora
+        do banco. A certificação não é iniciada (RF02).
       operationId: cadastrar
       tags: [autenticacao]
       requestBody:
@@ -24,14 +25,14 @@ paths:
               $ref: '#/components/schemas/CadastroEntrada'
             example:
               cpf: 529.982.247-25
-              nome: Maria D'Ávila Souza
+              nome: Maria D'Ávila Souza-Lima
               email: maria@exemplo.com
               senha: uma senha boa
               confirmacaoSenha: uma senha boa
               aceiteTermos: true
       responses:
         '201':
-          description: Cadastro criado; cookie de sessão emitido. A certificação NÃO é iniciada.
+          description: Cadastro criado; cookie de sessão emitido.
           headers:
             Set-Cookie:
               $ref: '#/components/headers/CookieSessao'
@@ -44,26 +45,29 @@ paths:
         '403':
           $ref: '#/components/responses/OrigemNegada'
         '409':
-          description: CPF já cadastrado; nenhum outro dado do titular é revelado.
+          description: >
+            CPF já cadastrado; nenhum outro dado do titular é revelado (FR-007). A página mostra o
+            atalho para Entrar.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Erro'
               example:
-                erro: Este CPF já tem cadastro. Entre com o seu CPF e senha.
+                erro: Este CPF já tem cadastro. Se a conta é sua, entre com CPF e senha.
                 campos:
-                  cpf: Este CPF já tem cadastro. Entre com o seu CPF e senha.
+                  cpf: Este CPF já tem cadastro. Se a conta é sua, entre com CPF e senha.
         '413':
           $ref: '#/components/responses/GrandeDemais'
         '415':
           $ref: '#/components/responses/SomenteJson'
         '429':
-          $ref: '#/components/responses/LimiteRede'
+          $ref: '#/components/responses/MuitasTentativas'
         '503':
           $ref: '#/components/responses/BancoIndisponivel'
   /api/auth/login:
     post:
-      summary: Entra com CPF e senha (exclusivamente)
+      summary: Entra exclusivamente com CPF e senha
+      description: FR-015 a FR-017a, FR-030 e RF04.
       operationId: entrar
       tags: [autenticacao]
       requestBody:
@@ -74,7 +78,7 @@ paths:
               $ref: '#/components/schemas/LoginEntrada'
       responses:
         '200':
-          description: Sessão aberta.
+          description: Sessão aberta; a página leva à área do candidato.
           headers:
             Set-Cookie:
               $ref: '#/components/headers/CookieSessao'
@@ -84,26 +88,33 @@ paths:
                 $ref: '#/components/schemas/CandidatoConectado'
         '400':
           description: >
-            E-mail no lugar do CPF, CPF inválido, campo vazio ou JSON malformado. Não conta como tentativa
-            para o bloqueio por CPF.
+            E-mail no lugar do CPF, CPF inválido, campo vazio ou JSON malformado. Não conta como
+            tentativa para o bloqueio por CPF.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Erro'
-              example:
-                erro: Use o seu CPF para entrar (não o e-mail).
-                campos:
-                  cpf: Use o seu CPF para entrar (não o e-mail).
+              examples:
+                email:
+                  value:
+                    erro: O login é feito com o CPF cadastrado, não com o e-mail.
+                    campos:
+                      cpf: O login é feito com o CPF cadastrado, não com o e-mail.
+                cpfInvalido:
+                  value:
+                    erro: CPF inválido. Confira os 11 números.
+                    campos:
+                      cpf: CPF inválido. Confira os 11 números.
         '401':
           description: >
-            CPF não cadastrado ou senha errada; mensagem idêntica nos dois casos (FR-016).
+            CPF não cadastrado ou senha errada, com mensagem idêntica nos dois casos (FR-016).
             Conta como falha para o CPF.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Erro'
               example:
-                erro: CPF ou senha inválidos.
+                erro: CPF ou senha inválidos. Confira os dados e tente de novo.
         '403':
           $ref: '#/components/responses/OrigemNegada'
         '413':
@@ -111,31 +122,13 @@ paths:
         '415':
           $ref: '#/components/responses/SomenteJson'
         '429':
-          description: >
-            Bloqueio por CPF (5 falhas em 15 minutos, por 15 minutos; mesma mensagem para CPF
-            cadastrado ou não) ou limite por endereço de rede (60 tentativas malsucedidas por
-            minuto). O cabeçalho
-            Retry-After informa os segundos de espera.
-          headers:
-            Retry-After:
-              schema:
-                type: integer
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Erro'
-              examples:
-                porCpf:
-                  value:
-                    erro: Muitas tentativas para este CPF. Aguarde 15 minutos e tente de novo.
-                porRede:
-                  value:
-                    erro: Muitas tentativas a partir desta rede. Aguarde um minuto e tente de novo.
+          $ref: '#/components/responses/MuitasTentativas'
         '503':
           $ref: '#/components/responses/BancoIndisponivel'
   /api/auth/logout:
     post:
       summary: Encerra a sessão (idempotente)
+      description: FR-019. A página leva à tela inicial.
       operationId: sair
       tags: [autenticacao]
       responses:
@@ -146,11 +139,14 @@ paths:
   /api/auth/me:
     get:
       summary: Candidato da sessão atual
+      description: >
+        FR-020 e FR-021. Usado pelo cabeçalho logado (nome) e pela saudação da área do candidato.
+        Só o nome é devolvido (minimização, Princípio VI).
       operationId: obterCandidatoConectado
       tags: [autenticacao]
       responses:
         '200':
-          description: Sessão válida. Só o nome é devolvido (minimização, Princípio VI).
+          description: Sessão válida.
           content:
             application/json:
               schema:
@@ -162,20 +158,20 @@ paths:
               schema:
                 $ref: '#/components/schemas/Erro'
               example:
-                erro: Sessão expirada ou inexistente. Entre de novo.
+                erro: Sua sessão expirou. Entre de novo.
 components:
   headers:
     CookieSessao:
       description: >
-        sessao=<JWT HS256>; HttpOnly; SameSite=Lax; Path=/; Max-Age=28800; Secure quando
-        PUBLIC_BASE_URL é HTTPS.
+        sessao=<JWT HS256 com sub, cad, iat e exp>; HttpOnly; SameSite=Lax; Path=/;
+        Max-Age=28800; Secure quando PUBLIC_BASE_URL é HTTPS (research R2).
       schema:
         type: string
   responses:
     ErroValidacao:
       description: >
-        Um ou mais campos inválidos (campos lista a mensagem de cada um), ou JSON malformado
-        ("Envie os dados em JSON.", sem campos).
+        Um ou mais campos inválidos (campos traz a mensagem de cada um, para a página ligar ao
+        campo, FR-014), ou JSON malformado ("Envie os dados em JSON.", sem campos).
       content:
         application/json:
           schema:
@@ -183,8 +179,8 @@ components:
           example:
             erro: Confira os campos destacados.
             campos:
-              cpf: CPF inválido. Confira os 11 dígitos.
-              aceiteTermos: Para se cadastrar, é preciso aceitar os termos de uso e privacidade.
+              cpf: CPF inválido. Confira os 11 números.
+              aceiteTermos: É preciso aceitar os termos para criar a conta.
     GrandeDemais:
       description: Corpo acima de 10 kB.
       content:
@@ -195,8 +191,8 @@ components:
             erro: Dados grandes demais.
     OrigemNegada:
       description: >
-        O host do cabeçalho Origin difere do cabeçalho Host da requisição, ou Origin não é URL
-        válida (proteção contra CSRF).
+        O host do cabeçalho Origin difere do cabeçalho Host do pedido, Origin não é URL válida ou
+        Sec-Fetch-Site indica outro site (research R3).
       content:
         application/json:
           schema:
@@ -211,18 +207,24 @@ components:
             $ref: '#/components/schemas/Erro'
           example:
             erro: Envie os dados em JSON.
-    LimiteRede:
+    MuitasTentativas:
       description: >
-        Mais de 60 tentativas malsucedidas por minuto vindas do mesmo endereço de rede (as
-        bem-sucedidas não contam).
+        Bloqueio por CPF no login (5 falhas em 15 minutos, por 15 minutos, FR-017) ou limite por
+        endereço de rede no login e no cadastro (60 tentativas malsucedidas por minuto, FR-017a).
+        A mensagem é a mesma nos dois casos e para CPF cadastrado ou não. Retry-After informa os
+        segundos de espera.
+      headers:
+        Retry-After:
+          schema:
+            type: integer
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Erro'
           example:
-            erro: Muitas tentativas a partir desta rede. Aguarde um minuto e tente de novo.
+            erro: Muitas tentativas sem sucesso. Aguarde alguns minutos para tentar de novo.
     BancoIndisponivel:
-      description: Falha ao falar com o banco; nada é gravado pela metade.
+      description: Falha ao falar com o banco; nada é gravado pela metade (FR-030).
       content:
         application/json:
           schema:
@@ -236,17 +238,17 @@ components:
       properties:
         cpf:
           type: string
-          description: 11 dígitos, com ou sem máscara; dígitos verificadores válidos.
+          description: 11 dígitos, com ou sem máscara; dígitos verificadores válidos; não todos iguais.
         nome:
           type: string
           maxLength: 150
-          description: Nome e sobrenome; letras, espaços, apóstrofo e hífen.
+          description: Nome e sobrenome; letras, espaços, apóstrofo e hífen (research R11).
         email:
           type: string
           maxLength: 254
         senha:
           type: string
-          description: 8 a 64 caracteres e no máximo 72 bytes em UTF-8.
+          description: 8 a 64 caracteres e no máximo 72 bytes em UTF-8 (research R5).
         confirmacaoSenha:
           type: string
         aceiteTermos:
@@ -258,7 +260,7 @@ components:
       properties:
         cpf:
           type: string
-          description: Só CPF (com ou sem máscara); e-mail é recusado.
+          description: Só CPF, com ou sem máscara; um texto com @ é tratado como e-mail e recusado.
         senha:
           type: string
     CandidatoConectado:

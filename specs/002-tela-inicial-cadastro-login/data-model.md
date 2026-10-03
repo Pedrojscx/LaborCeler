@@ -1,105 +1,68 @@
-> **⚠ DESATUALIZADO (2026-10-02).** Este artefato foi gerado a partir da versão anterior da
-> spec, antes da constituição 3.0.0, da identidade visual 2.0 e do kit de interface, e não vale
-> como referência. Será regenerado depois que todas as specs estiverem prontas.
-
 # Data Model: Tela Inicial, Cadastro e Login
 
-**Feature**: `002-tela-inicial-cadastro-login` | **Fonte da verdade do esquema**:
-[`db/01-ddl.sql`](../../db/01-ddl.sql)
+**Feature**: `002-tela-inicial-cadastro-login` | **Data**: 2026-10-03 | **Spec**: [spec.md](spec.md)
 
-Esta feature **não altera o esquema**: passa a gravar e ler `tbcandidato`, que já existe. Os
-demais dados (sessão, tentativas de login, segredo) ficam fora do banco, como descrito abaixo.
+**Nenhuma mudança de esquema.** A feature só passa a preencher a tabela `tbcandidato`, que já
+existe em `db/01-ddl.sql`. Os demais dados desta página não ficam no banco: sessão (cookie
+assinado), contadores de tentativas (memória do app), segredo da sessão (arquivo num volume) e
+textos (páginas estáticas).
 
-## Candidato (`tbcandidato`, esquema oficial)
+## Candidato (`tbcandidato`, já existente)
 
-| Coluna | Tipo no DDL | Regra desta feature | Origem |
+| Coluna | Tipo | Origem e regra | Requisito |
 |---|---|---|---|
-| `id` | `serial` | gerado pelo banco | — |
-| `cpf` | `varchar(11) not null unique`, `check (cpf ~ '^[0-9]{11}$')` | só os 11 dígitos; dígitos verificadores válidos; todos iguais recusado | FR-006, FR-007 |
-| `nome` | `varchar(150) not null` | `trim`, espaços internos repetidos viram um; pelo menos 2 palavras; até 150 caracteres; letras (com acento), espaço, apóstrofo (`'` ou `’`) e hífen | FR-008 |
-| `email` | `varchar(254) not null` | `trim`; formato `local@dominio.tld`; até 254 caracteres; **não** é único | FR-009 |
-| `senha` | `varchar(255) not null` | hash `bcrypt` custo 12 (60 caracteres); nunca a senha digitada | FR-010, R5 |
-| `data_cadastro` | `timestamp not null default now()` | preenchida pelo banco | — |
-| `data_aceite_termos` | `timestamp not null` | `now()` do servidor no momento do cadastro, só com aceite marcado | FR-011 |
+| `id` | `serial` | gerado pelo banco | |
+| `cpf` | `varchar(11)`, `unique`, `check ~ '^[0-9]{11}$'` | só os 11 dígitos, depois de `normalizarCpf`; dígitos verificadores válidos; recusa todos iguais | FR-006, FR-007 |
+| `nome` | `varchar(150)` | aparado nas pontas; pelo menos duas palavras; letras, espaço, apóstrofo e hífen (research R11) | FR-008 |
+| `email` | `varchar(254)` | formato simples, até 254; repetição entre candidatos permitida | FR-009 |
+| `senha` | `varchar(255)` | só o hash `bcrypt` (custo 12); a senha nunca é guardada nem registrada | FR-010 |
+| `data_cadastro` | `timestamp`, `default now()` | relógio do banco | sessão (R2) |
+| `data_aceite_termos` | `timestamp not null` | `now()` do banco no mesmo `insert`, só com o aceite marcado | FR-011 |
 
-### Regras da senha (antes do hash, não armazenada)
+- **Inserção**: um único `insert` parametrizado com `now()` para o aceite; a corrida de dois
+  cadastros do mesmo CPF é resolvida pelo `unique` (erro `23505` vira "CPF já tem cadastro"), sem
+  cadastro parcial (FR-030).
+- **Leituras**: por CPF (login) e por `id` (sessão), sempre parametrizadas; a leitura por `id`
+  devolve só `id`, `nome` e `data_cadastro`.
+- **Nunca sai do servidor**: hash, CPF e e-mail não aparecem em nenhuma resposta desta feature;
+  `GET /api/auth/me` devolve só o nome (Princípio VI).
+- **Fora do escopo**: edição de perfil (decisão D5), recuperação de senha e exclusão pelo portal
+  (pedidos pelo e-mail do projeto, P-01).
 
-- 8 a 64 caracteres, contados por ponto de código (`[...senha].length`).
-- No máximo 72 bytes em UTF-8 (`Buffer.byteLength(senha, 'utf8')`), por causa do limite do
-  `bcrypt` (R5).
-- Igual ao campo de confirmação, que também não é armazenado.
+## Sessão (cookie `sessao`, sem tabela)
 
-### Operações (SQL puro, sempre parametrizado)
-
-| Operação | Uso | Observação |
-|---|---|---|
-| inserir candidato | cadastro | `insert ... values ($1, $2, $3, $4, now()) returning id, nome, data_cadastro`; erro `23505` em `cpf` vira "CPF já cadastrado" (`409`) |
-| buscar por CPF | login | devolve `id`, `nome`, `senha`, `data_cadastro` |
-| buscar por id | sessão | devolve `id`, `nome`, `data_cadastro`; o app compara em JS `Math.floor(data_cadastro / 1000) === cad` para confirmar que o token pertence a um cadastro que ainda existe (R2) |
-
-## Sessão do candidato (fora do banco)
-
-Token JWT HS256 no cookie `sessao` (R2):
-
-| Campo | Conteúdo |
+| Campo do token | Valor |
 |---|---|
-| `sub` | id do candidato |
-| `cad` | `data_cadastro` do candidato, em segundos desde 1970 |
-| `iat` / `exp` | emissão e expiração (emissão + 8 h) |
+| `sub` | `id` do candidato |
+| `cad` | `data_cadastro` em segundos |
+| `iat`, `exp` | emissão e validade de 8 horas |
 
-Atributos do cookie: `HttpOnly`, `SameSite=Lax`, `Path=/`, `Max-Age=28800`, `Secure` só quando
-`PUBLIC_BASE_URL` é HTTPS.
+- **Estados**: ausente → válida (cadastro ou login) → expirada (8 horas) ou encerrada (sair); um
+  token com `cad` que não confere com o cadastro atual é inválido (R2).
+- **Cookie**: `HttpOnly`, `SameSite=Lax`, `Path=/`, `Max-Age=28800`, `Secure` só com
+  `PUBLIC_BASE_URL` em HTTPS.
 
-Estados:
+## Tentativas de login (memória do app, sem tabela)
 
-```text
-(sem cookie) --cadastro ou login--> ATIVA --8 h--> EXPIRADA
-                                      |                |
-                                      +--sair-->  (sem cookie)
-ATIVA --segredo trocado ou cadastro inexistente--> INVÁLIDA (cookie apagado)
-```
-
-## Tentativas de login por CPF (memória do app)
-
-| Campo | Conteúdo |
-|---|---|
-| chave | CPF normalizado (11 dígitos válidos), cadastrado ou não |
-| `falhas` | instantes das falhas nos últimos 15 minutos |
-| `bloqueadoAte` | instante até o qual o CPF fica bloqueado (5ª falha + 15 min) |
-
-Regras (FR-017): a 5ª falha em 15 minutos bloqueia por 15 minutos; durante o bloqueio, a senha
-não é conferida; sucesso zera o registro; limpeza a cada 5 minutos; teto de 50 000 entradas.
-Os dados somem quando o app reinicia (aceito no MVP).
-
-## Limite por endereço de rede (memória do `express-rate-limit`)
-
-60 tentativas **malsucedidas** por minuto por IP (respostas com status a partir de 400; as
-bem-sucedidas não contam), contadas separadamente para `POST /api/auth/login` e
-`POST /api/auth/cadastro` (FR-017a, R6).
-
-## Segredo da sessão (volume `segredo_sessao`)
-
-| Fonte | Prioridade | Regra |
+| Chave | Conteúdo | Regra |
 |---|---|---|
-| `JWT_SECRET` do ambiente | 1 | usada se não vazia; menos de 32 caracteres impede a subida |
-| arquivo `segredo-sessao` na pasta do segredo (`/app/segredo`, ou `PASTA_SEGREDO` fora do container) | 2 | lido se existir |
-| geração na subida | 3 | 64 bytes aleatórios em base64url, gravados com permissão `0600` |
+| CPF normalizado e válido | instantes das falhas e fim do bloqueio | 5 falhas em 15 min bloqueiam por 15 min; sucesso zera (FR-017) |
+| IP da conexão | contador do `express-rate-limit` | 60 falhas por minuto, login e cadastro separados (FR-017a) |
 
-`docker compose down` preserva o volume (sessões continuam válidas); `docker compose down -v`
-apaga o volume e invalida todas as sessões (R4).
+Some ao reiniciar o app (risco aceito no plano).
 
-## Termos de uso e privacidade
+## Segredo da sessão (arquivo, sem tabela)
 
-Texto estático em `/termos`, com data de vigência no topo. O aceite é registrado só pela data e
-hora em `tbcandidato.data_aceite_termos`; mudar o texto no futuro exige atualizar a data de
-vigência (a versão vigente em cada aceite pode ser deduzida pela data).
+`/app/segredo/segredo-sessao` no volume `segredo_sessao`, permissão `0600`, ou `JWT_SECRET` do
+ambiente com 32 caracteres ou mais (R4). Nunca versionado nem registrado em log.
 
-## Regras garantidas pelo banco vs. pelo app
+## Conteúdo estático (páginas, sem tabela)
 
-| Regra | Banco (DDL) | App |
-|---|---|---|
-| CPF com 11 dígitos | `check (cpf ~ '^[0-9]{11}$')` | normaliza e valida antes |
-| CPF único, inclusive em cadastros simultâneos | `unique` | traduz `23505` em `409` |
-| dígitos verificadores, dígitos repetidos | — | `validarCpf` (R9) |
-| nome, e-mail, senha | só tamanho e `not null` | validação do cadastro |
-| aceite dos termos | `data_aceite_termos not null` | só grava com o aceite marcado |
+- **Termos de uso e privacidade** (`termos.html`): texto com a data da última atualização no topo
+  e o contato; enquanto a P-01 não for resolvida, o marcador `[E-mail do projeto pendente: P-01]`
+  no lugar do e-mail (research R15).
+- **Destinos provisórios** (`app/src/routes/destinos-provisorios.js`): endereço → variação da
+  página "Disponível em breve" (título e texto de cada uma, FR-024), removidos um a um pelas
+  features que entregam os recursos (research R9).
+- **Fatos das empresas**: textos da seção 9 de `docs/identidade-visual.md`, com fontes em
+  `docs/referencias.md` (FR-033, FR-034); documentação do projeto, não dados.
