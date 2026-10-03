@@ -48,6 +48,11 @@
   `tbcandidato`. Conflitos 3, 7, 11, 12 e 13 resolvidos e conflito 14 acrescentado. Terceira
   iteração: todos os itens aprovados; pendências abertas só P-02 (revisão da proposta, bloqueia o
   plano), P-09 (alinhamento de `docs/telas.md` e dos protótipos) e P-11 (fora desta feature).
+- P-09 resolvida (2026-10-03): `docs/telas.md` 1.6 e os protótipos das telas 12, 15 a 19 e 21
+  alinhados às decisões; `docs/prototipo/` passa a ser a fonte da verdade do protótipo. FR-045a e a
+  proposta registram a regra do aviso dos termos pela versão vigente (avisa quem se cadastrou antes
+  dela e ainda não foi avisado). Quarta iteração: todos os itens continuam aprovados; pendências
+  abertas só P-02 e P-11.
 - Exceções aceitas em "No implementation details", por virem das regras do mantenedor e das
   features anteriores: nomes das tabelas propostas (`tbflashcard`, `tbsessao_revisao`,
   `tbrevisao`), "relógio do servidor", "carga SQL", o fuso do `docker-compose.yml` e a referência a

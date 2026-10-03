@@ -35,7 +35,7 @@ th{text-align:left;font-weight:600}
 <header style="width: 100%; max-width: 1040px; margin: 0 auto; padding: 20px 24px; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
 <a href="AreaCandidato.dc.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: Inter, system-ui, sans-serif; font-weight: 300; letter-spacing: -0.02em; font-size: 17px"><svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="12" fill="#2E2E33"></circle><path d="M14 2 A12 12 0 0 1 14 26 A6 12 0 0 0 14 2" fill="#E8E6DF"></path></svg><span>Lunar Celer</span></a>
 <nav style="display: flex; flex-wrap: wrap; align-items: center; gap: 18px; font-size: 16px">
-<a href="EmBreve.dc.html" style="text-decoration: none; color: #A1A1AA">Área de estudos</a>
+<a href="AreaEstudos.dc.html" style="text-decoration: none; color: #A1A1AA">Área de estudos</a>
 <a href="FlashcardsEscolha.dc.html" style="text-decoration: none; color: #A1A1AA">Flashcards</a>
 <a href="Perfil.dc.html" style="text-decoration: none; color: #A1A1AA">[Nome do candidato]</a>
 <a href="Main.dc.html" style="text-decoration: none; padding: 10px 16px; border: 1px solid #2E2E33; border-radius: 999px; min-height: 44px; box-sizing: border-box; display: inline-flex; align-items: center">Sair</a>
@@ -76,7 +76,7 @@ th{text-align:left;font-weight:600}
 <tr style="border-top: 1px solid #1F1F23; vertical-align: top">
 <td style="padding: 14px 18px; white-space: nowrap"><span style="display: inline-flex; align-items: center; gap: 8px"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5.5" fill="{{ l.cor }}"></circle></svg><span style="display: flex; flex-direction: column"><span style="font-weight: 600">{{ l.nome }}</span><span style="color: #A1A1AA; font-size: 13px">{{ l.tema }}</span></span></span></td>
 <td style="padding: 14px 12px; max-width: 260px">{{ l.q }}</td>
-<td style="padding: 14px 12px"><span style="display: block; font-weight: 500; color: {{ l.corSua }}">{{ l.marca }}</span><span style="display: block">{{ l.sua }}</span><sc-if value="{{ l.revisar }}" hint-placeholder-val="{{ false }}"><a href="AreaTema.dc.html" aria-label="{{ l.rotuloRevisar }}" style="display: inline-block; margin-top: 6px; font-size: 14px">Revisar o tema</a></sc-if></td>
+<td style="padding: 14px 12px"><span style="display: block; font-weight: 500; color: {{ l.corSua }}">{{ l.marca }}</span><span style="display: block">{{ l.sua }}</span><sc-if value="{{ l.revisar }}" hint-placeholder-val="{{ false }}"><a href="AreaTema.dc.html" aria-label="{{ l.rotuloRevisar }}" style="display: inline-block; margin-top: 6px; margin-right: 12px; font-size: 14px">Revisar o tema</a><a href="FlashcardsEscolha.dc.html" aria-label="{{ l.rotuloFlashcards }}" style="display: inline-block; margin-top: 6px; font-size: 14px">Revisar com flashcards</a></sc-if></td>
 <td style="padding: 14px 12px">{{ l.correta }}</td>
 <td style="padding: 14px 18px 14px 12px; white-space: nowrap; font-variant-numeric: tabular-nums; color: #A1A1AA">{{ l.data }}</td>
 </tr>
@@ -114,7 +114,8 @@ class Component extends DCLogic {
         sua: e ? e[1] : h.correta,
         corSua: e ? '#F7A5AC' : '#4CC38A',
         revisar: !!e,
-        rotuloRevisar: 'Revisar o tema ' + planetas[i].nome + ', ' + planetas[i].tema
+        rotuloRevisar: 'Revisar o tema ' + planetas[i].nome + ', ' + planetas[i].tema,
+        rotuloFlashcards: 'Revisar com flashcards o tema ' + planetas[i].nome + ', ' + planetas[i].tema
       };
     });
     const tentativas = [2, 1].map((n) => ({

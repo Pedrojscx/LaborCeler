@@ -461,8 +461,15 @@ do cadastro e não pode mudar de significado.
 - `data_aviso_termos timestamp null`: momento em que o candidato recebeu o último aviso de
   atualização dos termos, pelo relógio do servidor. Nula para quem nunca precisou de aviso. É um
   dado gerado pelo uso, como o aceite (Princípio VI), e os termos passam a citá-lo.
-- A data da última atualização dos termos não vai para o banco: é a mesma data exibida no topo da
-  página dos termos, que a aplicação passa como parâmetro.
+- A data da versão vigente dos termos não vai para o banco: é a mesma data exibida no topo da
+  página dos termos ("Última atualização"), que a aplicação passa como parâmetro.
+
+**Regra do aviso (mantenedor, 03/10/2026)**: o aviso compara `data_aviso_termos` com a data da
+versão vigente dos termos. Avisa quem se cadastrou antes dessa versão e ainda não foi avisado dela,
+isto é, quem tem o aviso nulo ou anterior a ela. Quem se cadastrou depois já aceitou a versão
+vigente no cadastro e nunca é avisado. No esquema, "se cadastrou antes" é conferido pelo aceite do
+cadastro, `data_aceite_termos`, gravado junto com `data_cadastro` (spec 002, FR-011); a cada nova
+versão dos termos, a mesma regra vale de novo.
 
 ```sql
 -- momento do último aviso de atualização dos termos (spec 007, FR-045a)
@@ -473,14 +480,14 @@ alter table tbcandidato
 No DDL definitivo, a coluna entra direto no `create table` de `tbcandidato`, logo depois de
 `data_aceite_termos`, no lugar do `alter table`.
 
-A consulta decide e registra o aviso numa única operação: devolve uma linha só quando o candidato
-aceitou os termos antes da última atualização e ainda não foi avisado dela, e, ao devolver, grava o
-momento do aviso, de modo que o próximo acesso (ou um acesso simultâneo em outra aba) não devolve
-nada.
+A consulta aplica a regra e registra o aviso numa única operação: devolve uma linha só quando o
+candidato se cadastrou antes da versão vigente dos termos e ainda não foi avisado dela, e, ao
+devolver, grava o momento do aviso, de modo que o próximo acesso (ou um acesso simultâneo em outra
+aba) não devolve nada.
 
 ```sql
--- aviso de atualização dos termos para o candidato $1; $2 é a data da última atualização dos
--- termos, a mesma exibida na página dos termos (spec 007, FR-045a)
+-- aviso de atualização dos termos para o candidato $1; $2 é a data da versão vigente dos
+-- termos, a mesma exibida no topo da página dos termos (spec 007, FR-045a)
 update tbcandidato c
    set data_aviso_termos = now()
  where c.id = $1
@@ -489,8 +496,8 @@ update tbcandidato c
 returning true as avisar;
 ```
 
-A comparação é pelo início do dia da atualização: quem aceitou os termos nesse dia ou depois já
-aceitou a versão nova e não recebe o aviso.
+A comparação é pelo início do dia da versão vigente: quem se cadastrou nesse dia ou depois já
+aceitou essa versão e não recebe o aviso.
 
 ### Modelo Lógico
 
@@ -577,9 +584,9 @@ Os blocos SQL deste documento foram executados como estão, lidos deste arquivo,
   96,7%, sem contar a conta inativa que também a tem; 3 de 30 com Cem revisões, 10,0%; 0,0% para
   a que ninguém ativo tem); conta com questão só expirada não é ativa; a consulta devolve só a
   conquista e o percentual;
-- aviso dos termos: quem aceitou antes da atualização é avisado uma vez, e o segundo acesso não
-  devolve nada; quem aceitou depois não é avisado; numa nova atualização, quem já tinha sido
-  avisado da anterior é avisado de novo, uma vez, e quem aceitou entre as duas também.
+- aviso dos termos: quem se cadastrou antes da versão vigente é avisado uma vez, e o segundo
+  acesso não devolve nada; quem se cadastrou depois não é avisado; numa versão nova, quem já tinha
+  sido avisado da anterior é avisado de novo, uma vez, e quem se cadastrou entre as duas também.
 
 Falta rodar no PostgreSQL 16 do `docker compose`.
 

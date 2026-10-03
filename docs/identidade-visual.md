@@ -2,7 +2,7 @@
 
 Versão 2.0 (02/10/2026), decidida pelo mantenedor. Substitui integralmente a versão 1 (paleta azul-marinho, fontes Sora e Source Sans 3). Vale para todas as features a partir da 002.
 
-Referência visual: protótipo navegável no canvas do projeto (https://claude.ai/artifact/5MK3DegETGbv3t81EsqtZF, acesso do mantenedor). A descrição de cada tela está em `docs/telas.md`. Em caso de divergência entre o protótipo e este documento, vale este documento.
+Referência visual: o protótipo em `docs/prototipo/`, fonte da verdade do protótipo desde 03/10/2026 (o canvas do projeto deixou de ser referência). A descrição de cada tela está em `docs/telas.md`. Em caso de divergência entre o protótipo e este documento, vale este documento.
 
 ---
 

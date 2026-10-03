@@ -1,6 +1,6 @@
 # Telas do Lunar Celer
 
-Versão 1.5 (03/10/2026). Descreve as telas do protótipo (canvas do projeto, acesso do mantenedor: https://claude.ai/artifact/5MK3DegETGbv3t81EsqtZF) para orientar specs e implementação. Tokens, componentes e regras visuais estão em `docs/identidade-visual.md`. Requisitos citados pelo ID de `docs/requisitos-desafio.md`.
+Versão 1.6 (03/10/2026). Descreve as telas do protótipo em `docs/prototipo/`, que é a fonte da verdade do protótipo (o canvas do projeto deixou de ser referência em 03/10/2026), para orientar specs e implementação. Tokens, componentes e regras visuais estão em `docs/identidade-visual.md`. Requisitos citados pelo ID de `docs/requisitos-desafio.md`.
 
 Convenções: as rotas são sugestões para o plano de cada feature; "Logado" significa que a tela exige sessão e redireciona para Entrar sem ela; textos entre colchetes são dados dinâmicos ou pendências.
 
@@ -16,7 +16,7 @@ Disponibilidade (regra geral, FR-050 da spec da 002): as telas podem descrever q
 
 **Cabeçalho logado:** marca (leva à área do candidato); links "Área de estudos", "Flashcards", nome do candidato (leva ao perfil) e botão "Sair".
 
-**Cabeçalho de foco** (questão, correção e revisão de flashcards): só a marca, sem link, e à direita o tema atual e a saída explícita ("Interromper" ou "Encerrar revisão"). Evita que um clique distraído tire a pessoa da tarefa.
+**Cabeçalho de foco** (questão, correção e revisão de flashcards): só a marca, sem link, e à direita o tema atual e a saída explícita ("Interromper" ou "Encerrar revisão"); na revisão de flashcards, o tema aparece na linha de progresso e no chip do cartão. Evita que um clique distraído tire a pessoa da tarefa.
 
 **Rodapé:** estado do portal discreto (ponto verde e "Portal no ar e banco conectado"; se o banco falhar, aviso de instabilidade), "Projeto acadêmico da Fatec Jacareí", links "Termos de uso e privacidade" e "Validar certificado". As telas de foco não têm rodapé.
 
@@ -43,7 +43,7 @@ Disponibilidade (regra geral, FR-050 da spec da 002): as telas podem descrever q
 | 13 | Certificado | `/certificado` | Logado | 005 | RF18 |
 | 14 | Validação pública | `/validar` e `/validar/:codigo` | Público | 005 | RF19, RP08 |
 | 15 | Histórico | `/historico` e `/historico/:numero` | Logado | 006 | RF20 |
-| 16 | Flashcards: escolher | `/flashcards` | Logado | 007 | complemento |
+| 16 | Flashcards: escolher | `/flashcards` | Público (estado de visitante) e logado | 007 | complemento |
 | 17 | Flashcards: revisão | `/flashcards/revisao` | Logado | 007 | complemento |
 | 18 | Flashcards: fim da sessão | `/flashcards/resumo` | Logado | 007 | complemento |
 | 19 | Perfil e evolução | `/perfil` | Logado | 007 | complemento |
@@ -91,6 +91,8 @@ Estados: não iniciada ("Sua Lua ainda está nova", botão "Iniciar a certifica�
 
 Índice lateral e texto em linguagem simples: quem somos; dados coletados (cadastro e respostas); para que são usados (o endereço de rede só no momento do acesso, para limitar tentativas, sem gravação); o que fica público (nome, CPF mascarado, resultado e data na validação; e-mail nunca); por quanto tempo (os dados ficam guardados enquanto a conta existir; a exclusão pode ser pedida a qualquer momento e é atendida em até 15 dias; ao fim do projeto acadêmico, a base é apagada); direitos pela LGPD; contato [e-mail exclusivo do projeto, ainda a criar; nunca as issues públicas do repositório].
 
+Com a feature 007, os termos passam a incluir as revisões de flashcards, as sessões de revisão e a evolução, visíveis só para o dono da conta, o momento do aviso de atualização dos termos e a raridade das conquistas, sempre agregada. A atualização não pede novo aceite: quem já tinha conta vê uma única vez, no próximo acesso, a notificação "Atualizamos os termos de uso e privacidade", com o link para os termos.
+
 ## 6. Disponível em breve
 
 Ilustração de eclipse, título e texto conforme a funcionalidade, botões para a área do candidato e para o início. Variações: estudos (003), certificação (004), validação (005), histórico (006) e, para os links "Flashcards" e nome do candidato do cabeçalho logado, flashcards e perfil (007, FR-024 da spec da 002). Flashcards: título "Os flashcards estão a caminho" e texto "A revisão dos 12 temas com cartões de pergunta e resposta chega numa próxima versão do Lunar Celer." Perfil: título "O perfil está a caminho" e texto "Sua evolução nos estudos e as suas conquistas chegam numa próxima versão do Lunar Celer." Histórico: título "O histórico está a caminho" e texto "O registro completo das suas tentativas, questão por questão, chega numa próxima versão do Lunar Celer."; recebe os botões "Ver o histórico completo" (tela 12) e "Ver meu histórico" (tela 4) até a feature 006 existir. Temporária: cada variação some quando a sua feature é entregue; depois da 006, a página fica só para flashcards e perfil e some com a 007.
@@ -101,7 +103,7 @@ Aberta a qualquer pessoa, com ou sem conta. Título "Área de estudos" e texto d
 
 Cabeçalho: o visitante vê a marca e os links "Início" e "Entrar"; o candidato conectado vê o cabeçalho logado, com "Área de estudos" marcado como página atual.
 
-Estados: visitante; candidato conectado. Com a feature 007, o candidato conectado passa a ver o bloco "Próximo foco" (tema de menor domínio, com "Estudar [corpo]") e, em cada cartão, a barra "Flashcards dominados [n] de [n]"; o visitante passa a ver o convite "Quer fixar o que estudou?", com "Criar minha conta" e "Entrar". Antes da 007, esses blocos ficam ocultos (regra de disponibilidade).
+Estados: visitante; candidato conectado. Com a feature 007, o candidato conectado passa a ver o bloco "Próximo foco" (tema com a menor proporção de cartões dominados, com empate desfeito pela ordem dos temas, e "Estudar [corpo]") e, em cada cartão, a barra "Flashcards dominados [n] de [n]"; o visitante passa a ver o convite "Quer fixar o que estudou?", com "Criar minha conta" e "Entrar". Antes da 007, esses blocos ficam ocultos (regra de disponibilidade).
 
 ## 8. Página do tema
 
@@ -137,7 +139,7 @@ Estados: resposta certa; resposta errada; tempo esgotado; questão encerrada por
 
 Lua cheia, título e texto conforme o resultado; três números (acertos de 12, percentual e nota de 0 a 10, igual ao percentual dividido por 10, com uma casa decimal); lista tema a tema com "Acertou", "Errou" ou "Tempo esgotado".
 
-Estados: aprovado (botões "Ver meu certificado" e "Ver o histórico completo"); reprovado ("faltaram [n] acertos", "Revisar os temas que errei" e "Uma nova tentativa fica disponível 24 horas depois do fim desta, e até lá a área de estudos e os flashcards ajudam a revisar os temas que você errou."; a menção aos flashcards só aparece com a feature 007, pela regra de disponibilidade).
+Estados: aprovado (botões "Ver meu certificado" e "Ver o histórico completo"); reprovado ("faltaram [n] acertos", "Revisar os temas que errei", que leva à área de estudos, "Revisar com flashcards", que entra com a feature 007 e leva à tela 16 com os temas errados escolhidos, e "Uma nova tentativa fica disponível 24 horas depois do fim desta, e até lá a área de estudos e os flashcards ajudam a revisar os temas que você errou."; a menção aos flashcards só aparece com a feature 007, pela regra de disponibilidade).
 
 ## 13. Certificado
 
@@ -153,29 +155,31 @@ Estados: entrada; certificado autêntico (nome, CPF mascarado como `***.456.789-
 
 Todas as tentativas do candidato (decisão D1). Com duas ou mais, a lista "Suas tentativas", da mais recente para a mais antiga, mostra cada uma com "Tentativa [n]" e a data de conclusão e o percentual (em andamento: a data de início e "em andamento"); a mais recente aparece aberta e as outras podem ser escolhidas. Cada tentativa tem endereço próprio com o número da tentativa do candidato (`/historico/2`), nunca o identificador interno do banco; `/historico` abre a mais recente.
 
-Resumo da tentativa aberta: início, conclusão, resultado ("10 de 12 (83,3%)"), nota ("8,3") e situação ("Aprovado, certificado emitido" ou "Reprovado, sem certificado"); em andamento, "Concluída em: Em andamento", "Resultado: O resultado sai ao concluir os 12 temas", sem nota, e "Situação: Em andamento, [n] de 12 temas concluídos". Tabela com uma linha por tema encerrado, na ordem da prova: tema, questão sorteada (enunciado longo recolhido, com opção de expandir), sua resposta ("Acertou", "Errou", "Tempo esgotado: sem resposta" ou "Interrompida: sem resposta", com a alternativa escolhida quando houver), resposta correta e data e hora (da resposta, do fim do prazo ou da interrupção). Nas linhas de erro, tempo esgotado ou interrupção, "Revisar o tema" leva à página do tema na área de estudos. A questão aberta de uma tentativa em andamento não aparece. Botões "Ver meu certificado" (só na tentativa aprovada) e "Voltar para a área do candidato". Sem nenhuma tentativa: "Você ainda não começou a certificação. Cada tema aparece aqui depois de encerrado." No celular, a tabela rola para o lado dentro do próprio contêiner.
+Resumo da tentativa aberta: início, conclusão, resultado ("10 de 12 (83,3%)"), nota ("8,3") e situação ("Aprovado, certificado emitido" ou "Reprovado, sem certificado"); em andamento, "Concluída em: Em andamento", "Resultado: O resultado sai ao concluir os 12 temas", sem nota, e "Situação: Em andamento, [n] de 12 temas concluídos". Tabela com uma linha por tema encerrado, na ordem da prova: tema, questão sorteada (enunciado longo recolhido, com opção de expandir), sua resposta ("Acertou", "Errou", "Tempo esgotado: sem resposta" ou "Interrompida: sem resposta", com a alternativa escolhida quando houver), resposta correta e data e hora (da resposta, do fim do prazo ou da interrupção). Nas linhas de erro, tempo esgotado ou interrupção, "Revisar o tema" leva à página do tema na área de estudos e, com a feature 007, "Revisar com flashcards" (nome acessível com o corpo e o tema) leva à tela 16 com aquele tema escolhido. A questão aberta de uma tentativa em andamento não aparece. Botões "Ver meu certificado" (só na tentativa aprovada) e "Voltar para a área do candidato". Sem nenhuma tentativa: "Você ainda não começou a certificação. Cada tema aparece aqui depois de encerrado." No celular, a tabela rola para o lado dentro do próprio contêiner.
 
 ## 16. Flashcards: escolher
 
-Grade dos 12 temas como botões de seleção múltipla, cada um com o total de cartões e quantos a pessoa domina; opções "Só os que ainda não domino" e "Todos os cartões dos temas escolhidos"; tamanho da sessão (10, 20 ou todos); resumo da sessão e "Começar revisão". Na sessão, os cartões avaliados como "Não sabia" ou "Quase" voltam antes dos outros.
+Grade dos 12 temas, na ordem da prova, como botões de seleção múltipla, cada um com o ponto da cor, o corpo, o nome do tema e "[total] cartões, [n] dominados"; "Quais cartões", com "Só os que ainda não domino" (marcada ao abrir) e "Todos os cartões dos temas escolhidos"; "Tamanho da sessão", com 10, 20 (marcado ao abrir) e "Todos"; o resumo da sessão ("2 temas escolhidos, 9 cartões disponíveis. A sessão terá 9 cartões.", "Escolha pelo menos um tema." ou o aviso de que todos os cartões dos temas escolhidos já estão dominados, que sugere "Todos os cartões dos temas escolhidos") e "Começar revisão", desativado sem tema ou sem cartão disponível. Ao abrir, nenhum tema vem escolhido, salvo quando a pessoa chega por "Revisar [corpo]" (tela 8), "Revisar agora" (tela 19) ou "Revisar com flashcards" (telas 12 e 15), que já escolhem o tema.
 
-Estado de visitante: a grade aparece esmaecida e um cartão de vidro diz "Entre para usar 100% do Lunar Celer", com "Criar minha conta" e "Entrar", lembrando que a área de estudos continua aberta.
+Fila da sessão: em "Só os que ainda não domino", primeiro os cartões cuja última avaliação foi "Não sabia", depois "Quase", depois os nunca revisados e, por fim, os revisados há mais tempo; os cartões dominados só entram em "Todos os cartões dos temas escolhidos", no fim.
+
+Estado de visitante: cabeçalho público ("Início" e "Entrar"), a grade esmaecida, só com o total de cartões de cada tema e sem interação, e um cartão de vidro "Entre para usar 100% do Lunar Celer", com "Criar minha conta" e "Entrar", lembrando que a área de estudos continua aberta. A revisão, o resumo e o perfil (telas 17 a 19) exigem login.
 
 ## 17. Flashcards: revisão
 
-Cabeçalho de foco com "Encerrar revisão"; progresso "Cartão [n] de [total]"; cartão grande com chip do tema e a frente; "Mostrar resposta" vira o cartão em 3D; no verso, a resposta e três botões de autoavaliação: "Não sabia", "Quase" e "Sabia". Teclado: espaço vira o cartão; 1, 2 e 3 avaliam.
+Cabeçalho de foco com "Encerrar revisão", sem rodapé; progresso "Cartão [n] de [total]" com o tema atual; cartão grande com chip do tema e a frente; "Mostrar resposta" ou um toque no próprio cartão vira o cartão em 3D; no verso, a resposta e três botões de autoavaliação: "Não sabia", "Quase" e "Sabia". Cada avaliação é gravada na hora, e fechar a página no meio não perde o que já foi avaliado. Um cartão marcado "Não sabia" volta uma vez, no fim da sessão, e o total cresce 1; "Quase" não volta na mesma sessão. No celular, "Mostrar resposta" e os três botões ficam numa barra fixa no rodapé, de largura total, com botões de 60 px, e nenhum gesto de arrastar avalia. No computador, espaço vira o cartão e 1, 2 e 3 avaliam.
 
 ## 18. Flashcards: fim da sessão
 
-Quatro números (sabia, quase, não sabia, novos dominados), domínio por tema revisado com o ganho da sessão, botões "Revisar os [n] que errei", "Escolher outros temas" e "Ver minha evolução", e a notificação "Sessão salva".
+Título "Sessão concluída" e "Você revisou [n] cartões de [Corpo · Tema] e [Corpo · Tema]. Os [m] que ficaram como "Quase" ou "Não sabia" vão aparecer primeiro na próxima revisão."; quatro números (sabia, quase e não sabia, contando cada cartão pela última avaliação na sessão, e novos dominados); domínio por tema revisado com a variação da sessão ("(mais 2)", "(menos 1)" ou nada); botões "Revisar os [m] que errei" (só quando há), "Escolher outros temas" e "Ver minha evolução"; e a notificação "Sessão salva". "Encerrar revisão" depois de pelo menos uma avaliação também leva a este resumo e conclui a sessão; antes de qualquer avaliação, volta à escolha de temas.
 
 ## 19. Perfil e evolução
 
-Coluna de conquistas: número grande de conquistas desbloqueadas, três em destaque (a do meio mais alta) com raridade ("[x]% dos estudantes", exibida só a partir de 30 contas ativas) e a lista completa com anel de progresso nas que estão em andamento e a data nas obtidas. Coluna de evolução: domínio por tema (12 barras), cartões dominados nos últimos 14 dias e "Próximo foco" com o tema de menor domínio.
+Topo com o nome e "Estudando desde [data do cadastro]", sem nenhum outro dado cadastral. Coluna de conquistas: número grande de conquistas desbloqueadas, três em destaque (as três obtidas mais recentemente, a mais recente no meio e mais alta) com raridade ("[x]% dos estudantes", exibida só a partir de 30 contas ativas) e a lista completa das 18, com anel de progresso nas que estão em andamento e "Desde [data]" nas obtidas. Coluna de evolução: domínio por tema (12 barras), com o texto que explica que o domínio vem das avaliações da própria pessoa; cartões dominados nos últimos 14 dias, com a data e o valor de cada dia também em texto; e "Próximo foco", o tema com a menor proporção de cartões dominados (empate desfeito pela ordem dos temas), com "Revisar agora".
 
-Conquistas iniciais: Primeira órbita (primeira revisão concluída), Explorador de [corpo] (todos os cartões de um tema dominados, uma por tema), Meio caminho (cartões dominados em 6 temas), Cem revisões, Constância (revisões em 5 dias diferentes, não precisam ser seguidos), Sistema completo (todos os cartões dos 12 temas) e Lua cheia (aprovação na certificação).
+Conquistas iniciais (18): Primeira órbita (primeira sessão concluída, isto é, que chegou ao resumo com pelo menos uma avaliação), Explorador de [corpo] (todos os cartões de um tema dominados, uma por tema; no tema 3, "Explorador da Terra", e nos demais "de [corpo]"), Meio caminho (cartões dominados em 6 temas ao mesmo tempo), Cem revisões, Constância (revisões em 5 dias diferentes, não precisam ser seguidos), Sistema completo (todos os cartões dos 12 temas) e Lua cheia (aprovação na certificação, em qualquer tentativa).
 
-Regras de cálculo: tudo derivado do histórico, sem dado calculado armazenado (Princípio IV). Cartão dominado: as duas últimas avaliações dele foram "Sabia". A data de uma conquista é o momento em que a condição passou a valer.
+Regras de cálculo: tudo derivado do histórico, sem dado calculado armazenado (Princípio IV). Cartão dominado: recebeu "Sabia" em pelo menos dois dias diferentes, no calendário de São Paulo, sem nenhum "Quase" ou "Não sabia" depois; o primeiro "Quase" ou "Não sabia" derruba o domínio, que recomeça do zero. A data de uma conquista é o primeiro momento em que a condição passou a valer, e a conquista obtida continua obtida mesmo que a condição deixe de valer depois. Conta ativa: fez pelo menos uma revisão ou respondeu pelo menos uma questão nos últimos 30 dias.
 
 ## 20. Página não encontrada
 
@@ -183,7 +187,7 @@ Regras de cálculo: tudo derivado do histórico, sem dado calculado armazenado (
 
 ## 21. Notificações
 
-Componente descrito em `docs/identidade-visual.md`, seção 8.1, e implementado no kit de interface (`docs/kit-interface.md`), entregue na feature 002; cada feature usa o componente nos seus próprios eventos. Usos previstos: conta criada, sessão de flashcards salva, conquista desbloqueada, link copiado, conexão instável e falha ao salvar.
+Componente descrito em `docs/identidade-visual.md`, seção 8.1, e implementado no kit de interface (`docs/kit-interface.md`), entregue na feature 002; cada feature usa o componente nos seus próprios eventos. Usos previstos: conta criada, sessão de flashcards salva, conquista desbloqueada, termos atualizados (aviso único, feature 007), link copiado, conexão instável e falha ao salvar.
 
 ---
 
@@ -191,4 +195,3 @@ Componente descrito em `docs/identidade-visual.md`, seção 8.1, e implementado 
 
 - **D9** (limite de tentativas): sem limite por enquanto; afeta as telas 4 e 12 se mudar. As decisões D1, D2, D3 e D6 foram resolvidas em 03/10/2026 (dossiê, seção 7).
 - Contato privado (e-mail exclusivo do projeto, ainda a criar): tela 5. Sem ele, a feature 002 não pode ser entregue.
-- Termos (tela 5): incluir as revisões de flashcards e a evolução entre os dados coletados, na spec da feature 007 (Princípio VI).

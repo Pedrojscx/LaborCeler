@@ -35,10 +35,10 @@ th{text-align:left;font-weight:600}
 <header style="width: 100%; max-width: 1040px; margin: 0 auto; padding: 20px 24px; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
 <a href="AreaCandidato.dc.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: Inter, system-ui, sans-serif; font-weight: 300; letter-spacing: -0.02em; font-size: 17px"><svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="12" fill="#2E2E33"></circle><path d="M14 2 A12 12 0 0 1 14 26 A6 12 0 0 0 14 2" fill="#E8E6DF"></path></svg><span>Lunar Celer</span></a>
 <nav style="display: flex; flex-wrap: wrap; align-items: center; gap: 18px; font-size: 16px">
-<a href="EmBreve.dc.html" style="text-decoration: none; color: #A1A1AA">Área de estudos</a>
+<a href="AreaEstudos.dc.html" style="text-decoration: none; color: #A1A1AA">Área de estudos</a>
 <a href="FlashcardsEscolha.dc.html" style="text-decoration: none; color: #A1A1AA">Flashcards</a>
-<a href="Perfil.dc.html" style="text-decoration: none; color: #A1A1AA">[Nome do candidato]</a>
-<a href="Main.dc.html" style="text-decoration: none; padding: 10px 16px; border: 1px solid #2E2E33; border-radius: 12px; min-height: 44px; box-sizing: border-box; display: inline-flex; align-items: center">Sair</a>
+<a href="Perfil.dc.html" aria-current="page" style="text-decoration: none; color: #F5F5F4">[Nome do candidato]</a>
+<a href="Main.dc.html" style="text-decoration: none; padding: 10px 16px; border: 1px solid #2E2E33; border-radius: 999px; min-height: 44px; box-sizing: border-box; display: inline-flex; align-items: center">Sair</a>
 </nav>
 </header>
 <main style="flex: 1 0 auto; width: 100%; max-width: 1040px; margin: 0 auto; padding: 32px 24px 72px; box-sizing: border-box; display: flex; flex-direction: column; gap: 28px">
@@ -58,14 +58,15 @@ th{text-align:left;font-weight:600}
 <sc-for list="{{ destaques }}" as="d" hint-placeholder-count="3">
 <span style="display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; margin-top: {{ d.recuo }}">
 <span style="width: 60px; height: 60px; border-radius: 50%; background: #1A1A1D; display: flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="20" r="9" fill="#F2A43A"></circle><ellipse cx="20" cy="20" rx="17" ry="6" stroke="#F2A43A" stroke-width="1.6" transform="rotate(-20 20 20)"></ellipse></svg></span>
-<span style="font-size: 13px; color: #A1A1AA">{{ d.raridade }}</span>
+<sc-if value="{{ d.temRaridade }}" hint-placeholder-val="{{ true }}"><span style="font-size: 13px; color: #A1A1AA">{{ d.raridade }}</span></sc-if>
 <span style="font-weight: 500; font-size: 15px; line-height: 1.25">{{ d.nome }}</span>
 </span>
 </sc-for>
 </div>
 <div style="display: flex; flex-direction: column; gap: 12px">
 <span style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-size: 17px">Todas as conquistas</span><a href="#todas" style="font-size: 15px">Ver todas</a></span>
-<sc-for list="{{ conquistas }}" as="q" hint-placeholder-count="7">
+<div id="todas" style="display: flex; flex-direction: column; gap: 12px">
+<sc-for list="{{ conquistas }}" as="q" hint-placeholder-count="18">
 <div style="display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 18px; border: 1px solid #26262B; background: #0A0A0B; opacity: {{ q.op }}">
 <span style="flex: 0 0 auto; width: 52px; height: 52px; border-radius: 14px; background: #1A1A1D; display: flex; align-items: center; justify-content: center"><svg width="30" height="30" viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="20" r="9" fill="{{ q.cor }}"></circle><ellipse cx="20" cy="20" rx="17" ry="6" stroke="{{ q.cor }}" stroke-width="1.6" transform="rotate(-20 20 20)"></ellipse></svg></span>
 <span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 500">{{ q.nome }}</span><span style="font-size: 14px; color: #A1A1AA">{{ q.criterio }}</span></span>
@@ -81,6 +82,7 @@ th{text-align:left;font-weight:600}
 </div>
 </sc-for>
 </div>
+</div>
 </section>
 
 <section aria-labelledby="titulo-evolucao" style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
@@ -89,6 +91,7 @@ th{text-align:left;font-weight:600}
 <h2 id="titulo-evolucao" style="margin: 0; font-family: Inter, system-ui, sans-serif; font-weight: 400; letter-spacing: -0.01em; font-size: 20px; line-height: 1.25">Domínio por tema</h2>
 <span style="color: #A1A1AA; font-size: 15px">49 de 111 cartões dominados</span>
 </span>
+<p style="margin: 0; font-size: 15px; color: #A1A1AA">O domínio vem das suas próprias avaliações nos flashcards: um cartão conta como dominado quando você marca "Sabia" nele em pelo menos dois dias diferentes, sem nenhum "Quase" ou "Não sabia" depois.</p>
 <div style="display: flex; flex-direction: column; gap: 10px">
 <sc-for list="{{ temas }}" as="t" hint-placeholder-count="12">
 <div style="display: grid; grid-template-columns: 14px minmax(0, 1fr) 72px; align-items: center; gap: 10px">
@@ -105,12 +108,12 @@ th{text-align:left;font-weight:600}
 
 <div style="background: #0E0E10; border: 1px solid #26262B; border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 16px">
 <span style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline"><h2 style="margin: 0; font-family: Inter, system-ui, sans-serif; font-weight: 400; letter-spacing: -0.01em; font-size: 20px; line-height: 1.25">Cartões dominados</h2><span style="color: #A1A1AA; font-size: 15px">últimos 14 dias</span></span>
-<div role="img" aria-label="Gráfico de barras com os cartões dominados por dia nos últimos 14 dias, subindo de 22 para 49" style="height: 140px; display: grid; grid-template-columns: repeat(14, minmax(0, 1fr)); gap: 6px; align-items: end">
+<div role="img" aria-label="{{ rotuloGrafico }}" style="height: 140px; display: grid; grid-template-columns: repeat(14, minmax(0, 1fr)); gap: 6px; align-items: end">
 <sc-for list="{{ dias }}" as="d" hint-placeholder-count="14">
 <span style="height: {{ d.altura }}; border-radius: 6px 6px 2px 2px; background: {{ d.cor }}"></span>
 </sc-for>
 </div>
-<span style="display: flex; justify-content: space-between; font-size: 13px; color: #71717A"><span>20/10</span><span>hoje</span></span>
+<span style="display: flex; justify-content: space-between; font-size: 13px; color: #8A8A93"><span>20/10</span><span>hoje</span></span>
 </div>
 
 <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; padding: 18px 20px; border-radius: 20px; border: 1px solid #3A2E1C; background: rgba(242,164,58,0.06)">
@@ -127,7 +130,7 @@ th{text-align:left;font-weight:600}
 </footer>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1500}}'>
+<script type="text/x-dc" data-dc-script data-props='{"contas":{"editor":"enum","options":["30 ou mais ativas","menos de 30 ativas"],"default":"30 ou mais ativas"},"$preview":{"width":1440,"height":2100}}'>
 class Component extends DCLogic {
   renderVals() {
     const base = [{"nome": "Mercúrio", "tema": "Fundamentos da Agilidade", "cor": "#B5B0A8", "total": 10, "dom": 10}, {"nome": "Vênus", "tema": "Manifesto Ágil", "cor": "#E8C77A", "total": 10, "dom": 7}, {"nome": "Terra", "tema": "Introdução ao Scrum", "cor": "#4F8FD9", "total": 10, "dom": 6}, {"nome": "Marte", "tema": "Papéis do Scrum", "cor": "#D9644A", "total": 9, "dom": 5}, {"nome": "Ceres", "tema": "Eventos do Scrum", "cor": "#8C8A86", "total": 10, "dom": 8}, {"nome": "Júpiter", "tema": "Artefatos do Scrum", "cor": "#D9A066", "total": 10, "dom": 4}, {"nome": "Saturno", "tema": "User Stories", "cor": "#E3C98E", "total": 8, "dom": 3}, {"nome": "Urano", "tema": "Gestão do Product Backlog", "cor": "#7FD4D9", "total": 10, "dom": 3}, {"nome": "Netuno", "tema": "Kanban", "cor": "#4A6FD9", "total": 9, "dom": 2}, {"nome": "Plutão", "tema": "Planejamento Ágil", "cor": "#C9A98C", "total": 8, "dom": 1}, {"nome": "Makemake", "tema": "Métricas Ágeis", "cor": "#C46F5E", "total": 8, "dom": 0}, {"nome": "Éris", "tema": "Qualidade em Projetos Ágeis", "cor": "#D8D8E0", "total": 9, "dom": 0}];
@@ -137,32 +140,48 @@ class Component extends DCLogic {
       barra: p.dom === p.total ? '#F2A43A' : '#D4D4D8',
       texto: p.dom + ' de ' + p.total
     }));
-    const lista = [
-      ['Primeira órbita', 'Conclua sua primeira revisão de flashcards', 1, '05/10'],
-      ['Explorador de Mercúrio', 'Domine todos os cartões de Fundamentos da Agilidade', 1, '12/10'],
-      ['Meio caminho', 'Tenha cartões dominados em 6 temas diferentes', 1, '24/10'],
-      ['Cem revisões', 'Faça 100 revisões de cartões', 1, '29/10'],
-      ['Constância', 'Revise em 5 dias diferentes', 0.6, ''],
-      ['Sistema completo', 'Domine todos os cartões dos 12 temas', 0.44, ''],
-      ['Lua cheia', 'Seja aprovado na certificação', 0, '']
-    ];
+    // catálogo de 18 conquistas, com uma "Explorador" por tema; só Terra leva artigo (spec 007, FR-034)
+    const piso = (p) => Math.floor(p * 100);
+    const lista = [['Primeira órbita', 'Conclua sua primeira sessão de flashcards', 1, '05/10/2026']]
+      .concat(base.map((p) => [
+        'Explorador ' + (p.nome === 'Terra' ? 'da Terra' : 'de ' + p.nome),
+        'Domine todos os cartões de ' + p.nome + ' · ' + p.tema,
+        p.dom / p.total, p.dom === p.total ? '12/10/2026' : ''
+      ]))
+      .concat([
+        ['Meio caminho', 'Tenha cartões dominados em 6 temas diferentes', 1, '24/10/2026'],
+        ['Cem revisões', 'Faça 100 revisões de cartões', 1, '29/10/2026'],
+        ['Constância', 'Revise em 5 dias diferentes', 3 / 5, ''],
+        ['Sistema completo', 'Domine todos os cartões dos 12 temas', 49 / 111, ''],
+        ['Lua cheia', 'Seja aprovado na certificação', 0, '']
+      ]);
     const circ = 138.23;
     const conquistas = lista.map(([nome, criterio, p, data]) => ({
       nome, criterio, data: data ? 'Desde ' + data : '',
       feita: p === 1, emAndamento: p < 1,
-      pct: Math.round(p * 100) + '%',
+      // arredondado para baixo: nunca mostra 100% antes da obtenção (FR-037)
+      pct: piso(p) + '%',
       traco: (circ * p).toFixed(1) + ' ' + circ,
       cor: p === 1 ? '#F2A43A' : '#52525B',
       op: p === 0 ? '0.6' : '1'
     }));
+    // destaques: as três obtidas mais recentemente, a mais recente no meio (FR-037);
+    // a raridade só aparece com 30 contas ativas ou mais (FR-038)
+    const comRaridade = (this.props.contas ?? '30 ou mais ativas') === '30 ou mais ativas';
     const destaques = [
-      { nome: 'Explorador de Mercúrio', raridade: '31% dos estudantes', recuo: '24px' },
-      { nome: 'Primeira órbita', raridade: '92% dos estudantes', recuo: '0px' },
-      { nome: 'Meio caminho', raridade: '12% dos estudantes', recuo: '24px' }
-    ];
+      { nome: 'Meio caminho', raridade: '12% dos estudantes', recuo: '24px' },
+      { nome: 'Cem revisões', raridade: '18% dos estudantes', recuo: '0px' },
+      { nome: 'Explorador de Mercúrio', raridade: '31% dos estudantes', recuo: '24px' }
+    ].map((d) => ({ ...d, temRaridade: comRaridade }));
     const serie = [22, 23, 23, 26, 28, 28, 31, 33, 34, 37, 40, 42, 46, 49];
     const dias = serie.map((v, i) => ({ altura: (v / 49 * 100).toFixed(0) + '%', cor: i === serie.length - 1 ? '#F2A43A' : '#3F3F46' }));
-    return { temas, conquistas, destaques, dias };
+    // alternativa em texto com a data completa e o valor de cada dia (FR-031)
+    const dd = (n) => String(n).padStart(2, '0');
+    const rotuloGrafico = 'Cartões dominados ao fim de cada dia: ' + serie.map((v, i) => {
+      const d = new Date(2026, 9, 20 + i);
+      return dd(d.getDate()) + '/' + dd(d.getMonth() + 1) + '/' + d.getFullYear() + (i === serie.length - 1 ? ' (hoje)' : '') + ', ' + v;
+    }).join('; ') + '.';
+    return { temas, conquistas, destaques, dias, rotuloGrafico };
   }
 }
 </script>

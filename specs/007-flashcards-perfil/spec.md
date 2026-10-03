@@ -639,14 +639,16 @@ endereço da página "Disponível em breve".
   aparece só como percentual agregado das contas ativas, a partir de 30, sem identificar ninguém. O
   prazo de guarda e os direitos pela LGPD continuam os mesmos e passam a valer também para as
   revisões e as sessões.
-- **FR-045a**: A atualização dos termos MUST NOT pedir novo aceite de quem já tem conta. Quem aceitou
-  os termos antes da data da última atualização e ainda não foi avisado dela MUST ver, uma única
-  vez, na primeira página com login que abrir depois da atualização, a notificação informativa do
+- **FR-045a**: A atualização dos termos MUST NOT pedir novo aceite de quem já tem conta. Quem se
+  cadastrou antes da versão vigente dos termos e ainda não foi avisado dela (o momento do último
+  aviso é nulo ou anterior à data dessa versão) MUST ver, uma única vez, na primeira página com
+  login que abrir depois da atualização, a notificação informativa do
   kit "Atualizamos os termos de uso e privacidade", com o link "Ler os termos", que leva à página
   dos termos. O momento do aviso MUST ser registrado pelo servidor na mesma operação que decide
   mostrá-lo, de modo que nem outro acesso nem outra aba ou aparelho o mostrem de novo; quem criou a
-  conta depois da atualização não o vê. A regra vale para qualquer atualização futura dos termos,
-  pela data exibida no topo da página dos termos (decisão do mantenedor, P-10, 03/10/2026).
+  conta depois da versão vigente não o vê, porque a aceitou no cadastro. A data da versão vigente é
+  a exibida no topo da página dos termos, e a regra vale de novo a cada versão (decisão do
+  mantenedor, P-10, 03/10/2026).
 
 **Disponibilidade e integração (regra 13; FR-050 da 002)**
 
@@ -831,23 +833,23 @@ endereço da página "Disponível em breve".
 1. **Acesso à tela 16**: o mapa de `docs/telas.md` marca a tela 16 como "Logado", mas a própria tela
    16 descreve o estado de visitante, e o protótipo mostra o cabeçalho logado nesse estado.
    Resolução pela regra 1: a tela 16 abre para o visitante, com o cabeçalho público, e as telas 17
-   a 19 exigem login (FR-001, FR-002). `docs/telas.md` a alinhar (P-09).
+   a 19 exigem login (FR-001, FR-002). `docs/telas.md` alinhado (P-09).
 2. **Regra de domínio**: a tela 19 de `docs/telas.md` diz que o cartão está dominado quando "as duas
    últimas avaliações dele foram Sabia". Resolução pela regra 3 (decisão do mantenedor): "Sabia" em
-   dois dias diferentes, sem erro depois (FR-024). `docs/telas.md` a alinhar (P-09).
+   dois dias diferentes, sem erro depois (FR-024). `docs/telas.md` alinhado (P-09).
 3. **"Primeira órbita"**: `docs/telas.md` ("primeira revisão concluída") e o protótipo das
    notificações ("você concluiu sua primeira revisão de flashcards") falam de revisão; a regra 9
    fala de sessão concluída, e a regra 2 não registrava sessões. Resolução do mantenedor (P-01):
    sessão registrada numa terceira tabela e "Primeira órbita" na primeira sessão concluída
    (FR-020, FR-023, FR-035), com o texto "você concluiu sua primeira sessão de flashcards"
    (FR-041). A tela inicial ("da primeira revisão à Lua cheia") continua verdadeira, porque a
-   primeira sessão é também a primeira revisão. `docs/telas.md` e `Notificacoes.dc.html` a alinhar
+   primeira sessão é também a primeira revisão. `docs/telas.md` e `Notificacoes.dc.html` alinhados
    (P-09).
 4. **Quando os cartões errados voltam**: a tela 16 de `docs/telas.md` diz que, na sessão, "Não
    sabia" e "Quase" voltam antes dos outros; `FlashcardsFim` diz que eles aparecem primeiro na
    próxima revisão. Resolução pelas regras 4 e 5: na sessão, só o "Não sabia" volta, uma vez, no
    fim (FR-014); na próxima sessão, "Não sabia" e "Quase" vêm primeiro (FR-009). Os textos do
-   protótipo continuam verdadeiros. `docs/telas.md` a alinhar (P-09).
+   protótipo continuam verdadeiros. `docs/telas.md` alinhado (P-09).
 5. **Contador da revisão**: o protótipo tem total fixo ("Cartão 5 de 20"), que não comporta a volta
    do "Não sabia". Resolução: o total cresce a cada volta (FR-014).
 6. **Barra do celular**: a regra 7 fala em "barra com 60 px de altura"; o protótipo tem botões de
@@ -876,7 +878,7 @@ endereço da página "Disponível em breve".
     resultado reprovado e no histórico, mas os protótipos `Resultado.dc.html` e `Historico.dc.html`
     e as telas 12 e 15 de `docs/telas.md` só têm a menção no texto do resultado. Resolução do
     mantenedor (P-07): botão "Revisar com flashcards" no resultado reprovado e link de mesmo nome
-    nas linhas de erro do histórico (FR-050, FR-051); protótipos e `docs/telas.md` a alinhar (P-09).
+    nas linhas de erro do histórico (FR-050, FR-051); protótipos e `docs/telas.md` alinhados (P-09).
 13. **"Explorador de Terra"**: o padrão "Explorador de [corpo]" gera "Explorador de Terra"; em
     português, o natural é "Explorador da Terra", embora a tela inicial use "Aprofundar em Terra".
     Resolução do mantenedor (P-08): "Explorador da Terra"; só Terra leva artigo, e as demais ficam
@@ -891,12 +893,6 @@ endereço da página "Disponível em breve".
   (`proposta-modelo-de-dados.md`): `tbflashcard`, `tbsessao_revisao`, `tbrevisao`, a coluna
   `data_aviso_termos` em `tbcandidato`, as duas views, as consultas de referência e a verificação
   da carga; atualização do Modelo Lógico em PDF. Falta rodar no PostgreSQL 16 do `docker compose`.
-- **P-09**: alinhar `docs/telas.md` (mapa e telas 6, 12, 15, 16, 18 e 19: acesso à tela 16, regra
-  de domínio, volta dos cartões, "Primeira órbita" pela sessão, 18 conquistas, "Explorador da
-  Terra", datas e os caminhos "Revisar com flashcards") e os protótipos `FlashcardsEscolha`
-  (cabeçalho do visitante), `FlashcardsFim` (temas e variação negativa), `FlashcardsRevisao`
-  (contador), `Perfil` (18 conquistas, explicação do domínio, datas), `Resultado` e `Historico`
-  ("Revisar com flashcards") e `Notificacoes` (texto da "Primeira órbita" e aviso dos termos).
 - **P-11 (fora desta feature)**: cartões definitivos dos 12 temas pela trilha de conteúdo, com a
   coerência com o material conferida por uma pessoa da equipe, no mesmo processo da carga
   definitiva das questões e dos materiais (P-03 da 003).
@@ -913,9 +909,20 @@ Resolvidas pelo mantenedor em 03/10/2026:
   erro do histórico (FR-050, FR-051).
 - **P-08**: frases com "Corpo · Tema"; rótulos curtos de ação só com o corpo e nome acessível com
   corpo e tema; "Explorador da Terra", e as demais "Explorador de [corpo]" (FR-034, FR-053).
-- **P-10**: a atualização dos termos não pede novo aceite; quem já tinha conta antes dela vê uma
-  única vez, no próximo acesso, a notificação informativa "Atualizamos os termos de uso e
-  privacidade", com o link para os termos (FR-045a).
+- **P-10**: a atualização dos termos não pede novo aceite; quem se cadastrou antes da versão
+  vigente e ainda não foi avisado dela vê uma única vez, no próximo acesso, a notificação
+  informativa "Atualizamos os termos de uso e privacidade", com o link para os termos (FR-045a).
+- **P-09**: `docs/telas.md` 1.6 (mapa e telas 5, 12, 15, 16, 17, 18, 19 e 21) e os protótipos
+  `FlashcardsEscolha` (cabeçalho do visitante, escolha inicial, resumo e "Começar revisão"
+  desativado), `FlashcardsRevisao` (contador que cresce com a volta do "Não sabia", barra fixa no
+  celular com botões de 60 px), `FlashcardsFim` ("Corpo · Tema" e variação negativa), `Perfil` (18
+  conquistas, "Explorador da Terra", três destaques mais recentes, raridade só com 30 contas ativas,
+  explicação do domínio, datas completas e alternativa em texto do gráfico), `Resultado` e
+  `Historico` ("Revisar com flashcards") e `Notificacoes` (texto da "Primeira órbita" e aviso dos
+  termos) alinhados às decisões. Os links desses protótipos para a página "Disponível em breve"
+  passaram à área de estudos. A partir de 03/10/2026, `docs/prototipo/` é a fonte da verdade do
+  protótipo, registrada em `docs/prototipo/LEIAME.md`, `docs/telas.md` e
+  `docs/identidade-visual.md`.
 
 ## Conformidade com a constituição (versão 3.0.1)
 

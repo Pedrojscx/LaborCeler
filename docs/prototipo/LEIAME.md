@@ -1,6 +1,6 @@
 # Protótipo do Lunar Celer
 
-Código-fonte do protótipo visual feito no canvas do projeto (02/10/2026, telas 7 e 8 acrescentadas em 03/10/2026). É a referência visual de todas as telas descritas em `docs/telas.md`. Não é código de produção: serve para portar layout, textos e estilos para as páginas reais em HTML, CSS e JavaScript puros.
+Código-fonte do protótipo visual, criado no canvas do projeto (02/10/2026, telas 7 e 8 acrescentadas em 03/10/2026). Desde 03/10/2026, os arquivos desta pasta são a fonte da verdade do protótipo: o canvas deixou de ser referência, e toda mudança de protótipo é feita aqui. É a referência visual de todas as telas descritas em `docs/telas.md`; telas 12, 15 a 19 e 21 alinhadas à spec da feature 007 em 03/10/2026. Não é código de produção: serve para portar layout, textos e estilos para as páginas reais em HTML, CSS e JavaScript puros.
 
 ## Como ler os arquivos
 
