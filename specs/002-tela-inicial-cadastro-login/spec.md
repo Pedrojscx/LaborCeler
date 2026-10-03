@@ -378,10 +378,10 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
   PostgreSQL, Docker e Scrum; Figma só entra quando o protótipo existir no Figma).
 - **FR-040**: As perguntas frequentes MUST ser itens recolhíveis sobre: estudar antes, pausar,
   internet caindo durante uma questão, refazer a certificação e como conferir um certificado. A
-  resposta sobre a internet MUST ser "Fechar ou recarregar a página durante uma questão a encerra
-  como erro. Se a conexão cair, o tempo continua contando no servidor: se a resposta não chegar
-  até o fim do prazo, a questão conta como erro. Os temas já respondidos continuam salvos."
-  (decisão D6). A resposta sobre refazer MUST ser "Sim, se você não for aprovado. Uma nova
+  resposta sobre a internet MUST ser "O tempo continua contando no servidor: se a resposta não
+  chegar até o fim do prazo, a questão conta como erro. Já fechar ou recarregar a página encerra a
+  questão na hora, e o histórico registra o horário. Os temas já respondidos continuam salvos."
+  (decisão D6; texto do mantenedor de 03/10/2026, com o aviso de interrupção da spec 004). A resposta sobre refazer MUST ser "Sim, se você não for aprovado. Uma nova
   tentativa fica disponível 24 horas depois do fim da anterior, com as questões sorteadas de novo,
   dando preferência às que você ainda não viu." (decisão D1).
 - **FR-041**: A chamada final MUST trazer "Sua jornada começa em Mercúrio", o texto de apoio e os
@@ -649,7 +649,9 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
   segue essa decisão (FR-040).
 - Decisão D6 (03/10/2026): leitura literal do RF14; fechar ou recarregar a página durante uma
   questão a encerra como erro, e a perda de conexão segue o texto adotado na spec 004. Por isso as
-  instruções e a pergunta frequente avisam isso explicitamente (FR-003, FR-040).
+  instruções e a pergunta frequente avisam isso explicitamente (FR-003, FR-040). Com o aviso de
+  interrupção da 004 (FR-010), o encerramento acontece no momento em que a página é fechada ou
+  recarregada e fica registrado no histórico (spec 006), o que a pergunta frequente passa a dizer.
 - A área de estudos não exige login (decisão D8).
 - Os 12 temas e seus corpos celestes seguem `docs/identidade-visual.md`, seção 7, com a lista
   confirmada pela decisão D3 (03/10/2026).

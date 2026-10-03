@@ -148,37 +148,51 @@ o estado "em andamento" e continuar, verificando que o tema seguinte é o primei
 
 ### User Story 5 - Interrupção da questão aberta (Priority: P2)
 
-Se a questão aberta for pedida de novo (recarregar, reabrir, outra aba) ou o candidato escolher
-"Interromper" e confirmar, a questão é encerrada como interrompida e conta como erro. Pausar só é
-possível entre questões.
+Se o candidato fechar ou recarregar a página da questão, a página avisa o servidor, e a questão é
+encerrada como interrompida no momento em que o aviso chega. Se o aviso não chegar, a questão é
+interrompida quando for pedida de novo (recarregar, reabrir, outra aba) ou encerrada pelo prazo.
+O candidato também pode escolher "Interromper" e confirmar. Em todos os casos, conta como erro.
+Trocar de aba ou de aplicativo não interrompe. Pausar só é possível entre questões.
 
 **Why this priority**: é a leitura literal do RF14 (decisão D6) e protege a integridade
 da prova; P2 porque depende do fluxo principal.
 
-**Independent Test**: com uma questão aberta, recarregar a página, abrir o endereço em outra aba
-e usar "Interromper", conferindo em cada caso o encerramento como interrompida.
+**Independent Test**: com uma questão aberta, fechar a aba e conferir a interrupção com o horário
+do aviso; trocar de aba e voltar, conferindo que a questão continua aberta; com o aviso
+bloqueado, recarregar a página e abrir o endereço em outra aba; e usar "Interromper", conferindo
+em cada caso o encerramento como interrompida e o horário registrado.
 
 **Acceptance Scenarios**:
 
-1. **Given** uma questão aberta dentro do prazo, **When** a página a pede de novo (recarregar,
-   reabrir ou outra aba), **Then** a questão passa a interrompida, conta como erro e a página
-   mostra a correção no estado "Questão encerrada por interrupção", com a alternativa correta e o
-   painel de seguir ou pausar.
-2. **Given** a questão aberta, **When** o candidato escolhe "Interromper", **Then** a página pede
+1. **Given** uma questão aberta dentro do prazo, **When** o candidato fecha ou recarrega a página,
+   **Then** a página envia o aviso de interrupção, e o servidor encerra a questão como
+   interrompida, com o horário do recebimento do aviso, contando como erro.
+2. **Given** uma questão aberta, **When** o candidato troca de aba ou de aplicativo e depois volta,
+   **Then** a questão continua aberta, com o prazo correndo, e nenhum aviso de interrupção é
+   enviado.
+3. **Given** uma questão aberta dentro do prazo e nenhum aviso recebido, **When** a página a pede
+   de novo (recarregar, reabrir ou outra aba), **Then** a questão passa a interrompida, com o
+   horário desse pedido, conta como erro e a página mostra a correção no estado "Questão
+   encerrada por interrupção", com a alternativa correta e o painel de seguir ou pausar.
+4. **Given** a questão aberta, **When** o candidato escolhe "Interromper", **Then** a página pede
    confirmação numa caixa de diálogo da própria página (nunca a janela do navegador), avisando
-   que a questão aberta contará como erro; ao confirmar, a questão passa a interrompida e o
-   candidato vê a correção no estado "Questão encerrada por interrupção", com a alternativa
-   correta e o painel de seguir ou pausar; ao desistir, continua na questão com o cronômetro
-   correndo.
-3. **Given** uma questão interrompida, **When** chega uma resposta para ela, **Then** a resposta
+   que a questão aberta contará como erro; ao confirmar, a questão passa a interrompida, com o
+   horário da confirmação, e o candidato vê a correção no estado "Questão encerrada por
+   interrupção", com a alternativa correta e o painel de seguir ou pausar; ao desistir, continua
+   na questão com o cronômetro correndo.
+5. **Given** um aviso de interrupção, **When** ele chega sem questão aberta, para uma questão de
+   outro candidato ou para uma questão que já não é a aberta, **Then** nada muda, e a resposta ao
+   aviso é a mesma de um aviso aceito.
+6. **Given** uma questão interrompida, **When** chega uma resposta para ela, **Then** a resposta
    é recusada.
-4. **Given** uma questão aberta cujo prazo já venceu, **When** qualquer requisição do candidato
+7. **Given** uma questão aberta cujo prazo já venceu, **When** qualquer requisição do candidato
    chega (por exemplo, ao voltar horas depois), **Then** a questão é encerrada como tempo esgotado
    antes de qualquer outra coisa.
-5. **Given** a tela "Antes de começar", **When** o candidato lê a regra sobre sair da página,
-   **Then** encontra o texto "Fechar ou recarregar a página durante uma questão a encerra como erro.
-   Se a conexão cair, o tempo continua contando no servidor: se a resposta não chegar até o fim do
-   prazo, a questão conta como erro."
+8. **Given** a tela "Antes de começar", **When** o candidato lê a regra sobre sair da página,
+   **Then** encontra o texto "Fechar ou recarregar a página durante uma questão a encerra como
+   erro, e o histórico registra o horário em que isso aconteceu. Se a conexão cair, o tempo
+   continua contando no servidor: se a resposta não chegar até o fim do prazo, a questão conta
+   como erro."
 
 ---
 
@@ -232,8 +246,21 @@ tentativa evitam as já vistas.
 - Perda de conexão durante a questão, sem recarregar: o tempo continua contando no servidor; se a
   resposta chegar até 152 segundos depois da exibição, vale; se não chegar, a questão conta como
   erro e é encerrada como tempo esgotado na próxima requisição.
-- Navegador fechado durante a questão e retorno depois do prazo: a questão é encerrada como tempo
-  esgotado na primeira requisição seguinte, e o candidato retoma do próximo tema.
+- Navegador fechado durante a questão: com o aviso recebido, a questão é interrompida no momento
+  do fechamento; sem o aviso, e com retorno depois do prazo, ela é encerrada como tempo esgotado
+  na primeira requisição seguinte. Nos dois casos, o candidato retoma do próximo tema.
+- Aviso de interrupção que chega depois dos 150 segundos: a questão é encerrada como tempo
+  esgotado, como quando a página avisa que o tempo acabou (FR-009).
+- Aviso atrasado, que chega depois de a questão ser encerrada por outro caminho (resposta, novo
+  pedido ou prazo) ou depois de o candidato abrir o tema seguinte: não tem efeito, porque o aviso
+  identifica a questão a que se refere.
+- Página que sai da questão pelo próprio fluxo (depois de enviar a resposta, de confirmar
+  "Interromper" ou de o tempo acabar): não envia o aviso.
+- Volta, pelo botão do navegador, a uma página da questão guardada pelo próprio navegador: a
+  página consulta o servidor e mostra a correção; nunca oferece a questão como aberta, e uma
+  resposta enviada dela é recusada.
+- Celular que fecha o navegador em segundo plano: se o aviso for enviado, conta como fechar a
+  página; se não, valem o prazo e o novo pedido. Só trocar de aplicativo não interrompe.
 - Sessão de 8 horas expirada durante a questão: o candidato é levado ao login; ao voltar, a
   questão aberta é tratada pelas regras de prazo e de interrupção.
 - Alternativa enviada que pertence a outra questão, alternativa inexistente, resposta para tema
@@ -301,10 +328,21 @@ tentativa evitam as já vistas.
 
 **Interrupção (RF14, decisão D6)**
 
-- **FR-010**: A questão MUST ser entregue à página uma única vez. Se a página pedir de novo uma
-  questão que está aberta e dentro do prazo (recarregar, reabrir, outra aba, retomar pela área do
-  candidato), ela MUST passar a "interrompida" e contar como erro, e a página recebe a correção
-  (FR-015). Encerrar a sessão entre questões é pausa, sem penalidade.
+- **FR-010**: A questão MUST ser entregue à página uma única vez. Ao fechar ou recarregar a página
+  da questão (evento `pagehide`), a página MUST enviar ao servidor um aviso de interrupção com
+  `navigator.sendBeacon`, identificando a questão entregue; ao receber o aviso, o servidor MUST
+  encerrar como "interrompida", contando como erro, a questão aberta do candidato da sessão, com
+  o horário do recebimento pelo relógio do servidor, desde que ela seja a do aviso e esteja dentro
+  do prazo de 150 segundos (depois dele, vale o FR-009 e ela é encerrada como "expirada"). Trocar
+  de aba ou de aplicativo (`visibilitychange`) MUST NOT interromper. A página MUST NOT enviar o
+  aviso quando sai da questão pelo próprio fluxo (depois de enviar a resposta, de confirmar
+  "Interromper" ou de o tempo acabar). A rota do aviso MUST exigir sessão, conferir a origem como
+  as demais rotas que alteram dados (spec 002) e agir só sobre a questão aberta do próprio
+  candidato; a resposta a ela MUST ser a mesma tenha ou não havido interrupção. Se o aviso não
+  chegar, valem as regras de antes: o prazo vencido encerra a questão como "expirada" (FR-009); e,
+  se a página pedir de novo uma questão aberta e dentro do prazo (recarregar, reabrir, outra aba,
+  retomar pela área do candidato), ela MUST passar a "interrompida", com o horário desse pedido, e
+  a página recebe a correção (FR-015). Encerrar a sessão entre questões é pausa, sem penalidade.
 - **FR-011**: A repetição de um pedido de abertura de questão ("Começar agora" ou "Seguir para o
   próximo tema") MUST ser reconhecida como o mesmo pedido só quando vier da mesma sessão, com a
   mesma chave de pedido gerada pela página e em até 5 segundos do primeiro: nesse caso não sorteia
@@ -312,10 +350,11 @@ tentativa evitam as já vistas.
   condições, vale a interrupção (FR-010). A página MUST desativar o botão depois do primeiro
   clique.
 - **FR-012**: O link "Interromper" da tela da questão MUST pedir confirmação na própria página,
-  avisando que a questão aberta contará como erro. Ao confirmar, a questão passa a "interrompida"
-  e o candidato vê a correção no estado "interrompida" (FR-015), com a alternativa correta e o
-  painel de seguir ou pausar (FR-016); ao desistir, continua na questão, com o prazo correndo. O
-  mesmo vale para quem volta depois de uma interrupção por recarga (FR-010).
+  avisando que a questão aberta contará como erro. Ao confirmar, a questão passa a "interrompida",
+  com o horário da confirmação, e o candidato vê a correção no estado "interrompida" (FR-015),
+  com a alternativa correta e o painel de seguir ou pausar (FR-016); ao desistir, continua na
+  questão, com o prazo correndo. O mesmo vale para quem volta depois de uma interrupção por
+  recarga ou fechamento (FR-010).
 
 **Resposta, sigilo e manipulação (RF08, RF09, RF15, RNF04, Princípio I)**
 
@@ -341,8 +380,8 @@ tentativa evitam as já vistas.
 
 **Concorrência (Princípio I)**
 
-- **FR-017**: Criar a certificação, abrir questão, responder, encerrar por tempo e interromper
-  MUST rodar como operações indivisíveis, com bloqueio do candidato (ao criar a certificação) ou
+- **FR-017**: Criar a certificação, abrir questão, responder, encerrar por tempo, interromper e
+  receber o aviso de interrupção MUST rodar como operações indivisíveis, com bloqueio do candidato (ao criar a certificação) ou
   da certificação dele (nas demais) durante cada uma, de modo que pedidos simultâneos nunca gerem
   duas certificações em andamento, duas questões abertas, duas respostas para o mesmo tema nem
   uma resposta aceita para questão já encerrada.
@@ -401,9 +440,9 @@ tentativa evitam as já vistas.
   questão aberta; pausa entre temas; aprovação com 8 acertos em 12) e o cartão do tema que vai
   começar, com "Começar agora" e "Voltar e estudar mais" (que leva à área de estudos). A regra
   sobre sair da página MUST ter o texto "Fechar ou recarregar a página durante uma questão a
-  encerra como erro. Se a conexão cair, o tempo continua contando no servidor: se a resposta não
-  chegar até o fim do prazo, a questão conta como erro.", que é a interpretação do RF14 levada ao
-  professor junto da decisão D6.
+  encerra como erro, e o histórico registra o horário em que isso aconteceu. Se a conexão cair, o
+  tempo continua contando no servidor: se a resposta não chegar até o fim do prazo, a questão
+  conta como erro.", interpretação do RF14 da decisão D6 com o aviso de interrupção (FR-010).
 - **FR-025**: A tela 10 MUST trazer a coluna do tempo (Lua dentro do anel do cronômetro, tempo em
   número, "restantes de 02:30", aviso escrito abaixo de 30 segundos, trilha de 12 marcos, "[n] de
   12 temas concluídos" e o aviso de que o tempo é contado pelo servidor e de que sair da página
@@ -427,7 +466,11 @@ tentativa evitam as já vistas.
 - **FR-029**: MUST existir testes automatizados, que passam a cada mudança nessas regras, para:
   sorteio entre as quatro questões do tema; prazo de 150 segundos com e sem a tolerância de 2
   segundos; encerramento preguiçoso; interrupção (pedido repetido da questão aberta e
-  "Interromper"); repetição do mesmo pedido de abertura (FR-011); ausência da alternativa correta
+  "Interromper", cada uma com o seu horário); aviso de interrupção (aviso válido, que encerra a
+  questão aberta com o horário do recebimento; aviso de outro candidato, que não altera a questão
+  dele; aviso sem questão aberta e aviso atrasado de questão já encerrada, que não alteram nada;
+  aviso depois de 150 segundos, que encerra como expirada; e troca de aba ou de aplicativo, que
+  não envia aviso nem interrompe); repetição do mesmo pedido de abertura (FR-011); ausência da alternativa correta
   e da justificativa em tudo o que a página recebe antes do encerramento; concorrência (pedidos
   simultâneos de abrir e de responder); tentativas de manipulação (alternativa de outra questão,
   resposta repetida, resposta depois do prazo, resposta para tema que não é o atual, valores de
@@ -452,7 +495,8 @@ tentativa evitam as já vistas.
   permite uma só está na proposta de modelo de dados.
 - **Resposta**: o registro de um tema dentro da certificação: questão sorteada, horário de
   exibição, situação (exibida, respondida, expirada ou interrompida), alternativa escolhida e
-  horário de resposta, só quando respondida. É criada no sorteio. Já existe no esquema, com uma
+  horário de resposta, só quando respondida, e horário da interrupção, só quando interrompida
+  (coluna da proposta de modelo de dados da 006). É criada no sorteio. Já existe no esquema, com uma
   resposta por tema garantida pelo banco.
 - **Questão**: pertence a um tema, tem enunciado, imagem, justificativa e quatro alternativas, uma
   correta. Já existe no esquema.
@@ -476,8 +520,10 @@ tentativa evitam as já vistas.
 - **SC-005**: 0 tentativas de manipulação aceitas no conjunto de testes do FR-029, e 100% dos
   pedidos sobre resposta ou certificação de outro candidato recebem a mesma recusa de um recurso
   inexistente.
-- **SC-006**: Em 100% dos casos de recarregar, reabrir ou abrir em outra aba uma questão aberta
-  dentro do prazo, ela é encerrada como interrompida; em 100% das repetições do mesmo pedido em
+- **SC-006**: Em 100% dos casos de fechar ou recarregar a página com o aviso recebido, a questão
+  é encerrada como interrompida, com o horário do recebimento; em 100% das trocas de aba ou de
+  aplicativo, ela continua aberta; em 100% dos casos de recarregar, reabrir ou abrir em outra aba
+  uma questão aberta dentro do prazo sem aviso recebido, ela é encerrada como interrompida; em 100% das repetições do mesmo pedido em
   até 5 segundos, na mesma sessão e com a mesma chave, a questão entregue continua aberta; com a
   mesma chave depois de 5 segundos, ela é interrompida.
 - **SC-007**: Um candidato conclui os 12 temas em uma ou várias sessões e, em 100% das retomadas,
@@ -531,12 +577,21 @@ tentativa evitam as já vistas.
   texto alternativo.
 - **Diálogo de confirmação** (FR-028): o kit não tem esse componente; ele entra no kit como
   componente reutilizável, no plano.
-- **Perda de conexão (decisão do mantenedor, interpretação do RF14)**: o servidor só percebe a
-  interrupção quando a questão é pedida de novo ou quando o prazo vence. A regra exibida na tela 9
-  passa a ser "Fechar ou recarregar a página durante uma questão a encerra como erro. Se a
-  conexão cair, o tempo continua contando no servidor: se a resposta não chegar até o fim do
-  prazo, a questão conta como erro." A interpretação vai ao professor junto da decisão D6
-  (dossiê, seção 7).
+- **Perda de conexão (decisão do mantenedor, interpretação do RF14)**: sem conexão, o aviso de
+  interrupção não chega, e o servidor só percebe a interrupção quando a questão é pedida de novo
+  ou quando o prazo vence. A interpretação foi levada ao professor junto da decisão D6 (dossiê,
+  seção 7).
+- **Aviso de interrupção (FR-010, decisão do mantenedor, 03/10/2026)**: o horário da interrupção
+  passa a ser o momento em que a pessoa fechou ou recarregou a página, registrado pelo aviso, e
+  aparece no histórico (spec 006). A regra da tela 9 passa a ser "Fechar ou recarregar a página
+  durante uma questão a encerra como erro, e o histórico registra o horário em que isso
+  aconteceu. Se a conexão cair, o tempo continua contando no servidor: se a resposta não chegar
+  até o fim do prazo, a questão conta como erro." Duas proteções foram acrescentadas à regra do
+  mantenedor: o aviso identifica a questão a que se refere, para que um aviso atrasado nunca
+  encerre a questão seguinte, e a página não envia o aviso quando sai pelo próprio fluxo. O
+  formato do corpo do aviso fica para o plano: o `sendBeacon` não envia corpo JSON em todos os
+  navegadores, e a regra de formato das rotas da 002 exige JSON; a conferência de origem é a
+  mesma das demais rotas.
 - A ordem dos temas segue a decisão D3; a área de estudos (003) existe antes desta feature, e
   "Voltar e estudar mais" leva a ela.
 
@@ -547,7 +602,9 @@ tentativa evitam as já vistas.
   certificação, regra que impede horário de resposta além de 152 segundos e troca da restrição
   única de `tbcertificacao.idcandidato` por um índice único parcial para uma certificação em
   andamento por candidato (D1), todos validados em PGlite, além da consulta de referência do
-  sorteio; e atualização do Modelo Lógico em PDF. Falta rodar no PostgreSQL 16 do
+  sorteio; a coluna do horário da interrupção, adotada pelo mantenedor e descrita na proposta da
+  006 (`specs/006-historico-certificacao/proposta-modelo-de-dados.md`), entra no DDL junto, porque
+  a 004 é a primeira a gravá-la; e atualização do Modelo Lógico em PDF. Falta rodar no PostgreSQL 16 do
   `docker compose`.
 - **P-05**: legenda da imagem depende da proposta de modelo de dados da 003.
 - **P-06**: decisão D9 (limite de tentativas), aberta; sem limite por enquanto.

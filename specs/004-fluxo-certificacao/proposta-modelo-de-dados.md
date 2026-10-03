@@ -114,6 +114,14 @@ são sempre de tentativas anteriores.
   sobre `tbcertificacao` (uma em andamento por candidato) podem ser anotadas no modelo como
   regras de integridade; nenhum atributo muda.
 
+### Horário da interrupção (spec 006)
+
+A coluna `tbresposta.data_hora_interrupcao`, preenchida só na situação `INTERROMPIDA`, foi adotada
+pelo mantenedor em 03/10/2026 e está descrita e validada na proposta da 006
+(`specs/006-historico-certificacao/proposta-modelo-de-dados.md`). Ela entra no DDL junto com as
+mudanças desta proposta, porque a 004 é a primeira a gravá-la: no aviso de interrupção, no novo
+pedido da questão aberta e na confirmação de "Interromper" (spec 004, FR-010 e FR-012).
+
 ## Regra fora do banco: justificativa das questões
 
 A justificativa continua opcional no esquema, porque a carga provisória pode não tê-la. A

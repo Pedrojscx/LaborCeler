@@ -62,3 +62,12 @@
   P-02 e P-03 resolvidas (a P-03 aplicada na spec da 002) e P-06 (D9, limite de tentativas)
   aberta. Proposta de modelo de dados com a troca da restrição de `tbcertificacao` e a consulta
   do sorteio, validadas em PGlite. Revalidação: todos os itens continuam aprovados.
+- Decisões do mantenedor (2026-10-03, com a spec 006): aviso de interrupção ao fechar ou recarregar
+  a página da questão (`sendBeacon` no `pagehide`), com o horário do recebimento; troca de aba ou
+  de aplicativo nunca interrompe; rota com sessão e conferência de origem, só sobre a questão
+  aberta do próprio candidato; sem aviso, valem o prazo e o novo pedido, com o horário dele
+  (FR-010, FR-012, FR-017, US5, edge cases, SC-006). Testes do aviso no FR-029. Texto da tela 9
+  com o registro do horário no histórico (FR-024, US5 cenário 8). Acrescentadas por segurança: o
+  aviso identifica a questão e não age sobre a seguinte; a página não envia aviso ao sair pelo
+  próprio fluxo; aviso depois de 150 segundos encerra como expirada. Horário da interrupção na
+  coluna da proposta da 006 (P-04). Revalidação: todos os itens continuam aprovados.

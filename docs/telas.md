@@ -1,8 +1,10 @@
 # Telas do Lunar Celer
 
-Versão 1.4 (03/10/2026). Descreve as telas do protótipo (canvas do projeto, acesso do mantenedor: https://claude.ai/artifact/5MK3DegETGbv3t81EsqtZF) para orientar specs e implementação. Tokens, componentes e regras visuais estão em `docs/identidade-visual.md`. Requisitos citados pelo ID de `docs/requisitos-desafio.md`.
+Versão 1.5 (03/10/2026). Descreve as telas do protótipo (canvas do projeto, acesso do mantenedor: https://claude.ai/artifact/5MK3DegETGbv3t81EsqtZF) para orientar specs e implementação. Tokens, componentes e regras visuais estão em `docs/identidade-visual.md`. Requisitos citados pelo ID de `docs/requisitos-desafio.md`.
 
 Convenções: as rotas são sugestões para o plano de cada feature; "Logado" significa que a tela exige sessão e redireciona para Entrar sem ela; textos entre colchetes são dados dinâmicos ou pendências.
+
+Datas e horas (regra de escrita para todas as telas): em tabelas, no formato "14/11/2026 19:02"; em frases, no formato "15/11/2026 às 14:23"; sempre no horário de Brasília, pelo relógio do servidor. Data sem hora: "14/11/2026".
 
 Disponibilidade (regra geral, FR-050 da spec da 002): as telas podem descrever qualquer funcionalidade a qualquer momento, mas textos que afirmam disponibilidade ("a área de estudos é aberta", "com uma conta você tem...") e links que levam direto a um recurso só aparecem quando ele existe; links para recursos ainda não entregues levam à tela 6.
 
@@ -40,7 +42,7 @@ Disponibilidade (regra geral, FR-050 da spec da 002): as telas podem descrever q
 | 12 | Resultado final | `/certificacao/resultado` | Logado | 005 | RF16, RF17 |
 | 13 | Certificado | `/certificado` | Logado | 005 | RF18 |
 | 14 | Validação pública | `/validar` e `/validar/:codigo` | Público | 005 | RF19, RP08 |
-| 15 | Histórico | `/historico` | Logado | 006 | RF20 |
+| 15 | Histórico | `/historico` e `/historico/:numero` | Logado | 006 | RF20 |
 | 16 | Flashcards: escolher | `/flashcards` | Logado | 007 | complemento |
 | 17 | Flashcards: revisão | `/flashcards/revisao` | Logado | 007 | complemento |
 | 18 | Flashcards: fim da sessão | `/flashcards/resumo` | Logado | 007 | complemento |
@@ -64,7 +66,7 @@ Seções, na ordem:
 4. **Por que estudar aqui funciona.** Grade em bento: bloco largo com o princípio "Estudar e depois se testar" (efeito de testagem), ilustração do ciclo Estudar e Responder em volta da Lua e o botão "Começar pelos estudos"; três blocos menores (correção na hora, situações reais, progresso visível). Sem números de eficácia não medidos.
 5. **Entre e use 100% do Lunar Celer.** Convite para criar conta, explicando que a área de estudos é aberta e listando o que a conta libera: flashcards, evolução por tema, conquistas e a certificação. Botões "Criar minha conta" e "Já tenho conta".
 6. **De onde vem este portal.** Origem acadêmica na ABP do 1º semestre de DSM da Fatec Jacareí (Centro Paula Souza), o problema que motivou o projeto e o aviso de que o certificado não substitui certificações oficiais de Scrum. Ficha: instituição, curso, programa, orientação (Prof. Antonio Egydio, Prof. Marcelo Sudo e Prof. Arley Souza), colaboradores (Pedro Lucas) e tecnologias.
-7. **Perguntas frequentes.** Itens recolhíveis: estudar antes, pausar, internet caindo ("Fechar ou recarregar a página durante uma questão a encerra como erro. Se a conexão cair, o tempo continua contando no servidor: se a resposta não chegar até o fim do prazo, a questão conta como erro. Os temas já respondidos continuam salvos."), refazer a certificação ("Sim, se você não for aprovado. Uma nova tentativa fica disponível 24 horas depois do fim da anterior, com as questões sorteadas de novo, dando preferência às que você ainda não viu.") e como conferir um certificado.
+7. **Perguntas frequentes.** Itens recolhíveis: estudar antes, pausar, internet caindo ("O tempo continua contando no servidor: se a resposta não chegar até o fim do prazo, a questão conta como erro. Já fechar ou recarregar a página encerra a questão na hora, e o histórico registra o horário. Os temas já respondidos continuam salvos."), refazer a certificação ("Sim, se você não for aprovado. Uma nova tentativa fica disponível 24 horas depois do fim da anterior, com as questões sorteadas de novo, dando preferência às que você ainda não viu.") e como conferir um certificado.
 8. **Chamada final.** "Sua jornada começa em Mercúrio", com os dois botões.
 
 ## 2. Criar conta
@@ -91,7 +93,7 @@ Estados: não iniciada ("Sua Lua ainda está nova", botão "Iniciar a certifica�
 
 ## 6. Disponível em breve
 
-Ilustração de eclipse, título e texto conforme a funcionalidade (estudos, certificação, validação ou histórico), botões para a área do candidato e para o início. Histórico: título "O histórico está a caminho" e texto "O registro completo das suas tentativas, questão por questão, chega numa próxima versão do Lunar Celer."; recebe os botões "Ver o histórico completo" (tela 12) e "Ver meu histórico" (tela 4) até a feature 006 existir. Temporária: some quando as features 003 a 006 forem entregues.
+Ilustração de eclipse, título e texto conforme a funcionalidade, botões para a área do candidato e para o início. Variações: estudos (003), certificação (004), validação (005), histórico (006) e, para os links "Flashcards" e nome do candidato do cabeçalho logado, flashcards e perfil (007, FR-024 da spec da 002; ainda sem textos no protótipo). Histórico: título "O histórico está a caminho" e texto "O registro completo das suas tentativas, questão por questão, chega numa próxima versão do Lunar Celer."; recebe os botões "Ver o histórico completo" (tela 12) e "Ver meu histórico" (tela 4) até a feature 006 existir. Temporária: cada variação some quando a sua feature é entregue; depois da 006, a página fica só para flashcards e perfil e some com a 007.
 
 ## 7. Área de estudos
 
@@ -117,7 +119,7 @@ Estados: visitante; candidato conectado; tema sem vídeo; vídeo indisponível (
 
 ## 9. Antes de começar
 
-Lista das seis regras em linguagem direta (12 temas em ordem, 150 segundos, resposta única, sair da página encerra a questão aberta, pausa permitida entre temas, aprovação com 8 acertos) e cartão lateral com o tema que vai começar (o primeiro, Mercúrio · Fundamentos da Agilidade, ou, na retomada, o próximo tema pendente), botão "Começar agora" e "Voltar e estudar mais". A regra sobre sair da página diz: "Fechar ou recarregar a página durante uma questão a encerra como erro. Se a conexão cair, o tempo continua contando no servidor: se a resposta não chegar até o fim do prazo, a questão conta como erro." A certificação só é criada ao confirmar "Começar agora".
+Lista das seis regras em linguagem direta (12 temas em ordem, 150 segundos, resposta única, sair da página encerra a questão aberta, pausa permitida entre temas, aprovação com 8 acertos) e cartão lateral com o tema que vai começar (o primeiro, Mercúrio · Fundamentos da Agilidade, ou, na retomada, o próximo tema pendente), botão "Começar agora" e "Voltar e estudar mais". A regra sobre sair da página diz: "Fechar ou recarregar a página durante uma questão a encerra como erro, e o histórico registra o horário em que isso aconteceu. Se a conexão cair, o tempo continua contando no servidor: se a resposta não chegar até o fim do prazo, a questão conta como erro." A certificação só é criada ao confirmar "Começar agora".
 
 ## 10. Questão com cronômetro
 
@@ -149,7 +151,9 @@ Estados: entrada; certificado autêntico (nome, CPF mascarado como `***.456.789-
 
 ## 15. Histórico
 
-Resumo (início, conclusão, resultado, situação) e tabela com uma linha por tema: tema, questão sorteada, sua resposta (acertou, errou ou sem resposta por tempo esgotado), resposta correta e data e hora. No celular, a tabela rola para o lado dentro do próprio contêiner.
+Todas as tentativas do candidato (decisão D1). Com duas ou mais, a lista "Suas tentativas", da mais recente para a mais antiga, mostra cada uma com "Tentativa [n]" e a data de conclusão e o percentual (em andamento: a data de início e "em andamento"); a mais recente aparece aberta e as outras podem ser escolhidas. Cada tentativa tem endereço próprio com o número da tentativa do candidato (`/historico/2`), nunca o identificador interno do banco; `/historico` abre a mais recente.
+
+Resumo da tentativa aberta: início, conclusão, resultado ("10 de 12 (83,3%)"), nota ("8,3") e situação ("Aprovado, certificado emitido" ou "Reprovado, sem certificado"); em andamento, "Concluída em: Em andamento", "Resultado: O resultado sai ao concluir os 12 temas", sem nota, e "Situação: Em andamento, [n] de 12 temas concluídos". Tabela com uma linha por tema encerrado, na ordem da prova: tema, questão sorteada (enunciado longo recolhido, com opção de expandir), sua resposta ("Acertou", "Errou", "Tempo esgotado: sem resposta" ou "Interrompida: sem resposta", com a alternativa escolhida quando houver), resposta correta e data e hora (da resposta, do fim do prazo ou da interrupção). Nas linhas de erro, tempo esgotado ou interrupção, "Revisar o tema" leva à página do tema na área de estudos. A questão aberta de uma tentativa em andamento não aparece. Botões "Ver meu certificado" (só na tentativa aprovada) e "Voltar para a área do candidato". Sem nenhuma tentativa: "Você ainda não começou a certificação. Cada tema aparece aqui depois de encerrado." No celular, a tabela rola para o lado dentro do próprio contêiner.
 
 ## 16. Flashcards: escolher
 
