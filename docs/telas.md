@@ -1,6 +1,6 @@
 # Telas do Lunar Celer
 
-Versão 1.6 (03/10/2026). Descreve as telas do protótipo em `docs/prototipo/`, que é a fonte da verdade do protótipo (o canvas do projeto deixou de ser referência em 03/10/2026), para orientar specs e implementação. Tokens, componentes e regras visuais estão em `docs/identidade-visual.md`. Requisitos citados pelo ID de `docs/requisitos-desafio.md`.
+Versão 1.7 (03/10/2026). Descreve as telas do protótipo em `docs/prototipo/`, que é a fonte da verdade do protótipo (o canvas do projeto deixou de ser referência em 03/10/2026), para orientar specs e implementação. Tokens, componentes e regras visuais estão em `docs/identidade-visual.md`. Requisitos citados pelo ID de `docs/requisitos-desafio.md`.
 
 Convenções: as rotas são sugestões para o plano de cada feature; "Logado" significa que a tela exige sessão e redireciona para Entrar sem ela; textos entre colchetes são dados dinâmicos ou pendências.
 
@@ -47,7 +47,7 @@ Disponibilidade (regra geral, FR-050 da spec da 002): as telas podem descrever q
 | 17 | Flashcards: revisão | `/flashcards/revisao` | Logado | 007 | complemento |
 | 18 | Flashcards: fim da sessão | `/flashcards/resumo` | Logado | 007 | complemento |
 | 19 | Perfil e evolução | `/perfil` | Logado | 007 | complemento |
-| 20 | Página não encontrada | qualquer rota inexistente | Público | 008 | |
+| 20 | Página não encontrada | qualquer endereço de página inexistente | Público e logado (cabeçalho conforme a sessão) | 008 | complemento |
 | 21 | Notificações | componente | Todas | 002 | |
 
 Enquanto a feature 003 não existir, os links para as telas 7 e 8 levam provisoriamente à tela 6, exceto "Começar pelos estudos", que leva à seção da trilha na própria tela inicial.
@@ -183,7 +183,13 @@ Regras de cálculo: tudo derivado do histórico, sem dado calculado armazenado (
 
 ## 20. Página não encontrada
 
-"Erro 404", título "Esta página caiu num buraco negro", texto curto, botões "Voltar ao início" e "Validar um certificado" e a ilustração do buraco negro.
+"Erro 404", título "Esta página caiu num buraco negro", texto curto ("Nem a luz sai daqui. O endereço pode ter sido digitado errado, ou a página não existe mais."), botões "Voltar ao início" e "Validar um certificado" e a ilustração do buraco negro. Responde com o código 404 de verdade e a instrução noindex, e nunca repete o endereço pedido.
+
+O corpo é o mesmo para qualquer endereço e qualquer pessoa; o cabeçalho segue a sessão de quem pede, nunca o recurso pedido: o logado, com sessão (e a resposta não vai para cache compartilhado), e o público, sem ela.
+
+Vale para endereços que não existem e para recursos de página que não existem ou são de outro candidato: tema (tela 8), resultado (tela 12), certificado (tela 13) e tentativa do histórico (tela 15), com a mesma resposta para inexistente, alheio e malformado. Sem sessão, os endereços logados levam a Entrar antes de qualquer conferência. A validação pública mantém o próprio estado "Nenhum certificado encontrado". A API responde 404 em JSON, e arquivos inexistentes (imagens, estilos, scripts e outros), 404 curto em texto puro, sem a página.
+
+Estado de instabilidade: se o banco estiver indisponível ao conferir a sessão ou o recurso, a resposta é 503, com a indicação de quando tentar de novo, e a página "Tente novamente em instantes" (cabeçalho só com a marca, botões "Tentar de novo" e "Voltar ao início"), também sem repetir o endereço; textos e protótipo pendentes (P-06 da spec 008).
 
 ## 21. Notificações
 

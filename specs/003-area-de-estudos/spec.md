@@ -132,11 +132,14 @@ internet e com o vídeo indisponível.
   existem, e a contagem de materiais acompanha.
 - Tema com um único material: a página funciona igual, com sumário de um item.
 - Primeiro e último tema: a navegação mostra só o vizinho que existe.
-- Endereço de um tema que não existe: o portal informa que o tema não foi encontrado e oferece o
-  caminho para a área de estudos.
+- Endereço de um tema que não existe: até a feature 008 existir, o portal informa que o tema não
+  foi encontrado e oferece o caminho para a área de estudos; com ela, responde com a página não
+  encontrada, com código 404 (FR-010 da 008).
 - Banco indisponível: a área de estudos e as páginas de tema mostram uma mensagem amigável de
   indisponibilidade temporária, sem detalhes técnicos, e o rodapé mostra a mensagem de
-  instabilidade (FR-004a da 002).
+  instabilidade (FR-004a da 002). Com a feature 008, o endereço de um tema que não pode ser
+  conferido por falta do banco responde com a página "Tente novamente em instantes", com código 503
+  (FR-022 da 008), nunca com a página não encontrada.
 - Navegador sem JavaScript: textos, imagens, transcrição e navegação continuam legíveis, e o
   vídeo continua reproduzível com os controles do próprio navegador.
 - Portal sem acesso à internet: tudo funciona, menos a abertura das leituras externas, que
@@ -392,7 +395,10 @@ internet e com o vídeo indisponível.
 - **Cabeçalho do visitante**: o protótipo usa "Início" e "Entrar", e `docs/telas.md` foi
   atualizado para registrar essa variação nas telas 7 e 8.
 - **Tema inexistente**: até a página não encontrada da feature 008 existir, o endereço de um tema
-  que não existe responde com uma mensagem simples e o caminho para a área de estudos.
+  que não existe responde com uma mensagem simples e o caminho para a área de estudos. Com a 008,
+  responde com a página não encontrada, com código 404 e a mesma resposta de qualquer endereço
+  inexistente (FR-010 da 008); o plano desta feature deixa o ponto de troca pronto (dependência
+  registrada na spec da 008).
 - Os 12 temas e seus corpos celestes seguem `docs/identidade-visual.md`, seção 7, com a lista
   confirmada pela decisão D3 (03/10/2026).
 - A área de estudos não registra o que cada pessoa leu ou assistiu; nenhum dado pessoal é
