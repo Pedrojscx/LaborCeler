@@ -205,7 +205,10 @@ bloco "Estudar antes" no estado "reprovada".
 - Carga de questões substituída: só acontece com o volume do banco recriado, o que apaga também
   as respostas; o histórico nunca mostra uma questão diferente da sorteada.
 - Banco indisponível: mensagem amigável de instabilidade, no padrão do kit, e nenhum histórico
-  parcial.
+  parcial. Com a feature 008, o endereço do histórico que não pode ser conferido por falta do banco
+  responde com a página "Tente novamente em instantes", com código 503 (FR-022 da 008), nunca com a
+  página não encontrada; número que o candidato não tem continua com a mesma recusa de uma
+  tentativa inexistente, que passa a ser a página não encontrada (FR-011 da 008).
 - Pedido de menos movimento: nada no histórico depende de animação.
 
 ## Requirements *(mandatory)*
