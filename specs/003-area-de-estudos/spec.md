@@ -404,6 +404,24 @@ internet e com o vídeo indisponível.
 - A área de estudos não registra o que cada pessoa leu ou assistiu; nenhum dado pessoal é
   coletado aqui. O acompanhamento de estudo por pessoa (domínio de cartões) é da feature 007.
 
+## Dependências
+
+- **Trilha da tela inicial e links provisórios da 002**: enquanto a 003 não existe, os corpos da
+  trilha da tela inicial, "Aprofundar em Terra · Introdução ao Scrum" e os demais links para a área
+  de estudos levam a `/estudos`, que a tabela de destinos provisórios da 002 liga à página
+  "Disponível em breve" (plano da 002, research R9; `contracts/paginas-e-sessao.md` da 002). O plano
+  da 003 MUST, na entrega:
+  - trocar o destino de cada corpo da trilha da tela inicial e de "Aprofundar em Terra" de
+    `/estudos` para a página do seu tema (tela 8), no formato de endereço que o plano da 003
+    definir (FR-018);
+  - remover da tabela de destinos provisórios da 002 as linhas `/estudos` e `/estudos/:tema`, que
+    passam a ser as rotas reais da área de estudos e da página do tema.
+  Sem isso, a trilha continuaria levando à área de estudos, e não ao tema de cada corpo, depois da
+  entrega da 003.
+- **Página não encontrada (feature 008)**: o endereço de um tema que não existe usa a página
+  provisória desta feature até a 008 existir, e a página não encontrada depois (FR-010 e FR-022 da
+  008; Assumptions).
+
 ## Pendências
 
 - **P-01 (bloqueia o plano)**: revisão final, pelo mantenedor, da proposta de modelo de dados
