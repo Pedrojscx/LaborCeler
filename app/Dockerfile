@@ -8,6 +8,10 @@ RUN npm ci
 
 COPY . .
 
+# Pasta do segredo da sessão gerado na primeira subida (volume segredo_sessao), com dono node
+# para o app gravar o arquivo; só RUN, compatível com o builder clássico (research R4 da 002).
+RUN mkdir -p /app/segredo && chown node:node /app/segredo
+
 USER node
 
 EXPOSE 3000

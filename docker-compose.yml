@@ -40,6 +40,12 @@ services:
       PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-}
       DATABASE_URL: ${DATABASE_URL:-postgres://portal:portal@db:5432/bdcertificacao}
       TZ: America/Sao_Paulo
+      # opcional: sem valor, o app gera o segredo da sessão na primeira subida e o guarda no
+      # volume segredo_sessao; se definida, precisa de 32 caracteres ou mais (FR-029, research R4)
+      JWT_SECRET: ${JWT_SECRET:-}
+    volumes:
+      # segredo da sessão: "down" mantém as sessões; "down -v" apaga o segredo junto com o banco
+      - segredo_sessao:/app/segredo
     ports:
       - "${PORT:-3000}:${PORT:-3000}"
     restart: unless-stopped
@@ -54,3 +60,4 @@ services:
 
 volumes:
   dados_banco:
+  segredo_sessao:

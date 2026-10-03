@@ -1,6 +1,6 @@
 # Kit de interface do Lunar Celer
 
-Versão 1.2 (03/10/2026; na 1.2, cores dos corpos celestes por classe e nenhum atributo `style` nos exemplos, por causa da CSP do portal; na 1.1, alvos de 44 px nas abas e no botão de fechar notificação, e foco com afastamento de 3 px também nos campos). Implementação real, em CSS e JavaScript puros, dos tokens e componentes de `docs/identidade-visual.md`. Toda página do portal usa este kit; o protótipo em `docs/prototipo/` mostra como as telas ficam, e este kit é o que se usa para construí-las.
+Versão 1.3 (03/10/2026; na 1.3, estado do portal no rodapé preenchido por `estado-portal.js`; na 1.2, cores dos corpos celestes por classe e nenhum atributo `style` nos exemplos, por causa da CSP do portal; na 1.1, alvos de 44 px nas abas e no botão de fechar notificação, e foco com afastamento de 3 px também nos campos). Implementação real, em CSS e JavaScript puros, dos tokens e componentes de `docs/identidade-visual.md`. Toda página do portal usa este kit; o protótipo em `docs/prototipo/` mostra como as telas ficam, e este kit é o que se usa para construí-las.
 
 Para ver tudo funcionando, abra `docs/kit-demo.html` direto no navegador (não precisa do servidor).
 
@@ -18,7 +18,8 @@ app/public/kit/
 │   ├── abas.js           abas deslizantes com acompanhamento da rolagem (LunarCeler.abas)
 │   ├── notificacoes.js   notificações (LunarCeler.notificar)
 │   ├── cronometro.js     cronômetro em anel, só exibição (LunarCeler.cronometro)
-│   └── formularios.js    mostrar e ocultar senha (LunarCeler.formularios)
+│   ├── formularios.js    mostrar e ocultar senha (LunarCeler.formularios)
+│   └── estado-portal.js  estado do portal no rodapé (LunarCeler.estadoPortal)
 ├── fonts/                Inter 300, 400 e 500 em woff2 (latim) e licença OFL
 └── img/                  céu (ceu.svg e duas camadas de brilho) e lua-rede.svg (reserva estática)
 ```
@@ -57,19 +58,20 @@ Os scripts são clássicos, sem módulos: cada um registra sua função em `wind
   <header class="lc-cabecalho">...</header>
   <main class="lc-principal">...</main>
   <footer class="lc-rodape">
-    <span class="lc-status">Portal no ar e banco conectado</span>
+    <span class="lc-status" hidden></span>
     <span>Projeto acadêmico da Fatec Jacareí</span>
     <span class="lc-rodape__links"><a href="/termos">Termos de uso e privacidade</a><a href="/validar">Validar certificado</a></span>
   </footer>
 </div>
 <script src="/kit/js/notificacoes.js"></script>
+<script src="/kit/js/estado-portal.js"></script>
 <script src="/js/pagina.js"></script>
 </body>
 </html>
 ```
 
 - Céu parado (tela da questão): `<div class="lc-pagina lc-pagina--ceu-parado">`.
-- Banco indisponível no rodapé: `<span class="lc-status lc-status--falha">Instabilidade no portal. Tente de novo em alguns minutos.</span>`.
+- Estado do portal no rodapé: o `lc-status` nasce vazio e oculto (`hidden`), e `LunarCeler.estadoPortal(document)` o preenche a partir de `GET /api/saude`: "Portal no ar e banco conectado"; com `lc-status--falha`, "Conteúdo em atualização." (carga incompleta; o detalhe fica no log do app) ou "Instabilidade no portal. Tente de novo em alguns minutos." (`503` ou falha de rede). Sem JavaScript, o rodapé mostra só o texto neutro e os links.
 
 ## Componentes
 
@@ -118,6 +120,9 @@ cronometro.sincronizar(outraRespostaDaApi.segundosRestantes);
 
 // Mostrar e ocultar senha
 LunarCeler.formularios(document);
+
+// Estado do portal no rodapé (kit 1.3)
+LunarCeler.estadoPortal(document);
 ```
 
 ## Comportamentos já garantidos pelo kit
