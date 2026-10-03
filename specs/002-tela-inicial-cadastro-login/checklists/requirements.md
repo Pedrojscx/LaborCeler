@@ -94,3 +94,7 @@
   marcador do e-mail; verificação de clone limpo obrigatória para publicar) e SC-017; pendência
   P-10 (texto de refazer do FR-040 depende da D9). Revalidação: todos os itens continuam
   aprovados.
+- Textos alinhados aos protótipos `Cadastro` e `Entrar` (fonte da verdade, decisão do mantenedor de
+  2026-10-03): cenários 3, 4 e 5 da US2 e 2, 3 e 6 da US3; FR-014 (catálogo do contrato como
+  referência dos textos), FR-015, FR-016, FR-017 e FR-017a (mensagem única para o bloqueio por CPF
+  e o limite por rede), FR-043, FR-046 e SC-005. Revalidação: todos os itens continuam aprovados.

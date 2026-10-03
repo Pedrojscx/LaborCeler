@@ -95,12 +95,13 @@ conferir que todos são recusados com mensagens claras.
    ou só com os 11 dígitos, **Then** os dois formatos são aceitos e tratados como o mesmo CPF.
 3. **Given** o formulário de cadastro, **When** o CPF tem dígitos verificadores errados, tem
    todos os dígitos iguais (ex.: 111.111.111-11), tem menos ou mais de 11 dígitos ou contém
-   letras, **Then** o cadastro é recusado com a mensagem de CPF inválido.
+   letras, **Then** o cadastro é recusado com a mensagem "CPF inválido. Confira os 11 números."
 4. **Given** um CPF já cadastrado, **When** alguém tenta cadastrá-lo de novo, **Then** o
-   cadastro é recusado com uma mensagem clara de que o CPF já tem conta, sem revelar nenhum
+   cadastro é recusado com a mensagem "Este CPF já tem cadastro. Se a conta é sua, entre com CPF
+   e senha", sem revelar nenhum
    outro dado do titular, e com o atalho para entrar.
 5. **Given** o formulário de cadastro, **When** o visitante não marca o aceite dos termos,
-   **Then** o cadastro não é concluído e ele é avisado de que o aceite é obrigatório.
+   **Then** o cadastro não é concluído e ele vê "É preciso aceitar os termos para criar a conta."
 6. **Given** o formulário de cadastro, **When** o visitante abre os termos de uso e privacidade,
    **Then** lê o texto completo sem perder o que já digitou.
 7. **Given** um cadastro recusado por qualquer motivo, **When** a mensagem aparece, **Then** ela
@@ -134,17 +135,19 @@ candidato deixa de estar acessível.
 1. **Given** um candidato cadastrado, **When** ele informa CPF e senha corretos, **Then** entra
    no portal e é levado à área do candidato.
 2. **Given** a tela de login, **When** o CPF não está cadastrado ou a senha está errada,
-   **Then** a mensagem é a mesma nos dois casos ("CPF ou senha inválidos"), sem indicar qual
+   **Then** a mensagem é a mesma nos dois casos ("CPF ou senha inválidos. Confira os dados e
+   tente de novo."), sem indicar qual
    dos dois falhou.
 3. **Given** a tela de login, **When** a pessoa digita um e-mail no lugar do CPF, **Then** o
-   login é recusado e ela é orientada a usar o CPF.
+   login é recusado com "O login é feito com o CPF cadastrado, não com o e-mail."
 4. **Given** um candidato conectado, **When** ele escolhe sair, **Then** a sessão é encerrada, ele
    volta à tela inicial e a área do candidato só volta a ser acessível após novo login.
 5. **Given** um candidato conectado há mais de 8 horas, **When** ele tenta usar a área do
    candidato, **Then** é levado ao login com a explicação de que a sessão expirou.
 6. **Given** 5 tentativas de login malsucedidas para o mesmo CPF em 15 minutos, **When** alguém
    tenta entrar de novo com esse CPF, **Then** a tentativa é recusada por 15 minutos, mesmo com a
-   senha certa, com uma mensagem pedindo para aguardar que é igual para CPF cadastrado ou não.
+   senha certa, com a mensagem "Muitas tentativas sem sucesso. Aguarde alguns minutos para
+   tentar de novo.", igual para CPF cadastrado ou não e igual à do limite por rede.
 7. **Given** várias pessoas entrando ao mesmo tempo a partir da mesma rede (por exemplo, a sala
    da apresentação), **When** cada uma usa o seu próprio CPF, **Then** nenhuma é bloqueada pelas
    falhas das outras.
@@ -442,7 +445,10 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
 - **FR-013**: Concluído o cadastro, o candidato MUST ficar conectado e ser levado à área do
   candidato; o cadastro MUST NOT iniciar a certificação (RF02).
 - **FR-014**: Mensagens de recusa MUST indicar o campo a corrigir e preservar os campos já
-  preenchidos, exceto senha e confirmação.
+  preenchidos, exceto senha e confirmação. Os textos das mensagens MUST ser os dos protótipos
+  `Cadastro.dc.html` e `Entrar.dc.html` (fonte da verdade), reunidos no catálogo de
+  `contracts/paginas-e-sessao.md`; os casos que os protótipos não mostram têm texto próprio nesse
+  catálogo, aprovado pelo mantenedor.
 - **FR-043**: A tela de cadastro MUST seguir a grade em bento da tela 2: no bloco largo, à
   esquerda, a Lua nova apagada, o título "Criar conta" e os avisos "Sua Lua começa nova" e
   "Criar a conta não inicia a prova"; à direita, o formulário com CPF (com ou sem pontuação,
@@ -450,7 +456,8 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
   e confirmação lado a lado com botão de mostrar e ocultar, e o aceite obrigatório dos termos com
   link; nos blocos menores, "Já tem conta?" e "Como seus dados são usados". A tela MUST ter os
   estados: normal; erros por campo; CPF já cadastrado (sem revelar dados do titular, com atalho
-  para Entrar); senha longa demais para ser protegida por inteiro.
+  para Entrar); senha longa demais para ser protegida por inteiro ("Essa senha é longa demais
+  para ser protegida com segurança. Use uma senha mais curta ou com menos letras acentuadas.").
 - **FR-044**: Ao concluir o cadastro, além de levar o candidato à área do candidato, o portal
   MUST confirmar a criação da conta com uma notificação de sucesso do kit
   (`LunarCeler.notificar`, título "Conta criada"); as notificações são infraestrutura do kit,
@@ -462,18 +469,22 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
 **Login e sessão (RF04, tela 3)**
 
 - **FR-015**: O login MUST aceitar exclusivamente CPF (com ou sem máscara) e senha; tentativas
-  com e-mail ou qualquer outro identificador MUST ser recusadas com orientação para usar o CPF.
+  com e-mail ou qualquer outro identificador MUST ser recusadas com "O login é feito com o CPF
+  cadastrado, não com o e-mail."
 - **FR-016**: CPF não cadastrado e senha errada MUST gerar a mesma mensagem genérica ("CPF ou
-  senha inválidos"), sem indicar qual dos dois falhou.
+  senha inválidos. Confira os dados e tente de novo."), sem indicar qual dos dois falhou.
 - **FR-017**: Falhas de login MUST ser contadas por CPF: após 5 tentativas malsucedidas para o
   mesmo CPF em 15 minutos, novas tentativas para esse CPF MUST ser recusadas por 15 minutos,
   inclusive com a senha correta. A contagem vale para qualquer CPF digitado, cadastrado ou não,
-  e a mensagem de bloqueio MUST ser a mesma nos dois casos, sem revelar se o CPF existe; um
-  login bem-sucedido zera a contagem daquele CPF.
+  e a mensagem de bloqueio MUST ser a mesma nos dois casos, sem revelar se o CPF existe, e a
+  mesma do limite por rede (FR-017a), sem revelar qual dos dois limites foi atingido: "Muitas
+  tentativas sem sucesso. Aguarde alguns minutos para tentar de novo." Um login bem-sucedido zera
+  a contagem daquele CPF.
 - **FR-017a**: Por endereço de rede, MUST existir apenas um limite folgado contra abuso em massa,
   tanto no login quanto no cadastro: da ordem de 60 tentativas **malsucedidas** por minuto em
   cada um, sem contar as bem-sucedidas, para não bloquear várias pessoas legítimas entrando ou se
-  cadastrando a partir da mesma rede, como na sala da apresentação.
+  cadastrando a partir da mesma rede, como na sala da apresentação. A mensagem é a do bloqueio
+  por CPF (FR-017).
 - **FR-018**: A sessão do candidato MUST durar até 8 horas; depois disso, ou após sair, o acesso
   à área do candidato MUST exigir novo login.
 - **FR-019**: O candidato conectado MUST poder sair a qualquer momento, encerrando a sessão.
@@ -483,9 +494,10 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
 - **FR-046**: A tela de login MUST seguir a grade em bento da tela 3: formulário só com CPF e
   senha (com mostrar e ocultar), o aviso de que não há recuperação de senha nesta versão e os
   blocos menores "Ainda não tem conta?" e "Quer estudar antes?". A tela MUST ter os estados:
-  normal; erro genérico ("CPF ou senha inválidos"); bloqueio por excesso de tentativas, sem
-  revelar se o CPF existe; tentativa com e-mail ("O login é feito com o CPF cadastrado"); sessão
-  expirada.
+  normal; erro genérico ("CPF ou senha inválidos. Confira os dados e tente de novo."); bloqueio
+  por excesso de tentativas, sem revelar se o CPF existe nem qual limite foi atingido ("Muitas
+  tentativas sem sucesso. Aguarde alguns minutos para tentar de novo."); tentativa com e-mail ("O
+  login é feito com o CPF cadastrado, não com o e-mail."); sessão expirada.
 
 **Área do candidato (RF02, tela 4)**
 
@@ -616,7 +628,7 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
   recusado.
 - **SC-005**: Em 100% das tentativas de login malsucedidas, a mensagem é idêntica para CPF não
   cadastrado e senha errada, e a mensagem de bloqueio é idêntica para CPF cadastrado e não
-  cadastrado.
+  cadastrado e para o limite por rede.
 - **SC-006**: 0 senhas legíveis armazenadas ou registradas em logs, conferido em inspeção do
   banco e dos registros após uma rodada de testes de cadastro e login.
 - **SC-007**: Todas as telas desta feature ficam utilizáveis, sem rolagem horizontal, de 360 px a
