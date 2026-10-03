@@ -1,6 +1,6 @@
 # Kit de interface do Lunar Celer
 
-Versão 1.1 (02/10/2026; na 1.1, alvos de 44 px nas abas e no botão de fechar notificação, e foco com afastamento de 3 px também nos campos). Implementação real, em CSS e JavaScript puros, dos tokens e componentes de `docs/identidade-visual.md`. Toda página do portal usa este kit; o protótipo em `docs/prototipo/` mostra como as telas ficam, e este kit é o que se usa para construí-las.
+Versão 1.2 (03/10/2026; na 1.2, cores dos corpos celestes por classe e nenhum atributo `style` nos exemplos, por causa da CSP do portal; na 1.1, alvos de 44 px nas abas e no botão de fechar notificação, e foco com afastamento de 3 px também nos campos). Implementação real, em CSS e JavaScript puros, dos tokens e componentes de `docs/identidade-visual.md`. Toda página do portal usa este kit; o protótipo em `docs/prototipo/` mostra como as telas ficam, e este kit é o que se usa para construí-las.
 
 Para ver tudo funcionando, abra `docs/kit-demo.html` direto no navegador (não precisa do servidor).
 
@@ -31,6 +31,7 @@ Os scripts são clássicos, sem módulos: cada um registra sua função em `wind
 - Nenhum JavaScript inline (o CSP do helmet bloqueia): o código de cada página fica em `app/public/js/<pagina>.js` e usa `addEventListener`.
 - Cores, tamanhos e tempos sempre pelas variáveis de `tokens.css`, nunca valores soltos.
 - Texto vindo do servidor entra com `textContent`, nunca com `innerHTML`.
+- Nenhum atributo `style="..."` no HTML das páginas: a CSP do portal (`style-src 'self'`) bloqueia. Cores de corpo celeste vêm das classes `lc-corpo-1` a `lc-corpo-12`; valores calculados, de `elemento.style.setProperty` em JavaScript. A demonstração (`docs/kit-demo.html`) abre direto do disco, fora da CSP, e só usa `style=` para montar a própria vitrine.
 - Ao portar uma tela do protótipo, os estilos inline viram classes do kit; o que não existir no kit vira classe no CSS da página, usando os tokens.
 
 ## Esqueleto de página
@@ -75,7 +76,8 @@ Os scripts são clássicos, sem módulos: cada um registra sua função em `wind
 | Componente | Classes |
 |---|---|
 | Botão principal e secundário | `lc-botao lc-botao--primario`, `lc-botao`; variações `--compacto`, `--bloco`; grupo `lc-botoes` |
-| Chip de tema | `lc-chip` com `<span class="lc-ponto" style="--cor: #8C8A86">` |
+| Chip de tema | `lc-chip` com `<span class="lc-ponto lc-corpo-5">` (a cor do corpo vem da classe) |
+| Cor de corpo celeste | `lc-corpo-1` a `lc-corpo-12`, pela ordem do tema (tokens `--corpo-1` a `--corpo-12`); no rótulo de vidro, o ponto fica decorativo em repouso e âmbar quando ativo, sem classe |
 | Rótulo de vidro | `lc-vidro`; ativo com `aria-pressed="true"` ou `is-ativo`; flutuação `lc-flutua`, `lc-flutua--defasado` |
 | Cartões e bento | `lc-cartao`, `--discreto`, `--destaque`, `--vidro`; grade `lc-bento` com `lc-bento__largo`; ícone `lc-icone-caixa` |
 | Formulário | `lc-formulario`, `lc-campo`, `lc-rotulo`, `lc-entrada` (erro com `aria-invalid="true"`), `lc-ajuda`, `lc-erro`, `lc-senha` com `lc-senha__alternar`, `lc-checagem` |
@@ -85,7 +87,7 @@ Os scripts são clássicos, sem módulos: cada um registra sua função em `wind
 | Notificações | criadas pelo script; classes `lc-toast--sucesso`, `--conquista`, `--info`, `--aviso`, `--erro` |
 | Cronômetro | `lc-cronometro` com SVG `lc-anel` (`lc-anel__trilha`, `lc-anel__progresso`, `lc-anel__lua`), `lc-cronometro__tempo` com `data-tempo`, `lc-cronometro__alerta`, anúncio com `data-anuncio` |
 | Trilha de 12 marcos | `lc-marcos` com `lc-marco`, `--feito`, `--atual` |
-| Barra de domínio | `lc-barra` com `lc-barra__valor` e `--valor: 60%`; completa com `lc-barra--completa` |
+| Barra de domínio | `lc-barra` com `lc-barra__valor`; a largura vem de `--valor`, definida em JavaScript (`el.style.setProperty('--valor', '60%')`); completa com `lc-barra--completa` |
 | Anel de conquista | `lc-progresso-anel` |
 | Flashcard | `lc-flashcard` com `lc-flashcard__miolo` e duas `lc-flashcard__face` (a segunda com `--verso`); vira com a classe `is-virado`; autoavaliação `lc-autoavaliacao` |
 | Recolhível | `<details class="lc-recolhivel">` |

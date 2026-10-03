@@ -22,6 +22,20 @@
   padding: 6px 14px; border-radius: var(--raio-pilula); background: var(--borda); font-size: 15px;
 }
 .lc-ponto { width: 10px; height: 10px; border-radius: 50%; flex: 0 0 auto; background: var(--cor, var(--texto-suave)); }
+/* A cor do ponto vem sempre de classe, nunca de style="--cor: ..." no HTML: a CSP do portal
+   (style-src 'self') bloqueia atributos style. Corpos celestes, pela ordem do tema: */
+.lc-corpo-1 { --cor: var(--corpo-1); }
+.lc-corpo-2 { --cor: var(--corpo-2); }
+.lc-corpo-3 { --cor: var(--corpo-3); }
+.lc-corpo-4 { --cor: var(--corpo-4); }
+.lc-corpo-5 { --cor: var(--corpo-5); }
+.lc-corpo-6 { --cor: var(--corpo-6); }
+.lc-corpo-7 { --cor: var(--corpo-7); }
+.lc-corpo-8 { --cor: var(--corpo-8); }
+.lc-corpo-9 { --cor: var(--corpo-9); }
+.lc-corpo-10 { --cor: var(--corpo-10); }
+.lc-corpo-11 { --cor: var(--corpo-11); }
+.lc-corpo-12 { --cor: var(--corpo-12); }
 .lc-vidro {
   display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
   padding: 8px 15px; border-radius: var(--raio-pilula); font-size: 14px; color: #E4E4E7;
@@ -31,6 +45,9 @@
 }
 button.lc-vidro { cursor: pointer; }
 .lc-vidro[aria-pressed="true"], .lc-vidro.is-ativo { border-color: var(--acento); box-shadow: 0 0 24px rgba(242, 164, 58, 0.35); }
+/* ponto do rótulo de vidro: decorativo em repouso, âmbar quando o rótulo está ativo */
+.lc-vidro .lc-ponto { --cor: var(--decorativo); }
+.lc-vidro[aria-pressed="true"] .lc-ponto, .lc-vidro.is-ativo .lc-ponto { --cor: var(--acento); }
 .lc-flutua { animation: lc-flutua 7s ease-in-out infinite; }
 .lc-flutua--defasado { animation-delay: -3.5s; }
 @keyframes lc-flutua { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }

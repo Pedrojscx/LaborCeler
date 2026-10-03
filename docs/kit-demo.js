@@ -6,6 +6,11 @@
   LC.abas(document.querySelector('[data-abas]'));
   LC.formularios(document);
 
+  // valores calculados (como a largura da barra) entram por JavaScript, nunca por style= no HTML
+  document.querySelectorAll('[data-valor]').forEach(function (el) {
+    el.style.setProperty('--valor', el.getAttribute('data-valor'));
+  });
+
   var exemplos = {
     sucesso: { titulo: 'Conta criada', texto: 'Boas-vindas ao Lunar Celer. Sua conta está pronta.' },
     conquista: { titulo: 'Conquista desbloqueada', texto: 'Primeira órbita: você concluiu sua primeira revisão.' },
