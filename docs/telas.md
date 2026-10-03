@@ -1,6 +1,6 @@
 # Telas do Lunar Celer
 
-Versão 1.1 (02/10/2026). Descreve as telas do protótipo (canvas do projeto, acesso do mantenedor: https://claude.ai/artifact/5MK3DegETGbv3t81EsqtZF) para orientar specs e implementação. Tokens, componentes e regras visuais estão em `docs/identidade-visual.md`. Requisitos citados pelo ID de `docs/requisitos-desafio.md`.
+Versão 1.2 (03/10/2026). Descreve as telas do protótipo (canvas do projeto, acesso do mantenedor: https://claude.ai/artifact/5MK3DegETGbv3t81EsqtZF) para orientar specs e implementação. Tokens, componentes e regras visuais estão em `docs/identidade-visual.md`. Requisitos citados pelo ID de `docs/requisitos-desafio.md`.
 
 Convenções: as rotas são sugestões para o plano de cada feature; "Logado" significa que a tela exige sessão e redireciona para Entrar sem ela; textos entre colchetes são dados dinâmicos ou pendências.
 
@@ -10,7 +10,7 @@ Disponibilidade (regra geral, FR-050 da spec da 002): as telas podem descrever q
 
 ## Estrutura comum
 
-**Cabeçalho público:** marca Lunar Celer à esquerda; à direita, link "Voltar ao início" (páginas internas) ou, na tela inicial, abas deslizantes (Scrum, Trilha, Método, Sobre) e o botão "Entrar".
+**Cabeçalho público:** marca Lunar Celer à esquerda; à direita, link "Voltar ao início" (páginas internas), links "Início" e "Entrar" (área de estudos e página do tema) ou, na tela inicial, abas deslizantes (Scrum, Trilha, Método, Sobre) e o botão "Entrar".
 
 **Cabeçalho logado:** marca (leva à área do candidato); links "Área de estudos", "Flashcards", nome do candidato (leva ao perfil) e botão "Sair".
 
@@ -32,8 +32,8 @@ Disponibilidade (regra geral, FR-050 da spec da 002): as telas podem descrever q
 | 4 | Área do candidato | `/candidato` | Logado | 002 e 004 | RF02, RF13, RF21 |
 | 5 | Termos de uso e privacidade | `/termos` | Público | 002 | RNF03 |
 | 6 | Disponível em breve | `/em-breve` | Público | 002 (temporária) | |
-| 7 | Área de estudos | `/estudos` | Público | 003 | RF07, RP07 (a desenhar) |
-| 8 | Página do tema | `/estudos/:tema` | Público | 003 | RF07, RP07 (a desenhar) |
+| 7 | Área de estudos | `/estudos` | Público | 003 | RF07, RP07 |
+| 8 | Página do tema | `/estudos/:tema` | Público | 003 | RF07, RP07 |
 | 9 | Antes de começar | `/certificacao/inicio` | Logado | 004 | RF02, RF05, RF10 |
 | 10 | Questão com cronômetro | `/certificacao/questao` | Logado | 004 | RF05, RF06, RF08, RF10, RF14 |
 | 11 | Correção da questão | `/certificacao/correcao` | Logado | 004 | RF09, RF11, RF12, RF14 |
@@ -48,7 +48,7 @@ Disponibilidade (regra geral, FR-050 da spec da 002): as telas podem descrever q
 | 20 | Página não encontrada | qualquer rota inexistente | Público | 008 | |
 | 21 | Notificações | componente | Todas | 002 | |
 
-As telas 7 e 8 ainda não foram desenhadas; os links para elas levam provisoriamente à tela 6, exceto "Começar pelos estudos", que leva à seção da trilha na própria tela inicial até a feature 003 existir.
+Enquanto a feature 003 não existir, os links para as telas 7 e 8 levam provisoriamente à tela 6, exceto "Começar pelos estudos", que leva à seção da trilha na própria tela inicial.
 
 As notificações (21) são infraestrutura do kit de interface, entregue na feature 002, e não complemento; a 008 fica só com a página não encontrada (20).
 
@@ -60,7 +60,7 @@ Seções, na ordem:
 
 1. **Hero.** À esquerda: título "Um aprendizado astronômico"; parágrafo com as regras em linguagem direta (12 temas, uma questão por tema, 150 segundos por questão, certificado com QR Code para 65% ou mais); botões "Criar minha conta" (principal) e "Começar pelos estudos"; bloco "Como funciona" com três passos numerados (Estude os 12 temas, Responda dentro do tempo, Alcance 65% de acertos). À direita: Lua em rede com cinco rótulos de vidro (Google, Salesforce, Spotify, Saab, Adobe) e o cartão de fato abaixo, que mostra "Quem usa Scrum." até a pessoa interagir.
 2. **O que é Scrum.** Definição em uma frase (framework leve, ciclos curtos chamados Sprints de no máximo um mês), os três pilares do empirismo, blocos recolhíveis com as três responsabilidades e os três artefatos com seus compromissos, a Sprint desenhada como órbita com os quatro eventos numerados e o link "Aprofundar em Terra · Introdução ao Scrum". Conteúdo fiel ao Scrum Guide 2020.
-3. **A trilha.** Os 12 corpos celestes em ordem, com tamanho relativo e o nome do tema, cada um levando à área de estudos.
+3. **A trilha.** Os 12 corpos celestes em ordem, com tamanho relativo e o nome do tema, cada um levando à página do seu tema (tela 8).
 4. **Por que estudar aqui funciona.** Grade em bento: bloco largo com o princípio "Estudar e depois se testar" (efeito de testagem), ilustração do ciclo Estudar e Responder em volta da Lua e o botão "Começar pelos estudos"; três blocos menores (correção na hora, situações reais, progresso visível). Sem números de eficácia não medidos.
 5. **Entre e use 100% do Lunar Celer.** Convite para criar conta, explicando que a área de estudos é aberta e listando o que a conta libera: flashcards, evolução por tema, conquistas e a certificação. Botões "Criar minha conta" e "Já tenho conta".
 6. **De onde vem este portal.** Origem acadêmica na ABP do 1º semestre de DSM da Fatec Jacareí (Centro Paula Souza), o problema que motivou o projeto e o aviso de que o certificado não substitui certificações oficiais de Scrum. Ficha: instituição, curso, programa, orientação (Prof. Antonio Egydio, Prof. Marcelo Sudo e Prof. Arley Souza), colaboradores (Pedro Lucas) e tecnologias.
@@ -93,9 +93,27 @@ Estados: não iniciada ("Sua Lua ainda está nova", botão "Iniciar a certifica�
 
 Ilustração de eclipse, título e texto conforme a funcionalidade (estudos, certificação ou validação), botões para a área do candidato e para o início. Temporária: some quando as features 003 a 005 forem entregues.
 
-## 7 e 8. Área de estudos e página do tema
+## 7. Área de estudos
 
-A desenhar. Requisitos já definidos: organizada pelos mesmos 12 temas, aberta sem login, conteúdo coerente com as questões (RP07), imagens com texto alternativo, link para os flashcards (exige conta).
+Aberta a qualquer pessoa, com ou sem conta. Título "Área de estudos" e texto de apresentação ("Os 12 temas da certificação, na mesma ordem da prova. Cada tema tem textos, imagens e indicações para aprofundar, e tudo aqui é aberto, com ou sem conta."). Abaixo, a trilha do Sistema Solar com os 12 corpos na ordem da prova, no mesmo desenho da trilha da tela inicial, cada corpo levando à página do seu tema. Depois, a grade de cartões, um por tema: "Tema [n]", o corpo celeste com sua cor (Saturno com anel), o nome no formato "Corpo · Tema" e "[n] materiais · cerca de [n] min de leitura", calculados a partir dos materiais; o cartão leva à página do tema. No fim, o aviso da licença do conteúdo didático (CC BY-SA 4.0, com atribuição ao Scrum Guide 2020).
+
+Cabeçalho: o visitante vê a marca e os links "Início" e "Entrar"; o candidato conectado vê o cabeçalho logado, com "Área de estudos" marcado como página atual.
+
+Estados: visitante; candidato conectado. Com a feature 007, o candidato conectado passa a ver o bloco "Próximo foco" (tema de menor domínio, com "Estudar [corpo]") e, em cada cartão, a barra "Flashcards dominados [n] de [n]"; o visitante passa a ver o convite "Quer fixar o que estudou?", com "Criar minha conta" e "Entrar". Antes da 007, esses blocos ficam ocultos (regra de disponibilidade).
+
+## 8. Página do tema
+
+Aberta a qualquer pessoa. Caminho "Área de estudos › Corpo · Tema"; cabeçalho do tema com "Tema [n] de 12 · Corpo", o nome do tema, a descrição e "[n] materiais · cerca de [n] min de leitura". Sumário "Neste tema" com os materiais em ordem e o tipo de cada um (Texto, Vídeo ou Leitura externa); cada item leva ao material na própria página.
+
+Materiais, na ordem do tema:
+
+- **Texto:** título, texto com intertítulos, figuras com legenda e texto alternativo (com crédito, se forem de terceiros) e, quando houver, o destaque "Para lembrar". Escrito em Markdown e convertido no servidor.
+- **Vídeo:** arquivo do próprio portal, parado até a pessoa reproduzir, com reproduzir e pausar, tempo decorrido e total, legendas em português e tela cheia. Legenda em português ligada por padrão, que funciona também com os controles nativos do navegador. Junto dele, nos vídeos gerados com NotebookLM, o aviso "Vídeo gerado com NotebookLM e revisado pela equipe do projeto" e, quando baseado no Scrum Guide, a atribuição a Ken Schwaber e Jeff Sutherland (CC BY-SA 4.0); a duração e "legendas em português"; e o bloco recolhível "Ler a transcrição". Opcional por tema.
+- **Leitura externa:** título, frase sobre o que a pessoa vai encontrar e link para a fonte primária, que abre em outra aba e avisa isso ("abre em outra aba").
+
+No fim, a navegação "Tema anterior" e "Próximo tema", com corpo e nome (o tema 1 não tem anterior; o 12 não tem próximo), e o aviso da licença do conteúdo.
+
+Estados: visitante; candidato conectado; tema sem vídeo; vídeo indisponível (aviso no lugar do vídeo, transcrição mantida). Com a feature 007, antes da navegação aparece "Revise o que estudou" (candidato conectado, com o domínio dos cartões do tema e "Revisar [corpo]") ou "Revise com flashcards" (visitante, com "Entrar"); antes da 007, esses blocos ficam ocultos.
 
 ## 9. Antes de começar
 
@@ -173,4 +191,3 @@ Componente descrito em `docs/identidade-visual.md`, seção 8.1, e implementado 
 - **D6** (recarregar durante a questão): telas 10 e 11.
 - Contato privado (e-mail exclusivo do projeto, ainda a criar): tela 5. Sem ele, a feature 002 não pode ser entregue.
 - Termos (tela 5): incluir as revisões de flashcards e a evolução entre os dados coletados, na spec da feature 007 (Princípio VI).
-- Áreas de estudo (telas 7 e 8): a desenhar.
