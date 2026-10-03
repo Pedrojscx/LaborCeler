@@ -189,7 +189,7 @@ O corpo é o mesmo para qualquer endereço e qualquer pessoa; o cabeçalho segue
 
 Vale para endereços que não existem e para recursos de página que não existem ou são de outro candidato: tema (tela 8), resultado (tela 12), certificado (tela 13) e tentativa do histórico (tela 15), com a mesma resposta para inexistente, alheio e malformado. Sem sessão, os endereços logados levam a Entrar antes de qualquer conferência. A validação pública mantém o próprio estado "Nenhum certificado encontrado". A API responde 404 em JSON, e arquivos inexistentes (imagens, estilos, scripts e outros), 404 curto em texto puro, sem a página.
 
-Estado de instabilidade: se o banco estiver indisponível ao conferir a sessão ou o recurso, a resposta é 503, com a indicação de quando tentar de novo, e a página "Tente novamente em instantes" (cabeçalho só com a marca, botões "Tentar de novo" e "Voltar ao início"), também sem repetir o endereço; textos e protótipo pendentes (P-06 da spec 008).
+Estado de instabilidade (protótipo `Instabilidade.dc.html`): se o banco estiver indisponível ao conferir a sessão ou o recurso, a resposta é 503, com a indicação de quando tentar de novo, e a página "Tente novamente em instantes", com o texto "O portal está com instabilidade e não conseguiu abrir esta página agora.", cabeçalho só com a marca (sem o banco, a sessão não pode ser confirmada), botões "Tentar de novo" e "Voltar ao início" (a tela inicial abre sem o banco) e o rodapé em estado de instabilidade, também sem repetir o endereço.
 
 ## 21. Notificações
 

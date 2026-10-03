@@ -154,7 +154,8 @@ o código 404, o formato de cada resposta e a ausência da página HTML.
 - Banco indisponível ao conferir a sessão ou um recurso de página: página "Tente novamente em
   instantes", com 503 e a indicação de quando tentar de novo, nunca a página não encontrada, para
   não dizer que algo que existe não existe (FR-022). Um endereço inexistente que não depende do
-  banco continua respondendo 404.
+  banco continua respondendo 404, e "Voltar ao início" leva à tela inicial, que abre sem o banco
+  (FR-024).
 - Navegador sem JavaScript: as duas páginas aparecem inteiras, com texto e caminhos, porque nada
   nelas depende de script.
 - Portal sem acesso à internet: a página carrega inteira, com fontes e ilustração.
@@ -243,15 +244,23 @@ o código 404, o formato de cada resposta e a ausência da página HTML.
 
 - **FR-022**: Quando o banco estiver indisponível ao conferir a sessão ou um recurso de página (tema,
   histórico, resultado ou certificado), a resposta MUST ser o código 503, com o cabeçalho
-  `Retry-After` (30 segundos) e a página "Tente novamente em instantes", nunca a página não
-  encontrada. A página de instabilidade MUST trazer: o cabeçalho só com a marca (que leva à tela
-  inicial), porque sem o banco não dá para confirmar a sessão; o título "Tente novamente em
-  instantes"; o texto "O portal está com instabilidade e não conseguiu abrir esta página agora.";
-  os botões "Tentar de novo", que recarrega o mesmo endereço sem repeti-lo no conteúdo, e "Voltar ao
-  início"; e o rodapé comum, com o estado de instabilidade do kit. Ela MUST levar a instrução
-  noindex e `Cache-Control: no-store`, MUST NOT repetir o endereço pedido nem mostrar detalhes
-  técnicos e segue o FR-005 e o FR-006 (textos e protótipo pendentes, P-06). O título da página
-  MUST ser "Portal instável · Lunar Celer".
+  `Retry-After` de 30 segundos e a página de instabilidade, nunca a página não encontrada. A página
+  MUST portar `Instabilidade.dc.html` com o kit: o cabeçalho do FR-023; o título "Tente novamente em
+  instantes"; o texto "O portal está com instabilidade e não conseguiu abrir esta página agora."; os
+  botões "Tentar de novo" (principal), que recarrega o mesmo endereço sem repeti-lo no conteúdo, e
+  "Voltar ao início", que leva à tela inicial (FR-024); e o rodapé comum, com o estado de
+  instabilidade do kit ("Instabilidade no portal. Tente de novo em alguns minutos."). Ela MUST levar
+  a instrução noindex e `Cache-Control: no-store`, MUST NOT repetir o endereço pedido nem mostrar
+  detalhes técnicos e segue o FR-005 e o FR-006. O título da página MUST ser "Portal instável ·
+  Lunar Celer". Textos e `Retry-After` aprovados pelo mantenedor em 03/10/2026.
+- **FR-023**: O cabeçalho da página de instabilidade MUST ter só a marca, sem os itens do cabeçalho
+  logado e sem "Entrar": sem o banco, a sessão não pode ser confirmada, e o cabeçalho logado também
+  dependeria do banco para mostrar o nome; na dúvida, a página não afirma nenhum dos dois estados
+  (aplicação da decisão P-01). A marca leva à tela inicial (FR-024).
+- **FR-024**: A tela inicial, destino de "Voltar ao início" e da marca na página de instabilidade,
+  MUST continuar abrindo sem o banco, com o estado de instabilidade no rodapé (FR-004a da 002), para
+  que esses caminhos nunca levem a outra resposta 503. Conferido em 03/10/2026 no código atual: com
+  o banco fora do ar, a tela inicial responde 200 e só a verificação de saúde responde 503.
 
 **API (regra 2)**
 
@@ -277,8 +286,8 @@ o código 404, o formato de cada resposta e a ausência da página HTML.
   resultado e no certificado, para o mesmo candidato; o cabeçalho logado com sessão e o público sem
   ela; `Cache-Control: private, no-store` com sessão; a ida do visitante sem sessão à tela Entrar
   nos endereços logados; o 404 em JSON da API; o 404 em texto puro dos arquivos, sem o caminho
-  pedido; o 503 com `Retry-After`, noindex e sem o endereço pedido, com o banco indisponível; e os
-  links corretos ("Voltar ao início" para a tela inicial, "Validar um certificado" e "Validar
+  pedido; o 503 com `Retry-After`, noindex, cabeçalho só com a marca e sem o endereço pedido, com o
+  banco indisponível; a tela inicial respondendo 200 com o banco indisponível; e os links corretos ("Voltar ao início" para a tela inicial, "Validar um certificado" e "Validar
   certificado" para a validação pública).
 
 ### Key Entities *(include if feature involves data)*
@@ -296,8 +305,16 @@ o código 404, o formato de cada resposta e a ausência da página HTML.
   histórico (006, FR-011), ou deixar o ponto de troca pronto para quando ela existir. Em 03/10/2026,
   nenhum desses três planos existe; a dependência fica registrada aqui e é conferida quando cada
   plano for escrito.
-- **Feature 002**: cabeçalho logado e público (FR-048 da 002), conferência da sessão e
-  redirecionamento de `.html` para o endereço limpo.
+- **Feature 002**: cabeçalho logado e público (FR-048 da 002), conferência da sessão,
+  redirecionamento de `.html` para o endereço limpo e tela inicial que abre sem o banco, com a
+  instabilidade no rodapé (FR-004a da 002; FR-024 desta spec).
+- **Conferência das specs 005 e 006 (03/10/2026)**: busca por banco indisponível, falha de
+  carregamento e recurso inexistente. Na 005, nenhum trecho contradiz esta spec: resultado e
+  certificado já recusam inexistente, alheio, em andamento e sem certificado da mesma forma (FR-025
+  da 005), e o banco indisponível só aparece na validação pública, que mantém o próprio estado
+  (FR-015). Na 006, o edge case de banco indisponível ("mensagem amigável de instabilidade, no
+  padrão do kit") contradizia o FR-022 e foi alinhado em commit próprio, no mesmo padrão da 003; as
+  recusas por número de tentativa já seguem esta spec.
 - **Feature 005**: validação pública em `/validar` (destino dos dois links) e a regra de recusa do
   FR-025.
 - **Feature 007**: quando entregue, o endereço da página "Disponível em breve" passa a cair nesta
@@ -322,7 +339,8 @@ o código 404, o formato de cada resposta e a ausência da página HTML.
 - **SC-006**: Em 100% dos testes, nenhum trecho do endereço pedido aparece no conteúdo da página não
   encontrada, da página de instabilidade nem do 404 em texto.
 - **SC-007**: Com o banco indisponível, 100% dos pedidos de tema, histórico, resultado e certificado
-  respondem 503 com `Retry-After` e a página "Tente novamente em instantes", e 0 respondem 404.
+  respondem 503 com `Retry-After` e a página "Tente novamente em instantes", com o cabeçalho só com
+  a marca, e 0 respondem 404; a tela inicial continua respondendo 200.
 - **SC-008**: As duas páginas ficam utilizáveis, sem rolagem horizontal, de 360 px a 1920 px, passam
   no contraste AA, têm 100% dos elementos acionáveis alcançados com foco visível só pelo teclado e
   carregam por completo sem acesso à internet, com 0 requisições para outros domínios.
@@ -348,8 +366,9 @@ o código 404, o formato de cada resposta e a ausência da página HTML.
 - **Endereços das telas 12, 13 e 15**: os formatos exatos (por exemplo, o número da tentativa no
   endereço do resultado e do certificado) são definidos nos planos das features 005 e 006; esta
   feature vale para qualquer formato que eles definam.
-- **`Retry-After` de 30 segundos** (FR-022): uma tentativa nova em meio minuto é curta o bastante
-  para quem está na apresentação e longa o bastante para não insistir num banco que está voltando.
+- **`Retry-After` de 30 segundos** (FR-022, aprovado): curto o bastante para não segurar robôs por
+  muito tempo depois que o banco volta e longo o bastante para não sobrecarregar o servidor durante a
+  queda.
 - **Texto da página**: o do protótipo, que vale também para recursos de outro candidato, porque
   "a página não existe mais" não revela nada sobre o recurso.
 
@@ -376,16 +395,14 @@ o código 404, o formato de cada resposta e a ausência da página HTML.
    Resolução pelas regras 2 e da descrição e pela decisão P-02: a API mantém o 404 em JSON (FR-016),
    e os arquivos recebem 404 em texto puro (FR-007).
 7. **Banco indisponível**: a primeira versão desta spec dizia só que a falha do banco não vira 404,
-   com a mensagem de instabilidade do kit. Resolução do mantenedor: 503 com `Retry-After` e uma
-   página própria, sem ecoar o endereço (FR-022). Não há protótipo dessa página (P-06).
+   com a mensagem de instabilidade do kit, e as specs 003 e 006 traziam essa mensagem nas suas
+   páginas. Resolução do mantenedor: 503 com `Retry-After` e uma página própria, com cabeçalho só
+   com a marca, sem ecoar o endereço (FR-022, FR-023), protótipo `Instabilidade.dc.html`; 003 e 006
+   alinhadas.
 
 ## Pendências
 
-- **P-06**: confirmar os textos da página de instabilidade (título "Tente novamente em instantes",
-  texto "O portal está com instabilidade e não conseguiu abrir esta página agora.", botões "Tentar
-  de novo" e "Voltar ao início", título da aba "Portal instável · Lunar Celer") e o `Retry-After` de
-  30 segundos, e criar o protótipo dela em `docs/prototipo/`, a fonte da verdade do protótipo
-  (FR-022; conflito 7).
+Nenhuma pendência aberta.
 
 Resolvidas pelo mantenedor em 03/10/2026:
 
@@ -399,12 +416,15 @@ Resolvidas pelo mantenedor em 03/10/2026:
   spec, em commit próprio na branch da 008.
 - **P-05**: dependência dos planos das features 003, 005 e 006 registrada na seção "Dependências";
   nenhum desses planos existe ainda.
+- **P-06**: textos da página de instabilidade e `Retry-After` de 30 segundos aprovados; cabeçalho só
+  com a marca aprovado (FR-023); tela inicial conferida sem o banco (FR-024); protótipo criado em
+  `docs/prototipo/Instabilidade.dc.html`.
 
 ## Conformidade com a constituição (versão 3.0.1)
 
 | Princípio | Como esta spec atende | Situação |
 |---|---|---|
-| I. Servidor é a autoridade | É o servidor quem confere a sessão, decide se o recurso existe e é do candidato da sessão e responde 404 ou 503 (FR-001, FR-010 a FR-014, FR-020, FR-022). | ✅ |
+| I. Servidor é a autoridade | É o servidor quem confere a sessão, decide se o recurso existe e é do candidato da sessão e responde 404 ou 503 (FR-001, FR-010 a FR-014, FR-020, FR-022, FR-023). | ✅ |
 | II. Front-end sem bibliotecas de terceiros | Páginas com o kit, sem JavaScript inline, legíveis sem JavaScript e sem recursos de outro domínio (FR-005, FR-022). | ✅ |
 | III. PostgreSQL com SQL explícito | Sem mudança de esquema; só as consultas de sessão e de existência das features 002, 003, 005 e 006. | ✅ |
 | IV. Dados derivados não são armazenados | Nada é gravado. | ✅ |
@@ -414,4 +434,4 @@ Resolvidas pelo mantenedor em 03/10/2026:
 | VIII. Rastreabilidade | Complemento citado pela tela 20 e pelas telas integradas; RNF01 e RNF03. | ✅ |
 | IX. Testes das regras críticas | Nenhuma regra crítica da constituição é tocada; testes obrigatórios por regra do mantenedor (FR-019). | ✅ |
 | X. Padrões de código | Textos em português; nada de banco. | ✅ |
-| XI. Interface fiel e acessível | Protótipo portado com o kit e a correção do cinza (FR-003, FR-005); AA, foco, 44 px, teclado e menos movimento (FR-006). | ✅ ⚠ P-06: página de instabilidade sem protótipo |
+| XI. Interface fiel e acessível | Protótipos `NaoEncontrada.dc.html` e `Instabilidade.dc.html` portados com o kit e a correção do cinza (FR-003, FR-005, FR-022); AA, foco, 44 px, teclado e menos movimento (FR-006). | ✅ |

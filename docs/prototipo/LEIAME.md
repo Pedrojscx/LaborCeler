@@ -38,6 +38,7 @@ Cada tela é um arquivo `NomeDaTela.dc.html`. O formato é um HTML com algumas c
 | FlashcardsFim.dc.html | Flashcards: fim da sessão |
 | Perfil.dc.html | Perfil e evolução |
 | NaoEncontrada.dc.html | Página 404 |
+| Instabilidade.dc.html | Página de instabilidade (503), estado da tela 20 |
 | Notificacoes.dc.html | Padrão de notificações |
 
 As versões de celular do protótipo apenas exibem estas mesmas telas em 390 px de largura, por isso não foram incluídas: o layout responsivo já está nos arquivos acima.

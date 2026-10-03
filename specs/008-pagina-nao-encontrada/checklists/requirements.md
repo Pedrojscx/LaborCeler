@@ -54,3 +54,10 @@
 - Esquema: nenhuma mudança; a feature só consulta, pelas regras das features 003, 005 e 006, se o
   recurso do endereço existe e é do candidato. Sem proposta de modelo de dados nem validação em
   PGlite.
+- Revisão do mantenedor (2026-10-03): textos da página de instabilidade e `Retry-After` de 30
+  segundos aprovados; cabeçalho só com a marca num requisito próprio (FR-023); tela inicial
+  conferida sem o banco no código atual (200, com a verificação de saúde em 503) e registrada como
+  requisito (FR-024), sem precisar prever outra 503 no início; protótipo
+  `docs/prototipo/Instabilidade.dc.html` criado (P-06 fechada); specs 005 e 006 conferidas, com o
+  edge case de banco indisponível da 006 alinhado em commit próprio e o resultado registrado em
+  "Dependências". Quarta iteração: todos os itens aprovados; nenhuma pendência aberta.
