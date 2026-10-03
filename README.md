@@ -113,6 +113,19 @@ página inicial mostra "Carga incompleta" e a verificação da carga lista o que
 resolver, corrija o script e recrie o banco do zero (`docker compose down -v` e
 `docker compose up -d --build --wait`).
 
+Se o log mostrar `Permission denied` ao ler um arquivo de `db/` (por exemplo,
+`psql: error: /docker-entrypoint-initdb.d/01-ddl.sql: Permission denied`), o arquivo está sem
+permissão de leitura para outros usuários: o usuário `postgres` do container não consegue
+lê-lo. Isso não acontece num clone limpo, porque o Git grava os arquivos de `db/` como `644`,
+mas pode acontecer com um arquivo criado ou copiado fora do Git. Libere a leitura e recrie o
+banco do zero:
+
+```bash
+chmod o+r db/*.sql
+docker compose down -v
+docker compose up -d --build --wait
+```
+
 ### Verificar a carga e rodar os testes
 
 ```bash
@@ -151,6 +164,33 @@ acesso de novo:
 rm docker-compose.override.yml
 docker compose up -d --build --wait
 ```
+
+### Validar as propostas de modelo de dados no PostgreSQL 16
+
+As propostas de mudança de esquema das features (`specs/*/proposta-modelo-de-dados.md`) são
+validadas no PostgreSQL 16 do projeto com um script que lê os blocos SQL delas como estão e roda
+as verificações de cada uma:
+
+```bash
+scripts/validar-propostas-pg16.sh 2>&1 | tee saida-pg16.txt          # todas
+scripts/validar-propostas-pg16.sh 004,006                             # só algumas features
+```
+
+O script usa um projeto do Compose próprio (`validarpropostas`): sobe só o banco, roda as
+verificações na imagem do app e, no fim, apaga os containers, o volume e a imagem montada desse
+projeto. Ele **não** toca nos containers, no volume nem no banco `bdcertificacao` do portal. Com
+`MANTER=1`, deixa o projeto de validação de pé para conferência.
+
+Antes de subir qualquer coisa, o script confere o ambiente e para com uma mensagem clara se:
+
+- o Docker não estiver acessível para o seu usuário (o erro comum é `permission denied` em
+  `/var/run/docker.sock`). Rode com `sudo scripts/validar-propostas-pg16.sh` ou entre no grupo
+  `docker` (`sudo usermod -aG docker $USER`, e depois saia e entre de novo na sessão);
+- algum arquivo que os containers leem (`db/`, o próprio script e as propostas) estiver sem
+  leitura para outros usuários. A mensagem traz o `chmod` que resolve.
+
+A saída tem uma linha `ok` ou `FALHA` por verificação e o resumo por feature; o script termina
+com código `0` só se todas passarem.
 
 ## Variáveis de ambiente
 
