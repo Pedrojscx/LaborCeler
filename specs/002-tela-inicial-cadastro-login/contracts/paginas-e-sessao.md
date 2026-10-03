@@ -130,8 +130,8 @@ texto.
 
 Textos dos protótipos `Cadastro`, `Entrar` e `Notificacoes` (fonte da verdade). Os marcados com
 * não aparecem nos protótipos e foram aprovados pelo mantenedor em 03/10/2026; os protótipos
-`Entrar` (bloqueio) e `Notificacoes` (primeiro nome) foram atualizados com as decisões da mesma
-data.
+`Entrar` (bloqueio e sem conexão), `Cadastro` (sem conexão) e `Notificacoes` (primeiro nome)
+foram atualizados com as decisões da mesma data.
 
 | Situação | Mensagem | Onde |
 |---|---|---|
@@ -151,6 +151,7 @@ data.
 | Sessão expirada (página) * | Sua sessão expirou. Entre de novo. | `/entrar?motivo=expirada` |
 | Sessão ausente ou inválida (API) * | Sua sessão expirou. Entre de novo. | `GET /api/auth/me` |
 | Banco indisponível * | O portal está com instabilidade. Tente de novo em instantes. | cadastro, login |
+| Sem resposta do portal (falha de rede, FR-030a) | Não foi possível conectar ao portal. Confira sua internet e tente de novo. | cadastro, login |
 | Origem negada * | Origem da requisição não permitida. | rotas `POST` |
 | Corpo fora de JSON ou JSON malformado * | Envie os dados em JSON. | rotas `POST` |
 | Corpo acima de 10 kB * | Dados grandes demais. | rotas `POST` |

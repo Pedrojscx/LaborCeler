@@ -73,13 +73,13 @@ Seções, na ordem:
 
 Grade em bento. Bloco largo: à esquerda, Lua nova apagada, título "Criar conta" e os avisos "Sua Lua começa nova" e "Criar a conta não inicia a prova"; à direita, formulário: CPF (com ou sem pontuação, teclado numérico), nome completo ("do jeito que deve aparecer no certificado"), e-mail, senha e confirmação lado a lado com botão de mostrar, aceite obrigatório dos termos com link. Blocos menores: "Já tem conta?" e "Como seus dados são usados".
 
-Estados: normal; erros por campo; CPF já cadastrado (sem revelar dados do titular, com atalho para Entrar); senha longa demais para o limite de 72 bytes.
+Estados: normal; erros por campo; CPF já cadastrado (sem revelar dados do titular, com atalho para Entrar); senha longa demais para o limite de 72 bytes; sem conexão com o portal ("Não foi possível conectar ao portal. Confira sua internet e tente de novo.").
 
 ## 3. Entrar
 
 Mesmo bento. Formulário só com CPF e senha (com mostrar e ocultar) e o aviso de que não há recuperação de senha nesta versão. Blocos menores: "Ainda não tem conta?" e "Quer estudar antes?".
 
-Estados: normal; erro genérico ("CPF ou senha inválidos"); bloqueio por excesso de tentativas, sem revelar se o CPF existe; tentativa com e-mail ("O login é feito com o CPF cadastrado").
+Estados: normal; erro genérico ("CPF ou senha inválidos"); bloqueio por excesso de tentativas, sem revelar se o CPF existe; tentativa com e-mail ("O login é feito com o CPF cadastrado"); sem conexão com o portal ("Não foi possível conectar ao portal. Confira sua internet e tente de novo.").
 
 ## 4. Área do candidato
 

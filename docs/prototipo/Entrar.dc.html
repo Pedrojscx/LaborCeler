@@ -123,14 +123,15 @@ Entrar
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"estado":{"editor":"enum","options":["normal","erro","bloqueado","email"],"default":"normal"},"$preview":{"width":1440,"height":1040}}'>
+<script type="text/x-dc" data-dc-script data-props='{"estado":{"editor":"enum","options":["normal","erro","bloqueado","email","semConexao"],"default":"normal"},"$preview":{"width":1440,"height":1040}}'>
 class Component extends DCLogic {
   renderVals() {
     const estado = this.props.estado ?? 'normal';
     const mensagens = {
       erro: 'CPF ou senha inválidos. Confira os dados e tente de novo.',
       bloqueado: 'Muitas tentativas sem sucesso. Aguarde 15 minutos e tente de novo.',
-      email: 'O login é feito com o CPF cadastrado, não com o e-mail.'
+      email: 'O login é feito com o CPF cadastrado, não com o e-mail.',
+      semConexao: 'Não foi possível conectar ao portal. Confira sua internet e tente de novo.'
     };
     const mostrar = (this.state && this.state.mostrar) || false;
     return {

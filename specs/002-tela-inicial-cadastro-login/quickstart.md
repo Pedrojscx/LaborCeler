@@ -79,7 +79,7 @@ da 002 ser resolvida", e o código de saída continua `0` (FR-012b).
 4. Sem login, abra `/certificacao/inicio` e `/perfil`: levam ao login; `/estudos`, `/validar` e
    `/flashcards` mostram a página "Disponível em breve".
 
-## Cenário 5: rodapé e falha do banco (FR-004a, FR-030)
+## Cenário 5: rodapé, falha do banco e falha de rede (FR-004a, FR-030, FR-030a)
 
 1. Com o banco no ar: rodapé com "Portal no ar e banco conectado".
 2. Pare o banco (`docker compose stop db`) e recarregue qualquer página: rodapé com "Instabilidade
@@ -88,6 +88,9 @@ da 002 ser resolvida", e o código de saída continua `0` (FR-012b).
    Volte com `docker compose start db`.
 3. Com a carga incompleta (cenário 5 do quickstart da 001), o rodapé mostra "Conteúdo em
    atualização.", e `docker compose logs app` mostra o que falta na carga.
+4. Com `/cadastro` ou `/entrar` já aberto, pare o app (`docker compose stop app`) e envie o
+   formulário: "Não foi possível conectar ao portal. Confira sua internet e tente de novo.", sem
+   perder o que foi digitado (exceto as senhas) (FR-030a). Volte com `docker compose start app`.
 
 ## Cenário 6: acessibilidade e celular (FR-025 a FR-028, FR-049; SC-007, SC-013, SC-014)
 

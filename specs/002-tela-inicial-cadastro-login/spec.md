@@ -605,6 +605,11 @@ Scrum contra o Scrum Guide 2020 e o comportamento das abas ao rolar.
   mensagem "O portal está com instabilidade. Tente de novo em instantes.", sem cadastro parcial,
   sem expor detalhes técnicos e sem dizer que o problema é o banco (coerente com a página de
   instabilidade da feature 008).
+- **FR-030a**: Quando o envio do cadastro ou do login não obtém nenhuma resposta do portal (falha
+  de rede, em geral na conexão do candidato), a página MUST mostrar "Não foi possível conectar ao portal. Confira sua internet e tente de novo.",
+  sem perder o que foi digitado (exceto as senhas). A mensagem não pode ser a de instabilidade
+  do FR-030, porque a causa provável é a conexão de quem usa, e a falha nunca fica sem aviso
+  (decisão do mantenedor, 03/10/2026).
 
 ### Key Entities *(include if feature involves data)*
 
