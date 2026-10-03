@@ -121,8 +121,10 @@ bem-sucedido zera a contagem do CPF.
 
 ## Catálogo de mensagens
 
-Textos dos protótipos `Cadastro` e `Entrar` (fonte da verdade); os marcados com * não aparecem
-no protótipo e são desta feature.
+Textos dos protótipos `Cadastro` e `Entrar` (fonte da verdade). Os marcados com * não aparecem
+no protótipo, foram propostos nesta feature e **aguardam a aprovação do mantenedor** antes das
+tarefas; os marcados com ** têm texto do protótipo com uma mudança proposta, também aguardando
+aprovação.
 
 | Situação | Mensagem | Onde |
 |---|---|---|
@@ -138,7 +140,7 @@ no protótipo e são desta feature.
 | Resumo de campos inválidos * | Confira os campos destacados. | cadastro |
 | E-mail no lugar do CPF | O login é feito com o CPF cadastrado, não com o e-mail. | login |
 | CPF não cadastrado ou senha errada | CPF ou senha inválidos. Confira os dados e tente de novo. | login |
-| Bloqueio por CPF ou limite por rede | Muitas tentativas sem sucesso. Aguarde alguns minutos para tentar de novo. | login, cadastro |
+| Bloqueio por CPF ou limite por rede ** | Muitas tentativas sem sucesso. Aguarde alguns minutos para tentar de novo. (proposta: "Muitas tentativas sem sucesso. Aguarde 15 minutos e tente de novo.", que diz o tempo sem revelar qual limite foi atingido, porque 15 minutos cobrem os dois) | login, cadastro |
 | Sessão expirada (página) * | Sua sessão expirou. Entre de novo. | `/entrar?motivo=expirada` |
 | Sessão ausente ou inválida (API) * | Sua sessão expirou. Entre de novo. | `GET /api/auth/me` |
 | Banco indisponível * | O portal está temporariamente sem acesso ao banco. Tente de novo em instantes. | cadastro, login |
@@ -148,7 +150,7 @@ no protótipo e são desta feature.
 | Estado do portal, banco ok | Portal no ar e banco conectado | rodapé |
 | Estado do portal, banco falhando | Instabilidade no portal. Tente de novo em alguns minutos. | rodapé |
 | Estado do portal, carga incompleta * | Carga incompleta: confira o conteúdo do banco. | rodapé |
-| Conta criada (notificação) | Conta criada. Boas-vindas ao Lunar Celer, [primeiro nome]. Sua conta está pronta. | área do candidato |
+| Conta criada (notificação) ** | Conta criada. Boas-vindas ao Lunar Celer, [primeiro nome]. Sua conta está pronta. (o protótipo `Notificacoes` diz "[Nome]"; proposta: o primeiro nome) | área do candidato |
 | Marcador do e-mail nos termos | Termos com marcador de e-mail: a publicação será bloqueada até P-01 da 002 ser resolvida | `npm test` (aviso), `validar-002.sh` (falha) |
 
 Nenhuma mensagem ecoa o CPF, o e-mail ou a senha digitados.

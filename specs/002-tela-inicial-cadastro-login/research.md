@@ -198,13 +198,14 @@ aberto ("NEEDS CLARIFICATION").
   palavra; o formato simples de e-mail basta, porque o e-mail não é usado para login nem enviado.
 - **Alternatives considered**: validar o e-mail com envio de confirmação (fora do escopo).
 
-## R12. Interface: kit 1.2, protótipo e identidade visual (FR-025 a FR-028, FR-031 a FR-049)
+## R12. Interface: kit 1.2 e 1.3, protótipo e identidade visual (FR-025 a FR-028, FR-031 a FR-049)
 
 - **Decision**: as seis telas usam o kit (`app/public/kit`) e portam `Main`, `Cadastro`, `Entrar`,
   `AreaCandidato`, `Termos` e `EmBreve` de `docs/prototipo/`: os estilos inline do protótipo viram
   classes do kit ou do CSS de cada página, com as correções da identidade visual (cinza `#8A8A93`
-  em todo texto abaixo de 18 px, Inter só nos pesos 300, 400 e 500). O kit ganha, na versão 1.2:
-  as classes por corpo celeste (R7) e o script do estado do portal no rodapé (R14). A Lua em rede
+  em todo texto abaixo de 18 px, Inter só nos pesos 300, 400 e 500). As classes por corpo celeste
+  (R7) entraram no kit 1.2, entregue antes das tarefas; o script do estado do portal no rodapé
+  (R14) entra na implementação, como kit 1.3. A Lua em rede
   usa `LunarCeler.luaRede` com o SVG estático do kit como reserva; as abas usam
   `LunarCeler.abas`; as notificações, `LunarCeler.notificar`; mostrar e ocultar senha,
   `LunarCeler.formularios`. A Lua da área do candidato e a órbita da Sprint são SVG no próprio

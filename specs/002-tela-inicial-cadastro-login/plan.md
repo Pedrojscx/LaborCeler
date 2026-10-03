@@ -31,7 +31,7 @@ JavaScript puros no front (sem mudança desde a 001).
 
 **Primary Dependencies**: `express` 5 e `pg` 8 (001) + `bcrypt` 6.0.0, `jsonwebtoken` 9.0.3,
 `cookie-parser` 1.4.7, `helmet` 8.3.0 e `express-rate-limit` 8.7.0 (research R1). Dev:
-`supertest` (001). Front: só o kit de interface do projeto (`app/public/kit`, versão 1.2 nesta
+`supertest` (001). Front: só o kit de interface do projeto (`app/public/kit`, versões 1.2 e 1.3 nesta
 feature), sem nenhuma biblioteca de terceiros.
 
 **Storage**: PostgreSQL 16, tabela `tbcandidato` do esquema oficial, sem mudança de esquema;
@@ -76,7 +76,7 @@ provisórios, uso de sala de aula (dezenas de candidatos ao mesmo tempo).
 | VIII. Rastreabilidade | Plano, contratos e tarefas citam RF01 a RF04, RNF01, RNF03, as telas 1 a 6 e os FR da spec. | ✅ |
 | IX. Testes das regras críticas | Nenhuma das regras críticas (sorteio, 150 s, resposta única, nota, certificado) está nesta feature; cadastro, login, sessão, bloqueios, páginas e marcador dos termos têm testes mesmo assim (R16). | ✅ |
 | X. Padrões | Identificadores, mensagens e textos em português; nomes estruturais da stack (`controllers/`, `services/`, `middlewares/`). | ✅ |
-| XI. Interface fiel e acessível | Seis telas portadas do protótipo com o kit e as correções da identidade visual; kit 1.2 com classes por corpo celeste e estado do portal (R12, R14); AA, foco, 44 px e menos movimento. | ✅ |
+| XI. Interface fiel e acessível | Seis telas portadas do protótipo com o kit e as correções da identidade visual; kit 1.2 com classes por corpo celeste (já entregue) e 1.3 com o estado do portal (R12, R14); AA, foco, 44 px e menos movimento. | ✅ |
 | DoD | Endpoints novos documentados em `docs/openapi.yaml` a partir de `contracts/api-auth.openapi.yaml`; clone limpo pelo `validar-002.sh`; autoverificação dos Princípios I, III, IV e VI antes do merge. | ✅ |
 
 **Resultado pré-pesquisa**: aprovado; a única ressalva é a P-01, que a própria spec trata como
@@ -113,7 +113,7 @@ specs/002-tela-inicial-cadastro-login/
 ├── .env.example                  # JWT_SECRET: comentário sobre a geração automática
 ├── README.md                     # tela inicial, variáveis, sessões e down -v, npm test, validar-002
 ├── docs/openapi.yaml             # + /api/auth/*
-├── docs/kit-interface.md         # kit 1.2: classes por corpo celeste e estado do portal
+├── docs/kit-interface.md         # kit 1.2 (classes por corpo, já entregue) e 1.3 (estado do portal)
 ├── scripts/
 │   ├── validar-002.sh            # clone limpo da feature, obrigatório para publicar (R19)
 │   └── validar-001.sh            # checagem da página inicial ajustada (R20)
@@ -162,7 +162,7 @@ specs/002-tela-inicial-cadastro-login/
     │   │   │   ├── api.js        # fetch JSON, erros por campo, 401 → login
     │   │   │   └── cabecalho.js  # nome do candidato e "Sair" no cabeçalho logado
     │   │   └── inicio.js  cadastro.js  entrar.js  candidato.js
-    │   └── kit/                  # kit 1.2: + classes lc-corpo-1 a 12 (componentes.css)
+    │   └── kit/                  # 1.2: classes lc-corpo-1 a 12 (já entregue); 1.3: estado-portal.js
     │       └── js/estado-portal.js   # estado do portal no rodapé (R14)
     └── test/
         ├── saude.test.js  verificacao-carga.test.js   # (001)
@@ -202,9 +202,9 @@ que permite testar com transação desfeita e tempo controlado.
   escopo, a rever se houver mais de um processo.
 - **Token copiado válido até expirar (R2)**: sair apaga o cookie, mas um token copiado vale até as
   8 horas; mitigado por `HttpOnly` e pela CSP.
-- **Kit e CSP (R7)**: o kit documenta `style="--cor: ..."`, que a CSP bloqueia; o kit 1.2 troca por
-  classes. A demonstração do kit (`docs/kit-demo.html`) abre direto do disco, fora da CSP, e não
-  precisa mudar.
+- **Kit e CSP (R7)**: o kit documentava `style="--cor: ..."`, que a CSP bloqueia; o kit 1.2, já
+  entregue antes das tarefas (commit próprio), troca por classes e define `--valor` por
+  JavaScript, inclusive na demonstração. A regra "nenhum `style=` nas páginas" está no kit.
 - **Builder clássico na máquina do mantenedor**: o Buildx não está instalado; o `Dockerfile` não
   pode usar `COPY --chmod`, `--link` nem `RUN --mount` (R4).
 - **Permissão dos arquivos de `db/`**: um arquivo criado fora do Git pode ficar sem leitura para
